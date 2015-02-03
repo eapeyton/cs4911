@@ -5,10 +5,11 @@ module.exports = {
     migration
       .createTable('Rooms', {
         id: { 
-          type: DataTypes.INTEGER,
-          primaryKey: true
+          type:  DataTypes.UUIDV4, 
+          primaryKey: true  
         },
         name: DataTypes.STRING,
+        maxPlayers: DataTypes.INTEGER,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE
       })
