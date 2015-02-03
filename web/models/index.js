@@ -8,6 +8,7 @@ var basename  = path.basename(module.filename);
 var env       = process.env.NODE_ENV || "development";
 var config    = require(__dirname + '/../config/config.json')[env];
 var sequelize;
+
 if (process.env.HEROKU_POSTGRESQL_PINK_URL) {
   // the application is executed on Heroku ... use the postgres database
   var match = process.env.HEROKU_POSTGRESQL_PINK_URL.match(/postgres:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
@@ -23,7 +24,6 @@ if (process.env.HEROKU_POSTGRESQL_PINK_URL) {
   // the application is executed on the local machine ... use mysql
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
-
 
 fs
   .readdirSync(__dirname)
