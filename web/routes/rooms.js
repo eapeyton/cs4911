@@ -1,6 +1,5 @@
 var models  = require('../models');
 var express = require('express');
-var bodyParser = require('body-parser')
 var router  = express.Router();
 
 //create a room
@@ -20,42 +19,51 @@ router.get('/', function(req, res) {
 });
 
 //get a room
-router.get('/:room_id', function(req, res) {
+router.get('/:id', function(req, res) {
   models.Room.find({
-    where: {id: req.param('room_id')}
-  }).success(function(room) {
+    where: {id: req.params.id}
+  })
+  .then(function(room) {
     res.json({success: true, room: room});
-  }).error(function(errors){
+  })
+  .catch(function(errors){
     res.json({success: false, errors: errors});
   });
 });
 
 //update a room
-router.put('/:room_id', function(req, res) {
+router.put('/:id', function(req, res) {
   models.Room.find({
-    where: {id: req.param('room_id')}
-  }).success(function(room) {
-    room.updateAttributes(req.body.room).success(function() {
+    where: {id: req.params.id}
+  })
+  .then(function(room) {
+    room.updateAttributes(req.body.room)
+    .then(function() {
       res.json({success: true, room: room});
-    }).error(function(errors){
+    })
+    .catch(function(errors){
       res.json({success: false, errors: errors});
     });;
-  }).error(function(errors){
+  })
+  .catch(function(errors){
     res.json({success: false, errors: errors});
   });
 });
 
 //delete a room
-router.delete('/:room_id', function(req, res) {
+router.delete('/:id', function(req, res) {
   models.Room.find({
-    where: {id: req.param('room_id')}
-  }).success(function(room) {
-    room.destroy().success(function() {
+    where: {id: req.params.id}
+  })
+  .then(function(room) {
+    room.destroy()
+    .then(function() {
       res.json({success: true});
-    }).error(function(errors){
+    })
+    .catch(function(errors){
       res.json({success: false, errors: errors});
     });;
-  }).error(function(errors){
+  }).catch(function(errors){
     res.json({success: false, errors: errors});
   });;
 });

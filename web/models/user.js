@@ -1,17 +1,17 @@
 module.exports = function(sequelize, DataTypes) {
-  var Room = sequelize.define("Room", {
+  var User = sequelize.define("User", {
     id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4 },
-    name: DataTypes.STRING,
-    maxPlayers: DataTypes.INTEGER,
+    username: DataTypes.STRING,
+    fbToken: DataTypes.STRING,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
   }, {
     classMethods: {
       associate: function(models) {
-        Room.hasMany(models.User, { foreignKey: 'rid' })
+        User.belongsTo(models.Room, { foreignKey: 'rid' })
       }
     }
   });
 
-  return Room;
+  return User;
 };
