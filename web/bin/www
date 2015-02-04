@@ -17,7 +17,7 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Create HTTP server and listen
  */
 var server;
 db.sequelize.sync().complete(function(err) {
@@ -30,12 +30,6 @@ db.sequelize.sync().complete(function(err) {
     server.on('listening', onListening);
   }
 })
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-
 
 /**
  * Normalize a port into a number, string, or false.

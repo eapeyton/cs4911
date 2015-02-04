@@ -8,7 +8,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        User.belongsTo(models.Room, { foreignKey: 'rid' })
+        User.belongsTo(models.Room, { foreignKey: 'rid' });
+        User.hasMany(models.WhiteCard, { foreignKey: 'creator' });
+        User.hasMany(models.BlackCard, { foreignKey: 'creator' });
       }
     }
   });
