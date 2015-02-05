@@ -9,8 +9,10 @@ module.exports = {
           primaryKey: true  
         },
         rid: DataTypes.UUIDV4,
-        username: DataTypes.STRING,
+        fbid: DataTypes.STRING,
         fbToken: DataTypes.STRING,
+        name: DataTypes.STRING,
+        pic: DataTypes.STRING,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE
       })

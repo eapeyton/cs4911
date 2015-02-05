@@ -41,9 +41,6 @@ router.put('/:id', function(req, res) {
     .then(function() {
       res.json({success: true, room: room});
     })
-    .catch(function(errors){
-      res.json({success: false, errors: errors});
-    });;
   })
   .catch(function(errors){
     res.json({success: false, errors: errors});
@@ -60,12 +57,10 @@ router.delete('/:id', function(req, res) {
     .then(function() {
       res.json({success: true});
     })
-    .catch(function(errors){
-      res.json({success: false, errors: errors});
-    });;
-  }).catch(function(errors){
+  })
+  .catch(function(errors){
     res.json({success: false, errors: errors});
-  });;
+  });
 });
 
 

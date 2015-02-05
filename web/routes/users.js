@@ -2,22 +2,31 @@ var models  = require('../models');
 var fb = require('fb');
 var express = require('express');
 var router = express.Router();
+var userHelper = require('./helpers/user-helper');
 
 
-//create a user
-router.post('/', function(req, res) {
-  models.User.create(req.body.user)
-  .then(function(user) {
-    res.json({ success: true, user: user });
+//login
+router.post('/login', function(req, res) {
+  var token = req.body.user.token
+
+  models.User.find({
+    where: {fbid: req.body.user.fbid}
+  })
+  .then(function(user){
+    if(user!==null){
+      userHelper.updateToken(user, token, res);
+    }else{
+      userHelper.createNewUser(req, res);
+    }
   })
   .catch(function(errors){
     res.json({success: false, errors: errors});
-  });;
+  });
 });
 
 //get all users
 router.get('/', function(req, res, next) {
-  models.User.all({attributes: ['id', 'rid', 'username']})
+  models.User.all({attributes: ['id', 'rid', 'name', 'pic', 'fbid']})
   .then(function(users) {
     res.json({ users: users });
   });
@@ -26,7 +35,7 @@ router.get('/', function(req, res, next) {
 //get a user
 router.get('/:id', function(req, res) {
   models.User.find({
-    attributes: ['id', 'rid', 'username'],
+    attributes: ['id', 'rid', 'name', 'pic', 'fbid'],
     where: {id: req.params.id}
   })
   .then(function(user) {
@@ -47,9 +56,6 @@ router.delete('/:id', function(req, res) {
     .then(function() {
       res.json({success: true});
     })
-    .catch(function(errors){
-      res.json({success: false, errors: errors});
-    });;
   })
   .catch(function(errors){
     res.json({success: false, errors: errors});

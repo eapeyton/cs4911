@@ -1,8 +1,10 @@
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define("User", {
     id: { type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4 },
-    username: DataTypes.STRING,
+    fbid: DataTypes.STRING,
     fbToken: DataTypes.STRING,
+    name: DataTypes.STRING,
+    pic: DataTypes.STRING,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
   }, {
