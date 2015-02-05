@@ -4,7 +4,6 @@ var express = require('express');
 var router = express.Router();
 var userHelper = require('./helpers/user-helper');
 
-
 //login
 router.post('/login', function(req, res) {
   var token = req.body.user.token
