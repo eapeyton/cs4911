@@ -7,7 +7,7 @@ var userHelper = require('./helpers/user-helper');
 
 //login
 router.post('/login', function(req, res) {
-  var token = req.body.user.token
+  var token = req.body.user.fbToken
 
   models.User.find({
     where: {fbid: req.body.user.fbid}
