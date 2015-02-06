@@ -3,7 +3,6 @@ var fb = require('fb');
 
 module.exports = {
   updateToken: function(user, newToken, res){
-    console.log("user=", user)
     user.updateAttributes({fbToken: newToken})
     .then(function() {
       res.json({success: true, user: user});
