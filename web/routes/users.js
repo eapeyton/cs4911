@@ -39,7 +39,26 @@ router.get('/:id', function(req, res) {
     where: {id: req.params.id}
   })
   .then(function(user) {
-    res.json({success: true, user: user});
+    res.json({user: user});
+  });
+});
+
+//join room
+router.put('/join', function(req, res) {
+  var id = req.body.id;
+  var rid = req.body.rid
+
+  models.User.find({
+    where: {id: id}
+  })
+  .then(function(user){
+    user.updateAttributes({rid: rid})
+    .then(function() {
+      res.json({success: true, user: user});
+    })
+    .catch(function(error){
+      res.json({success: false, error: error});
+    });
   })
   .catch(function(errors){
     res.json({success: false, errors: errors});
@@ -47,6 +66,7 @@ router.get('/:id', function(req, res) {
 });
 
 //delete a user
+//todo check header token
 router.delete('/:id', function(req, res) {
   models.User.find({
     where: {id: req.params.id}
@@ -59,7 +79,7 @@ router.delete('/:id', function(req, res) {
   })
   .catch(function(errors){
     res.json({success: false, errors: errors});
-  });;
+  });
 });
 
 module.exports = router;

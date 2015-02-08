@@ -2,44 +2,43 @@ var models  = require('../models');
 var express = require('express');
 var router  = express.Router();
 
-//create a room
+//create a card
 router.post('/', function(req, res) {
-  models.Room.create(req.body.room)
-  .then(function(room) {
-    res.json({ success: true, room: room });
+  models.Card.create(req.body.card)
+  .then(function(card) {
+    res.json({ success: true, card: card });
   })
   .catch(function(errors){
     res.json({success: false, errors: errors});
   });
 });
 
-//list all rooms
+//list all cards
 router.get('/', function(req, res) {
-  models.Room.all()
-  .then(function(rooms) {
-    res.json({ rooms: rooms });
+  models.Card.all().then(function(cards) {
+    res.json({ cards: cards });
   });
 });
 
-//get a room
+//get a card
 router.get('/:id', function(req, res) {
-  models.Room.find({
+  models.Card.find({
     where: {id: req.params.id}
   })
-  .then(function(room) {
-    res.json({room: room});
+  .then(function(card) {
+    res.json({card: card});
   });
 });
 
-//update a room
+//update a card
 router.put('/:id', function(req, res) {
-  models.Room.find({
+  models.Card.find({
     where: {id: req.params.id}
   })
-  .then(function(room) {
-    room.updateAttributes(req.body.room)
+  .then(function(card) {
+    card.updateAttributes(req.body.card)
     .then(function() {
-      res.json({success: true, room: room});
+      res.json({success: true, card: card});
     })
     .catch(function(error){
       res.json({success: false, error: error});
@@ -50,21 +49,20 @@ router.put('/:id', function(req, res) {
   });
 });
 
-//delete a room
+//delete a card
 router.delete('/:id', function(req, res) {
-  models.Room.find({
+  models.Card.find({
     where: {id: req.params.id}
   })
-  .then(function(room) {
-    room.destroy()
+  .then(function(card) {
+    card.destroy()
     .then(function() {
       res.json({success: true});
     })
     .catch(function(error){
       res.json({success: false, error: error});
     });
-  })
-  .catch(function(errors){
+  }).catch(function(errors){
     res.json({success: false, errors: errors});
   });
 });
