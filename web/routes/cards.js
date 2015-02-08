@@ -3,20 +3,14 @@ var authorize = require('../lib/authorization-middleware')().authorize;
 var express = require('express');
 var router  = express.Router();
 
-//create a room
+//create a card
 router.post('/', authorize, function(req, res) {
-  if(req.authorizedUser.rid !== null){
-    res.json({success: false, errors: "User already in a room"});
+  if(req.authorizedUser.id !== req.body.card.uid){
+    res.json({success: false, errors: "Token and card's uid don't match"});
   }else{
-    models.Room.create(req.body.room)
-    .then(function(room) {
-      req.authorizedUser.updateAttributes({rid: room.id})
-      .then(function() {
-        res.json({success: true, room: room, user: req.authorizedUser});
-      })
-      .catch(function(errors){
-        res.json({success: false, errors: errors});
-      });
+    models.Card.create(req.body.card)
+    .then(function(card) {
+      res.json({ success: true, card: card });
     })
     .catch(function(errors){
       res.json({success: false, errors: errors});
@@ -24,53 +18,36 @@ router.post('/', authorize, function(req, res) {
   }
 });
 
-//list all rooms
+//list all cards
 router.get('/', function(req, res) {
-  models.Room.all()
-  .then(function(rooms) {
-    res.json({ rooms: rooms });
+  models.Card.all().then(function(cards) {
+    res.json({ cards: cards });
   });
 });
 
-//get a room
+//get a card
 router.get('/:id', function(req, res) {
-  models.Room.find({
+  models.Card.find({
     where: {id: req.params.id}
   })
-  .then(function(room) {
-    res.json({room: room});
+  .then(function(card) {
+    res.json({card: card});
   });
 });
 
-//update a room
+//update a card
 /*
 router.put('/:id', authorize, function(req, res) {
-  models.Room.find({
+  models.Card.find({
     where: {id: req.params.id}
   })
-  .then(function(room) {
-    room.updateAttributes(req.body.room)
+  .then(function(card) {
+    if(req.authorizedUser.id !== card.uid){
+      throw "Token and card's uid don't match";
+    }
+    card.updateAttributes(req.body.card)
     .then(function() {
-      res.json({success: true, room: room});
-    })
-    .catch(function(error){
-      res.json({success: false, error: error});
-    });
-  })
-  .catch(function(errors){
-    res.json({success: false, errors: errors});
-  });
-});
-
-//delete a room
-router.delete('/:id', authorize, function(req, res) {
-  models.Room.find({
-    where: {id: req.params.id}
-  })
-  .then(function(room) {
-    room.destroy()
-    .then(function() {
-      res.json({success: true});
+      res.json({success: true, card: card});
     })
     .catch(function(error){
       res.json({success: false, error: error});
@@ -81,5 +58,26 @@ router.delete('/:id', authorize, function(req, res) {
   });
 });
 */
+//delete a card
+router.delete('/:id', authorize, function(req, res) {
+  models.Card.find({
+    where: {id: req.params.id}
+  })
+  .then(function(card) {
+    if(req.authorizedUser.id !== card.uid){
+      throw "Token and card's uid don't match";
+    }
+    card.destroy()
+    .then(function() {
+      res.json({success: true});
+    })
+    .catch(function(error){
+      res.json({success: false, error: error});
+    });
+  }).catch(function(errors){
+    res.json({success: false, errors: errors});
+  });
+});
+
 
 module.exports = router;

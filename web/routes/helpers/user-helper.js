@@ -3,10 +3,13 @@ var fb = require('fb');
 
 module.exports = {
   updateToken: function(user, newToken, res){
-    user.updateAttributes({fbToken: newToken})
+    user.updateAttributes({fbToken: newToken, rid: null})
     .then(function() {
       res.json({success: true, user: user});
     })
+    .catch(function(errors){
+      res.json({success: false, errors: errors});
+    });
   },
 
   createNewUser: function(req, res){
@@ -14,5 +17,8 @@ module.exports = {
     .then(function(user) {
       res.json({ success: true, user: user });
     })
+    .catch(function(errors){
+      res.json({success: false, errors: errors});
+    });
   }
 }

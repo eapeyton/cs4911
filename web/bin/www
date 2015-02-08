@@ -22,7 +22,7 @@ app.set('port', port);
 var server;
 db.sequelize.sync().complete(function(err) {
   if (err) {
-    throw err[0];
+    throw err;
   } else {
     server = http.createServer(app);
     server.listen(port);
