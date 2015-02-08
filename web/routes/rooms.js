@@ -42,6 +42,39 @@ router.get('/:id', function(req, res) {
   });
 });
 
+//join room
+router.put('/join/:id', authorize, function(req, res) {
+  models.Room.find({
+    where: {id: req.params.id}
+  })
+  .then(function(room){
+    if(room === null){
+      throw 'room does not exist';
+    } else if(room.id === req.authorizedUser.rid){
+      throw 'user already in room';
+    }
+    room.getUsers()
+    .then(function(users){
+      if(users.length >= room.maxPlayers){
+        throw 'room is full';
+      }
+      req.authorizedUser.updateAttributes({rid: req.params.id})
+      .then(function() {
+        res.json({success: true, user: req.authorizedUser});
+      })
+      .catch(function(error){
+        res.json({success: false, error: error});
+      });
+    })
+    .catch(function(errors){
+      res.json({success: false, errors: errors});
+    });
+  })
+  .catch(function(errors){
+    res.json({success: false, errors: errors});
+  });
+});
+
 //update a room
 /*
 router.put('/:id', authorize, function(req, res) {

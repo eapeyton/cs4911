@@ -5,13 +5,13 @@ module.exports = {
     migration
       .createTable('Cards', {
         id: { 
-          type:  DataTypes.UUIDV4, 
+          type:  DataTypes.UUID, 
           defaultValue: DataTypes.UUIDV4,
           unique: true,
           primaryKey: true
         },
         uid: {
-          type: DataTypes.UUIDV4,
+          type: DataTypes.UUID,
           references: 'Users',
           referencesKey: 'id',
           allowNull: false

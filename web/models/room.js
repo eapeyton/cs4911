@@ -1,7 +1,7 @@
 module.exports = function(sequelize, DataTypes) {
   var Room = sequelize.define("Room", {
     id: { 
-      type: DataTypes.UUIDV4, 
+      type: DataTypes.UUID, 
       defaultValue: DataTypes.UUIDV4,
       unique: true,
       primaryKey: true

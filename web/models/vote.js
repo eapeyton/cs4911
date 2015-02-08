@@ -1,19 +1,19 @@
 module.exports = function(sequelize, DataTypes) {
   var Vote = sequelize.define("Vote", {
     id: { 
-      type: DataTypes.UUIDV4,
+      type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       unique: true,
       primaryKey: true
     },
     uid: {
-      type: DataTypes.UUIDV4,
+      type: DataTypes.UUID,
       references: 'Users',
       referencesKey: 'id',
       allowNull: false
     },
     cid: {
-      type: DataTypes.UUIDV4,
+      type: DataTypes.UUID,
       references: 'Cards',
       referencesKey: 'id',
       allowNull: false

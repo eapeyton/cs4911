@@ -5,7 +5,7 @@ module.exports = {
     migration
       .createTable('Rooms', {
         id: { 
-          type:  DataTypes.UUIDV4, 
+          type:  DataTypes.UUID, 
           defaultValue: DataTypes.UUIDV4,
           unique: true,
           primaryKey: true

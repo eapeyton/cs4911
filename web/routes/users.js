@@ -44,33 +44,7 @@ router.get('/:id', function(req, res) {
   });
 });
 
-//join room
-router.put('/join', authorize, function(req, res) {
-  var id = req.body.id;
-  var rid = req.body.rid
-
-  models.User.find({
-    where: {id: id}
-  })
-  .then(function(user){
-    if(req.authorizedUser.id !== user.id){
-      throw "Token and user's id don't match";
-    }
-    user.updateAttributes({rid: rid})
-    .then(function() {
-      res.json({success: true, user: user});
-    })
-    .catch(function(error){
-      res.json({success: false, error: error});
-    });
-  })
-  .catch(function(errors){
-    res.json({success: false, errors: errors});
-  });
-});
-
 //delete a user
-//todo check header token
 router.delete('/:id', authorize, function(req, res) {
   models.User.find({
     where: {id: req.params.id}

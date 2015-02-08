@@ -1,13 +1,13 @@
 module.exports = function(sequelize, DataTypes) {
   var Card = sequelize.define("Card", {
     id: { 
-      type: DataTypes.UUIDV4, 
+      type: DataTypes.UUID, 
       defaultValue: DataTypes.UUIDV4,
       unique: true,
       primaryKey: true
     },
     uid: {
-      type: DataTypes.UUIDV4,
+      type: DataTypes.UUID,
       references: 'Users',
       referencesKey: 'id',
       allowNull: false
