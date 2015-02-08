@@ -1,16 +1,21 @@
 var models  = require('../models');
+var authorize = require('../lib/authorization-middleware')().authorize;
 var express = require('express');
 var router  = express.Router();
 
 //create a card
-router.post('/', function(req, res) {
-  models.Card.create(req.body.card)
-  .then(function(card) {
-    res.json({ success: true, card: card });
-  })
-  .catch(function(errors){
-    res.json({success: false, errors: errors});
-  });
+router.post('/', authorize, function(req, res) {
+  if(req.authorizedUser.id !== req.body.card.uid){
+    res.json({success: false, errors: "Token and uid don't match"});
+  }else{
+    models.Card.create(req.body.card)
+    .then(function(card) {
+      res.json({ success: true, card: card });
+    })
+    .catch(function(errors){
+      res.json({success: false, errors: errors});
+    });
+  }
 });
 
 //list all cards

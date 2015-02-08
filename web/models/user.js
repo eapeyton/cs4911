@@ -12,8 +12,15 @@ module.exports = function(sequelize, DataTypes) {
       referencesKey: 'id',
       allowNull: true
     },
-    fbid: DataTypes.STRING,
-    fbToken: DataTypes.STRING,
+    fbid: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false
+    },
+    fbToken: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     name: DataTypes.STRING,
     pic: DataTypes.STRING,
     createdAt: DataTypes.DATE,
