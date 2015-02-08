@@ -25,9 +25,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Vote.belongsTo(models.User, { foreignKey: 'uid' });
-        Vote.belongsTo(models.Card, { foreignKey: 'cid',
-      references: 'Users',
-      referencesKey: 'id' });
+        Vote.belongsTo(models.Card, { foreignKey: 'cid' });
       }
     }
   });

@@ -9,7 +9,7 @@ function AuthorizationMiddleware(){
   return self;
 
   function authorize(req, res, next){
-    if(req.headers.authorization===null || req.headers.authorization.split(' ')[1]===undefined){
+    if(req.headers.authorization===undefined || req.headers.authorization.split(' ')[1]===undefined){
       send401(next);
     }else{
       var token = req.headers.authorization.split(' ')[1];

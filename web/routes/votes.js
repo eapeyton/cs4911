@@ -1,10 +1,10 @@
 var models  = require('../models');
+var authorize = require('../lib/authorization-middleware')().authorize;
 var express = require('express');
 var router  = express.Router();
 
 //create a vote
-//todo check body.uid and token match
-router.post('/', function(req, res) {
+router.post('/', authorize, function(req, res) {
   models.Vote.find({
     where: {
       uid: req.body.vote.uid,
@@ -14,6 +14,8 @@ router.post('/', function(req, res) {
   .then(function(oldVote){
     if (oldVote !== null) {
       throw "Vote already exists for this card and user";
+    }else if(req.authorizedUser.id !== req.body.vote.uid){
+      throw "Token and vote's uid don't match";
     }else{
       models.Vote.create(req.body.vote)
       .then(function(vote) {
@@ -48,12 +50,14 @@ router.get('/:id', function(req, res) {
 });
 
 //update a vote
-router.put('/:id', function(req, res) {
+router.put('/:id', authorize, function(req, res) {
   models.Vote.find({
     where: {id: req.params.id}
   })
   .then(function(vote) {
-    // todo check vote.uuid and token match
+    if(req.authorizedUser.id !== vote.uid){
+      throw "Token and vote's uid don't match";
+    }
     vote.updateAttributes({upvoted: req.body.vote.upvoted})
     .then(function() {
       res.json({success: true, vote: vote});
@@ -68,12 +72,14 @@ router.put('/:id', function(req, res) {
 });
 
 //delete a vote
-//todo check token and vote.uid match
-router.delete('/:id', function(req, res) {
+router.delete('/:id', authorize, function(req, res) {
   models.Vote.find({
     where: {id: req.params.id}
   })
   .then(function(vote) {
+    if(req.authorizedUser.id !== vote.uid){
+      throw "Token and vote's uid don't match";
+    }
     vote.destroy()
     .then(function() {
       res.json({success: true});

@@ -12,7 +12,6 @@ module.exports = function(sequelize, DataTypes) {
       referencesKey: 'id',
       allowNull: false
     },
-    cardType: DataTypes.STRING,
     text: DataTypes.STRING,
     type: DataTypes.STRING,
     createdAt: DataTypes.DATE,

@@ -1,4 +1,5 @@
 var models  = require('../models');
+var authorize = require('../lib/authorization-middleware')().authorize;
 var fb = require('fb');
 var express = require('express');
 var router = express.Router();
@@ -44,7 +45,7 @@ router.get('/:id', function(req, res) {
 });
 
 //join room
-router.put('/join', function(req, res) {
+router.put('/join', authorize, function(req, res) {
   var id = req.body.id;
   var rid = req.body.rid
 
@@ -52,6 +53,9 @@ router.put('/join', function(req, res) {
     where: {id: id}
   })
   .then(function(user){
+    if(req.authorizedUser.id !== user.id){
+      throw "Token and user's id don't match";
+    }
     user.updateAttributes({rid: rid})
     .then(function() {
       res.json({success: true, user: user});
@@ -67,11 +71,14 @@ router.put('/join', function(req, res) {
 
 //delete a user
 //todo check header token
-router.delete('/:id', function(req, res) {
+router.delete('/:id', authorize, function(req, res) {
   models.User.find({
     where: {id: req.params.id}
   })
   .then(function(user) {
+    if(req.authorizedUser.id !== user.id){
+      throw "Token and user's id don't match";
+    }
     user.destroy()
     .then(function() {
       res.json({success: true});

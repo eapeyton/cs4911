@@ -15,7 +15,7 @@ module.exports = {
           references: 'Rooms',
           referencesKey: 'id',
           allowNull: true
-        }
+        },
         fbid: {
           type: DataTypes.STRING,
           unique: true,

@@ -1,16 +1,27 @@
 var models  = require('../models');
+var authorize = require('../lib/authorization-middleware')().authorize;
 var express = require('express');
 var router  = express.Router();
 
 //create a room
-router.post('/', function(req, res) {
-  models.Room.create(req.body.room)
-  .then(function(room) {
-    res.json({ success: true, room: room });
-  })
-  .catch(function(errors){
-    res.json({success: false, errors: errors});
-  });
+router.post('/', authorize, function(req, res) {
+  if(req.authorizedUser.rid !== null){
+    res.json({success: false, errors: "User already in a room"});
+  }else{
+    models.Room.create(req.body.room)
+    .then(function(room) {
+      req.authorizedUser.updateAttributes({rid: room.id})
+      .then(function() {
+        res.json({success: true, room: room, user: req.authorizedUser});
+      })
+      .catch(function(errors){
+        res.json({success: false, errors: errors});
+      });
+    })
+    .catch(function(errors){
+      res.json({success: false, errors: errors});
+    });
+  }
 });
 
 //list all rooms
@@ -32,7 +43,8 @@ router.get('/:id', function(req, res) {
 });
 
 //update a room
-router.put('/:id', function(req, res) {
+/*
+router.put('/:id', authorize, function(req, res) {
   models.Room.find({
     where: {id: req.params.id}
   })
@@ -51,7 +63,7 @@ router.put('/:id', function(req, res) {
 });
 
 //delete a room
-router.delete('/:id', function(req, res) {
+router.delete('/:id', authorize, function(req, res) {
   models.Room.find({
     where: {id: req.params.id}
   })
@@ -68,6 +80,6 @@ router.delete('/:id', function(req, res) {
     res.json({success: false, errors: errors});
   });
 });
-
+*/
 
 module.exports = router;
