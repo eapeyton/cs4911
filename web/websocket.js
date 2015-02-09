@@ -1,7 +1,10 @@
 var WebSocketHandler = function(io) {
   io.on('connection', function(socket) {
     socket.emit('message', 'hello world');
-
+    
+    socket.on('join room', function(msg) {
+      // attach socket to room id
+    });
     socket.on('start game', function(msg) {
       // deal hands
       // draw blank
@@ -17,6 +20,7 @@ var WebSocketHandler = function(io) {
       // else update the hand count and draw new cards
       // draw blank
     });
+
   });
 }
 
