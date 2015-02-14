@@ -7,15 +7,15 @@ var router  = express.Router();
 router.post('/', authorize, function(req, res) {
   models.Vote.find({
     where: {
-      uid: req.body.vote.uid,
-      cid: req.body.vote.cid
+      userId: req.body.vote.userId,
+      cardId: req.body.vote.cardId
     }
   })
   .then(function(oldVote){
     if (oldVote !== null) {
       throw "Vote already exists for this card and user";
-    }else if(req.authorizedUser.id !== req.body.vote.uid){
-      throw "Token and vote's uid don't match";
+    }else if(req.authorizedUser.id !== req.body.vote.userId){
+      throw "Token and vote's userId don't match";
     }else{
       models.Vote.create(req.body.vote)
       .then(function(vote) {
@@ -55,8 +55,8 @@ router.put('/:id', authorize, function(req, res) {
     where: {id: req.params.id}
   })
   .then(function(vote) {
-    if(req.authorizedUser.id !== vote.uid){
-      throw "Token and vote's uid don't match";
+    if(req.authorizedUser.id !== vote.userId){
+      throw "Token and vote's userId don't match";
     }
     vote.updateAttributes({upvoted: req.body.vote.upvoted})
     .then(function() {
@@ -77,8 +77,8 @@ router.delete('/:id', authorize, function(req, res) {
     where: {id: req.params.id}
   })
   .then(function(vote) {
-    if(req.authorizedUser.id !== vote.uid){
-      throw "Token and vote's uid don't match";
+    if(req.authorizedUser.id !== vote.userId){
+      throw "Token and vote's userId don't match";
     }
     vote.destroy()
     .then(function() {

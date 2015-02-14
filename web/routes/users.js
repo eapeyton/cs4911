@@ -11,7 +11,7 @@ router.post('/login', function(req, res) {
   var token = req.body.user.fbToken
 
   models.User.find({
-    where: {fbid: req.body.user.fbid}
+    where: {fbId: req.body.user.fbId}
   })
   .then(function(user){
     if(user!==null){
@@ -27,7 +27,7 @@ router.post('/login', function(req, res) {
 
 //get all users
 router.get('/', function(req, res, next) {
-  models.User.all({attributes: ['id', 'rid', 'name', 'pic', 'fbid']})
+  models.User.all({attributes: ['id', 'roomId', 'name', 'pic', 'fbId']})
   .then(function(users) {
     res.json({ users: users });
   });
@@ -36,7 +36,7 @@ router.get('/', function(req, res, next) {
 //get a user
 router.get('/:id', function(req, res) {
   models.User.find({
-    attributes: ['id', 'rid', 'name', 'pic', 'fbid'],
+    attributes: ['id', 'roomId', 'name', 'pic', 'fbId'],
     where: {id: req.params.id}
   })
   .then(function(user) {

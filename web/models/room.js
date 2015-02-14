@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Room.hasMany(models.User, { foreignKey: 'rid' });
+        Room.hasMany(models.User, { foreignKey: 'roomId' });
       }
     }
   });

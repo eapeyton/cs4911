@@ -5,8 +5,8 @@ var router  = express.Router();
 
 //create a card
 router.post('/', authorize, function(req, res) {
-  if(req.authorizedUser.id !== req.body.card.uid){
-    res.json({success: false, errors: "Token and card's uid don't match"});
+  if(req.authorizedUser.id !== req.body.card.userId){
+    res.json({success: false, errors: "Token and card's userId don't match"});
   }else{
     models.Card.create(req.body.card)
     .then(function(card) {
@@ -42,8 +42,8 @@ router.put('/:id', authorize, function(req, res) {
     where: {id: req.params.id}
   })
   .then(function(card) {
-    if(req.authorizedUser.id !== card.uid){
-      throw "Token and card's uid don't match";
+    if(req.authorizedUser.id !== card.userId){
+      throw "Token and card's userId don't match";
     }
     card.updateAttributes(req.body.card)
     .then(function() {
@@ -64,8 +64,8 @@ router.delete('/:id', authorize, function(req, res) {
     where: {id: req.params.id}
   })
   .then(function(card) {
-    if(req.authorizedUser.id !== card.uid){
-      throw "Token and card's uid don't match";
+    if(req.authorizedUser.id !== card.userId){
+      throw "Token and card's userId don't match";
     }
     card.destroy()
     .then(function() {
