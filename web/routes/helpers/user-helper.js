@@ -3,7 +3,7 @@ var fb = require('fb');
 
 module.exports = {
   updateToken: function(user, newToken, res){
-    user.updateAttributes({fbToken: newToken, rid: null})
+    user.updateAttributes({fbToken: newToken, roomId: null})
     .then(function() {
       res.json({success: true, user: user});
     })
