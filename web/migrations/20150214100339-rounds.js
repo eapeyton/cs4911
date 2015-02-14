@@ -22,6 +22,12 @@ module.exports = {
           referencesKey: 'id',
           allowNull: false
         },
+        blackCard: {
+          type: DataTypes.UUID,
+          references: 'Cards',
+          referencesKey: 'id',
+          allowNull: false
+        },
         winner: {
           type: DataTypes.UUID,
           references: 'Users',

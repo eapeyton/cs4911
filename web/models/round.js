@@ -18,6 +18,12 @@ module.exports = function(sequelize, DataTypes) {
       referencesKey: 'id',
       allowNull: false
     },
+    blackCard: {
+      type: DataTypes.UUID,
+      references: 'Cards',
+      referencesKey: 'id',
+      allowNull: false
+    },
     winner: {
       type: DataTypes.UUID,
       references: 'Users',
@@ -36,6 +42,7 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         Round.belongsTo(models.Game, { foreignKey: 'gameId' });
         Round.belongsTo(models.User, { foreignKey: 'judge' });
+        Round.belongsTo(models.Card, { foreignKey: 'blackCard' });
         Round.belongsTo(models.User, { foreignKey: 'winner' });
         Round.belongsTo(models.Card, { foreignKey: 'winningCard' });
         Round.hasMany(models.PlayedCard, { foreignKey: 'roundId' });
