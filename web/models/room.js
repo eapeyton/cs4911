@@ -14,6 +14,9 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Room.hasMany(models.User, { foreignKey: 'roomId' });
+        Room.hasMany(models.Judge, { foreignKey: 'roomId' });
+        Room.hasOne(models.Host, { foreignKey: 'roomId' });
+        Room.hasMany(models.Game, { foreignKey: 'roomId' })
       }
     }
   });
