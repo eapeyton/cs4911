@@ -5,12 +5,12 @@ var router  = express.Router();
 
 //create a room
 router.post('/', authorize, function(req, res) {
-  if(req.authorizedUser.rid !== null){
+  if(req.authorizedUser.roomId !== null){
     res.json({success: false, errors: "User already in a room"});
   }else{
     models.Room.create(req.body.room)
     .then(function(room) {
-      req.authorizedUser.updateAttributes({rid: room.id})
+      req.authorizedUser.updateAttributes({roomId: room.id})
       .then(function() {
         res.json({success: true, room: room, user: req.authorizedUser});
       })
@@ -50,7 +50,7 @@ router.put('/join/:id', authorize, function(req, res) {
   .then(function(room){
     if(room === null){
       throw 'room does not exist';
-    } else if(room.id === req.authorizedUser.rid){
+    } else if(room.id === req.authorizedUser.roomId){
       throw 'user already in room';
     }
     room.getUsers()
@@ -58,7 +58,7 @@ router.put('/join/:id', authorize, function(req, res) {
       if(users.length >= room.maxPlayers){
         throw 'room is full';
       }
-      req.authorizedUser.updateAttributes({rid: req.params.id})
+      req.authorizedUser.updateAttributes({roomId: req.params.id})
       .then(function() {
         res.json({success: true, user: req.authorizedUser});
       })

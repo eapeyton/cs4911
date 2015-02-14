@@ -6,13 +6,13 @@ module.exports = function(sequelize, DataTypes) {
       unique: true,
       primaryKey: true
     },
-    rid: {
+    roomId: {
       type: DataTypes.UUID,
       references: 'Rooms',
       referencesKey: 'id',
       allowNull: true
     },
-    fbid: {
+    fbId: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false
@@ -28,9 +28,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        User.belongsTo(models.Room, { foreignKey: 'rid' });
-        User.hasMany(models.Card, { foreignKey: 'uid' });
-        User.hasMany(models.Vote, { foreignKey: 'uid' });
+        User.belongsTo(models.Room, { foreignKey: 'roomId' });
+        User.hasMany(models.Card, { foreignKey: 'userId' });
+        User.hasMany(models.Vote, { foreignKey: 'userId' });
       }
     }
   });
