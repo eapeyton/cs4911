@@ -31,6 +31,12 @@ module.exports = function(sequelize, DataTypes) {
         User.belongsTo(models.Room, { foreignKey: 'roomId' });
         User.hasMany(models.Card, { foreignKey: 'userId' });
         User.hasMany(models.Vote, { foreignKey: 'userId' });
+        User.hasMany(models.Host, { foreignKey: 'userId' });
+        User.hasMany(models.Judge, { foreignKey: 'userId' });
+        User.hasMany(models.PlayedCard, { foreignKey: 'userId' });
+        User.hasMany(models.PlayerState, { foreignKey: 'userId' });
+        User.hasMany(models.Round, { foreignKey: 'judge' });
+        User.hasMany(models.Round, { foreignKey: 'winner' });
       }
     }
   });

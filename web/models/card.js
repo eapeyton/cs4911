@@ -21,6 +21,9 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         Card.belongsTo(models.User, { foreignKey: 'userId' });
         Card.hasMany(models.Vote, { foreignKey: 'cardId' });
+        Card.hasMany(models.Round, { foreignKey: 'winningCard' });
+        Card.hasMany(models.PlayedCard, { foreignKey: 'cardId' });
+        Card.hasMany(models.Hand, { foreignKey: 'cardId' });
       }
     }
   });
