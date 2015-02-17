@@ -30,6 +30,7 @@ public class Game extends ActionBarActivity {
     }
 
     protected void addCardButton(ViewGroup layout, String cardText) {
+
         Button button = new Button(this);
 
         button.setBackgroundResource(R.drawable.card_background);

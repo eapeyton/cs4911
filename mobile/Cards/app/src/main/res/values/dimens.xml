@@ -5,4 +5,5 @@
     <dimen name="max_card_size">200dp</dimen>
     <dimen name="card_margin">7dp</dimen>
     <dimen name="card_padding">20dp</dimen>
+    <dimen name="menu_margin">4dp</dimen>
 </resources>
