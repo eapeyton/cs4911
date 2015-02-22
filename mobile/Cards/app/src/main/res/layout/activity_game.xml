@@ -1,0 +1,53 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_repeating">
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="55"
+        android:gravity="center"
+        android:text="The class field trip was completely ruined by __________."
+        android:background="@drawable/bcard_background"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:layout_margin="40dp"
+        android:padding="20dp"
+        />
+
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="35">
+
+        <LinearLayout
+            android:id="@+id/card_hand"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/white_card"
+                android:layout_width="@dimen/max_card_size"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/card_margin"
+                android:gravity="left"
+                android:padding="@dimen/card_padding"
+                android:text="Dead parents."
+                android:textAllCaps="false"
+                android:maxWidth="@dimen/max_card_size"
+                android:background="@drawable/card_background"/>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"/>
+
+</LinearLayout>

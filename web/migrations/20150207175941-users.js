@@ -10,13 +10,13 @@ module.exports = {
           unique: true,
           primaryKey: true
         },
-        rid: {
+        roomId: {
           type: DataTypes.UUID,
           references: 'Rooms',
           referencesKey: 'id',
           allowNull: true
         },
-        fbid: {
+        fbId: {
           type: DataTypes.STRING,
           unique: true,
           allowNull: false
