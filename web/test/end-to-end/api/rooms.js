@@ -1,4 +1,3 @@
-process.env.NODE_ENV = 'test';
 var 
   assert = require('assert'),
   should = require('should'),
@@ -70,7 +69,6 @@ describe('Joining a room', function(){
             .expect(200)
             .expect(function(res){
               //TODO: break this up
-              console.log(res.body)
               res.body.success.should.equal(true);
               res.body.room.name.should.equal(roomData.name);
               res.body.room.maxPlayers.should.equal(roomData.maxPlayers);
@@ -91,7 +89,7 @@ describe('Joining a room', function(){
   });
 });
 
-describe('Getter room details', function(){
+describe('Getting room details', function(){
   before(function(done) {
     apiHelper.resetDb(done);
   });
