@@ -1,9 +1,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/bg_repeating">
+    style="@style/ActivityBase">
 
     <TextView
         android:id="@+id/label"
@@ -30,17 +28,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/white_card"
-                android:layout_width="@dimen/max_card_size"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/card_margin"
-                android:gravity="left"
-                android:padding="@dimen/card_padding"
-                android:text="Dead parents."
-                android:textAllCaps="false"
-                android:maxWidth="@dimen/max_card_size"
-                android:background="@drawable/card_background"/>
+            <include layout="@layout/white_card"/>
 
         </LinearLayout>
     </HorizontalScrollView>

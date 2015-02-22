@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -30,26 +31,8 @@ public class Game extends ActionBarActivity {
     }
 
     protected void addCardButton(ViewGroup layout, String cardText) {
-
-        Button button = new Button(this);
-
-        button.setBackgroundResource(R.drawable.card_background);
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                (int)getResources().getDimensionPixelOffset(R.dimen.max_card_size),
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                1.0f);
-        int card_margin = (int) getResources().getDimension(R.dimen.card_margin);
-        params.setMargins(card_margin, card_margin, card_margin, card_margin);
-        button.setLayoutParams(params);
-        button.setGravity(Gravity.LEFT);
-
-        int card_padding = (int) getResources().getDimensionPixelOffset(R.dimen.card_padding);
-        button.setPadding(card_padding,card_padding,card_padding,card_padding);
-        button.setMaxWidth((int) getResources().getDimensionPixelOffset(R.dimen.max_card_size));
-        button.setAllCaps(false);
+        Button button = (Button)this.getLayoutInflater().inflate(R.layout.white_card,layout,false);
         button.setText(cardText);
-
         layout.addView(button);
     }
 
