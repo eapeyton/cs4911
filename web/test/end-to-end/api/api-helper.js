@@ -8,10 +8,7 @@ var
 
 module.exports = {
   resetDb : function(done){
-    if(fs.existsSync('db.test.sqlite')){
-      fs.unlinkSync('db.test.sqlite');
-    }
-    models.sequelize.sync({logging: false}).complete(function(err) {
+    models.sequelize.sync({force:true, logging:false}).complete(function(err) {
       if(err) done(err);
       models.User.create({
         fbToken: "testFbToken", 
@@ -36,6 +33,18 @@ module.exports = {
       user = user.dataValues;
       user.updatedAt = user.updatedAt.toJSON();
       user.createdAt = user.createdAt.toJSON();
+      callback(user);
+    });
+  },
+  createSecondUserAndRun: function(callback){
+    models.User.create({
+      fbToken: "testFbToken2", 
+      fbId: "testFbId2",
+      pic: "testPic2",
+      name: "testName2"
+    })
+    .then(function(user) {
+      testUserId = user.id;
       callback(user);
     });
   }

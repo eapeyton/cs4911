@@ -1,4 +1,3 @@
-process.env.NODE_ENV = 'test';
 var 
   assert = require('assert'),
   request = require('supertest'),
@@ -6,11 +5,12 @@ var
   apiHelper = require('./api-helper'),
   app = require('../../../app');
 
-before(function(done) {
-  apiHelper.resetDb(done);
-});
 
 describe('User', function() {
+  before(function(done) {
+    apiHelper.resetDb(done);
+  });
+
   it('should create a new user', function(done) {
     var userData = {
       "fbToken": "createTestToken", 
