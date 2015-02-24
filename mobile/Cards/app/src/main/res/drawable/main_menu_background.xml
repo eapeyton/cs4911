@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--  Non focused states
-     -->
-    <item android:state_focused="false" android:state_selected="false" android:state_pressed="false" android:drawable="@drawable/main_menu_unfocused" />
-    <item android:state_focused="false" android:state_selected="true" android:state_pressed="false" android:drawable="@drawable/main_menu_unfocused" />
-    <item android:state_focused="true" android:state_selected="false" android:state_pressed="false" android:drawable="@drawable/main_menu_unfocused" />
-    <item android:state_focused="true" android:state_selected="true" android:state_pressed="false" android:drawable="@drawable/main_menu_unfocused" />
+    <!-- Unpressed -->
+    <item android:state_pressed="false">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="5dp" />
+                    <solid android:color="@android:color/white" />
+                </shape>
+            </item>
 
-    <!--  Pressed
-     -->
-    <item android:state_pressed="true" android:drawable="@drawable/main_menu_pressed" />
+        </layer-list>
+    </item>
+
+    <!--  Pressed -->
+    <item android:state_pressed="true">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <corners android:radius="5dp" />
+                    <solid android:color="@color/pressed" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
 </selector>
