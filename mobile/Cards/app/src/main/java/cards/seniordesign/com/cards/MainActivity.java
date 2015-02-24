@@ -14,12 +14,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Typeface blendaFont = Typeface.createFromAsset(getAssets(), "Blenda.otf");
-        TextView hello = (TextView) findViewById(R.id.helloworld);
-        hello.setTypeface(blendaFont);
+        TextView splashText = (TextView) findViewById(R.id.splash_text);
+        splashText.setTypeface(blendaFont);
     }
 
     public void goToGame(View view) {
         Intent intent = new Intent(this, Game.class);
+        startActivity(intent);
+    }
+
+    public void goToLobby(View view) {
+        Intent intent = new Intent(this, Lobby.class);
         startActivity(intent);
     }
 

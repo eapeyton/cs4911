@@ -24,6 +24,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cards.seniordesign.com.cards.MainActivity" />
         </activity>
+        <activity
+            android:name=".Lobby"
+            android:label="@string/title_activity_lobby"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cards.seniordesign.com.cards.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

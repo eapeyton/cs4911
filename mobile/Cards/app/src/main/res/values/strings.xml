@@ -19,5 +19,14 @@
         <item>The South.</item>
         <item>An icepick lobotomy.</item>
     </string-array>
+    <string-array name="drawers">
+        <item>Lobby</item>
+        <item>Editor</item>
+        <item>Settings</item>
+        <item>About</item>
+    </string-array>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="title_activity_lobby">Lobby</string>
 
 </resources>
