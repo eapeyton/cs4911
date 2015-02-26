@@ -7,7 +7,19 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/lobby_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"/>
+        </ScrollView>
+
+    </FrameLayout>
 
     <ListView
         android:id="@+id/nav_drawer"

@@ -7,4 +7,5 @@
     <dimen name="card_padding">20dp</dimen>
     <dimen name="menu_margin">4dp</dimen>
     <dimen name="game_card_corner">15dp</dimen>
+    <dimen name="lobby_item_height">100dp</dimen>
 </resources>
