@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./web/bin/www"
+    "start": "node ./web/bin/www",
+    "test": "NODE_ENV=test mocha 'web/test/**/*.js' --timeout 5000"
   },
   "dependencies": {
     "body-parser": "~1.10.2",
@@ -27,5 +28,10 @@
   "engines": {
     "node": "0.10.x",
     "npm": "2.4.x"
+  },
+  "devDependencies": {
+    "mocha": "^2.1.0",
+    "should": "^5.0.1",
+    "supertest": "^0.15.0"
   }
 }

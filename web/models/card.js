@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
       unique: true,
       primaryKey: true
     },
-    uid: {
+    userId: {
       type: DataTypes.UUID,
       references: 'Users',
       referencesKey: 'id',
@@ -19,8 +19,12 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Card.belongsTo(models.User, { foreignKey: 'uid' });
-        Card.hasMany(models.Vote, { foreignKey: 'cid' });
+        Card.belongsTo(models.User, { foreignKey: 'userId' });
+        Card.hasMany(models.Vote, { foreignKey: 'cardId' });
+        Card.hasMany(models.Round, { foreignKey: 'blackCard' });
+        Card.hasMany(models.Round, { foreignKey: 'winningCard' });
+        Card.hasMany(models.PlayedCard, { foreignKey: 'cardId' });
+        Card.hasMany(models.Hand, { foreignKey: 'cardId' });
       }
     }
   });

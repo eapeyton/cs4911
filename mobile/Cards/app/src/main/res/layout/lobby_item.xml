@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/lobby_item_height"
+    android:textColor="@android:color/white"
+    android:text="This is a lobby. 8/10 Players"
+    android:gravity="bottom|right"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:layout_marginBottom="1dp"
+    android:padding="2dp"
+    android:lineSpacingMultiplier="1.1"
+    android:textSize="25sp"/>

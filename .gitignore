@@ -1,1 +1,12 @@
 node_modules
+db.test.sqlite
+db.development.sqlite
+
+# Android Studio 
+
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build

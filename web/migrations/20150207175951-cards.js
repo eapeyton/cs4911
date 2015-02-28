@@ -10,7 +10,7 @@ module.exports = {
           unique: true,
           primaryKey: true
         },
-        uid: {
+        userId: {
           type: DataTypes.UUID,
           references: 'Users',
           referencesKey: 'id',
