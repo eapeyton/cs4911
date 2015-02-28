@@ -1,4 +1,6 @@
 node_modules
+db.test.sqlite
+db.development.sqlite
 
 # Android Studio 
 
