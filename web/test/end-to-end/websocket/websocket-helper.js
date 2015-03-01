@@ -17,13 +17,13 @@ var options ={
 };
 
 module.exports = {
-  createClients: function(done){
+  createClients: function(){
     return new Promise(function(resolve, reject){
       dbReset()
       .then(createClientAndCreateRoom)
       .then(createNextClientAndJoinRoom)
       .then(createNextClientAndJoinRoom)
-      .finally(done);
+      .then(resolve)
     })
   },
 
@@ -44,6 +44,9 @@ module.exports = {
 
   createCards: function(){
     //todo create cards
+    return new Promise(function(resolve, reject){
+      resolve();
+    });
   },
 
   clientWaitFor: function(client, msg){

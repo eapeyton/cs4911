@@ -8,7 +8,8 @@ var
 
 describe("'setup socket for user'",function(){
   before(function(done) {
-    websocketHelper.createClients(done);
+    websocketHelper.createClients()
+    .finally(done);
   });
 
   it('should setup socket and notify others in the room', function(done){
@@ -25,7 +26,9 @@ describe("'setup socket for user'",function(){
 
 describe("'start game'",function(){
   before(function(done) {
-    websocketHelper.createClients(done);
+    websocketHelper.createCards()
+    .then(websocketHelper.createCards)
+    .finally(done);
   });
 
   it('broadcast "host started" with hand ids, black card, and who the judge is', function(done){
