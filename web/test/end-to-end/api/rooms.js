@@ -25,7 +25,6 @@ describe('Creating a room', function() {
         .expect(200)
         .expect(function(res){
           //TODO: break this up
-          console.log("room create=", res.body);
           res.body.success.should.equal(true);
           res.body.room.name.should.equal(roomData.name);
           res.body.room.maxPlayers.should.equal(roomData.maxPlayers);
@@ -69,7 +68,6 @@ describe('Joining a room', function(){
             .expect(200)
             .expect(function(res){
               //TODO: break this up
-              console.log("room join=", res.body);
               res.body.success.should.equal(true);
               res.body.room.name.should.equal(roomData.name);
               res.body.room.maxPlayers.should.equal(roomData.maxPlayers);
@@ -109,14 +107,12 @@ describe('Getting room details', function(){
         .expect(200)
         .expect(function(res){
           roomId = res.body.room.id;
-          console.log('roomId=', roomId);
         })
         .end(function(room) {
           request(app).get('/rooms/'+roomId)
             .expect('Content-Type', /json/)
             .expect(200)
             .expect(function(res){
-              console.log("room get=", res.body);
               res.body.room.name.should.equal(roomData.name);
               res.body.room.maxPlayers.should.equal(roomData.maxPlayers);
               res.body.Users[0].fbId.should.equal('testFbId');
@@ -133,9 +129,6 @@ describe('Getting room details', function(){
       .expect('Content-Type', /json/)
       .expect(200)
       .expect(function(res) {
-        console.log("room list=", res.body);
-        console.log("Users=", res.body.rooms[0].Users);
-
         if(!('rooms' in res.body)) return "room array not present";
       })
       .end(done);

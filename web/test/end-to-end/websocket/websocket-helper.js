@@ -41,6 +41,10 @@ module.exports = {
       );
     });
   }
+
+  createCards: function(){
+    //todo create cards
+  }
 }
 
 function dbReset(){
