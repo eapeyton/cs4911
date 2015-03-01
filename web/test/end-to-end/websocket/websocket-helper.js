@@ -43,9 +43,15 @@ module.exports = {
   },
 
   createCards: function(){
-    //todo create cards
     return new Promise(function(resolve, reject){
-      resolve();
+      var options = {
+        url: 'http://localhost:3000/test/cards'
+      };
+      var callback = function(error, response){
+        resolve();
+      }
+
+      request.post(options, callback);  
     });
   },
 
@@ -60,15 +66,15 @@ module.exports = {
 
 function dbReset(){
   return new Promise(function(resolve, reject){
-      var options = {
-        url: 'http://localhost:3000/test/reset'
-      };
-      var callback = function(error, response){
-        resolve();
-      }
+    var options = {
+      url: 'http://localhost:3000/test/reset'
+    };
+    var callback = function(error, response){
+      resolve();
+    }
 
-      request.post(options, callback);  
-    });
+    request.post(options, callback);  
+  });
 }
 
 function createClientAndCreateRoom(){

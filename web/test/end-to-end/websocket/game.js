@@ -16,8 +16,9 @@ describe("'setup socket for user'",function(){
     websocketHelper.connectClients()
     .spread(function(client1, client2, client3){
       for(var i=0; i<3; i++){
-        client1.players[i].name.should.equal('testName'+(i+1));
-        client1.players[i].pic.should.equal('testPic'+(i+1));
+        client1.players.some(function(element){
+          return element.name === 'testName'+ (i+1);
+        }).should.equal(true);
       }
       done();
     });
@@ -26,8 +27,8 @@ describe("'setup socket for user'",function(){
 
 describe("'start game'",function(){
   before(function(done) {
-    websocketHelper.createCards()
-    .then(websocketHelper.createClients)
+    websocketHelper.createClients()
+    .then(websocketHelper.createCards)
     .finally(done);
   });
 
