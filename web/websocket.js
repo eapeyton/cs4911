@@ -3,19 +3,20 @@ var WebSocketHandler = function(io) {
     socket.emit('message', 'hello world');
 
     socket.on('setup socket for user', function(user){
-      socket.room = user.roomId;
+      socket.roomId = user.roomId;
       socket.join(user.roomId);
       var newUser = {
         id: user.id,
         name: user.name,
         pic: user.pic
       }
-      socket.broadcast.to(user.roomId).emit('user joined', newUser);
+      socket.broadcast.to(socket.roomId).emit('user joined', newUser);
       socket.emit('user joined', newUser);
     });
     
     socket.on('start game', function(msg) {
-      socket.emit('message', 'host started');
+      socket.broadcast.to(socket.roomId).emit('host started game', "started in room-"+socket.roomId);
+      socket.emit('host started game', "started in room-"+socket.roomId);
       /*
         -get first Judge
         -get a Black Card

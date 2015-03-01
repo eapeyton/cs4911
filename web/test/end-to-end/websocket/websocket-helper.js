@@ -40,10 +40,18 @@ module.exports = {
         }
       );
     });
-  }
+  },
 
   createCards: function(){
     //todo create cards
+  },
+
+  clientWaitFor: function(client, msg){
+    return new Promise(function(resolve, reject){
+      client.on(msg, function(data){
+        resolve(data)
+      });
+    });
   }
 }
 
