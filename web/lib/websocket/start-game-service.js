@@ -29,36 +29,42 @@ StartGameService.prototype.startGame = function(){
 
   function getFirstJudge(){
     return new Promise(function(resolve, reject){
+      //todo - actually implement
       resolve();
     });
   }
 
   function getBlackCard(response){
     return new Promise(function(resolve, reject){
+      //todo - actually implement
       resolve();
     });
   }
 
   function createGame(response){
     return new Promise(function(resolve, reject){
+      //todo - actually implement
       resolve();
     });
   }
 
   function createRound(response){
     return new Promise(function(resolve, reject){
+      //todo - actually implement
       resolve();
     });
   }
 
   function createHands(response){
     return new Promise(function(resolve, reject){
+      //todo - actually implement
       resolve();
     });
   }
 
   function createPlayerStates(response){
     return new Promise(function(resolve, reject){
+      //todo - actually implement
       resolve({
         roomId: socket.roomId,
         userId: socket.userId

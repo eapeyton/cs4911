@@ -27,7 +27,7 @@ describe("'setup socket for user'",function(){
 describe("'start game'",function(){
   before(function(done) {
     websocketHelper.createCards()
-    .then(websocketHelper.createCards)
+    .then(websocketHelper.createClients)
     .finally(done);
   });
 
