@@ -8,6 +8,7 @@ var userHelper = require('./helpers/user-helper');
 
 //login
 router.post('/login', function(req, res) {
+  console.log("\n\n\n",req.body)
   var token = req.body.user.fbToken
 
   models.User.find({
