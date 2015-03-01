@@ -2,9 +2,8 @@ var StartGameService = require('./lib/websocket/start-game-service');
 
 var WebSocketHandler = function(io) {
   io.on('connection', function(socket) {
-    socket.emit('message', 'hello world');
-
     socket.on('setup socket for user', function(user){
+      //todo authenticate user
       socket.roomId = user.roomId;
       socket.userId = user.id
       socket.join(user.roomId);
@@ -17,7 +16,7 @@ var WebSocketHandler = function(io) {
       socket.emit('user joined', newUser);
     });
     
-    socket.on('start game', function(msg) {
+    socket.on('start game', function() {
       /*
         -get first Judge
         -get a Black Card
@@ -28,7 +27,7 @@ var WebSocketHandler = function(io) {
         -create judge's PlayerState with state "waiting for players"
         -broadcast  "new game" state with hand ids, black card, and who the judge is. (front end will get players cards through hand ids with token)
       */
-      var startGameService = new StartGameService(socket, msg);
+      var startGameService = new StartGameService(socket);
       startGameService.startGame();
     });
     socket.on('play card', function(msg) {

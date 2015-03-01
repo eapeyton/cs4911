@@ -3,9 +3,8 @@ var
   Promise = require('bluebird');
   models = require('../../models');
 
-function StartGameService(socket, msg){
+function StartGameService(socket){
   this.socket = socket;
-  this.msg = msg;
 }
 /*
   -get first Judge
