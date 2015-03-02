@@ -24,12 +24,6 @@ module.exports = {
           allowNull: false,
           unique: 'userGameIndex'
         },
-        handId: {
-          type: DataTypes.UUID,
-          references: 'Hands',
-          referencesKey: 'id',
-          allowNull: false,
-        },
         state: DataTypes.STRING,
         points: DataTypes.INTEGER,
         place: DataTypes.INTEGER,
