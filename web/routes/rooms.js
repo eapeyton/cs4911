@@ -16,12 +16,20 @@ router.post('/', authorize, function(req, res) {
         .then(function(host){
           models.Judge.create({userId: req.authorizedUser.id, roomId: room.id, place: 1})
           .then(function(judge){
-            res.json({
-              success: true, 
-              room: room, 
-              user: req.authorizedUser,
-              host: host,
-              judges: [judge]
+            models.User.findAll({ 
+              where: {roomId: room.id},
+              attributes: ['id', 'roomId', 'name', 'pic', 'fbId']
+            })
+            .then(function(users){
+              res.json({
+                success: true, 
+                room: room,
+                host: host,
+                judges: [judge],
+                Users: users
+              });
+            }).catch(function(errors){
+              res.json({success: false, errors: errors});
             });
           })
           .catch(function(errors){
@@ -44,7 +52,12 @@ router.post('/', authorize, function(req, res) {
 
 //list all rooms
 router.get('/', function(req, res) {
-  models.Room.all()
+  models.Room.all({
+    include:[{
+      model: models.User,
+      attributes: ['id', 'fbId', 'name', 'pic']
+    }]
+  })
   .then(function(rooms) {
     res.json({ rooms: rooms });
   });
@@ -56,7 +69,15 @@ router.get('/:id', function(req, res) {
     where: {id: req.params.id}
   })
   .then(function(room) {
-    res.json({room: room});
+    room.getUsers({
+      attributes: ['id', 'fbId', 'name', 'pic']
+    })
+    .then(function(users){
+      res.json({
+        room: room,
+        Users: users
+      });
+    });
   });
 });
 
@@ -81,17 +102,30 @@ router.post('/join/:id', authorize, function(req, res) {
       .then(function() {
         room.getHost()
         .then(function(host){
-          room.getJudges({ where: {roomId: room.id}, order: 'place ASC' })
+          room.getJudges(
+            { order: 'place ASC' })
           .then(function(judges){
-            models.Judge.create({userId: req.authorizedUser.id, roomId: room.id, place: judges[judges.length-1].place + 1})
+            models.Judge.create({
+              userId: req.authorizedUser.id, 
+              roomId: room.id, 
+              place: judges[judges.length-1].place + 1
+            })
             .then(function(judge){
-              judges.push(judge)
-              res.json({
-                success: true, 
-                room: room, 
-                user: req.authorizedUser,
-                host: host,
-                judges: judges
+              models.User.findAll({ 
+                where: {roomId: room.id},
+                attributes: ['id', 'roomId', 'name', 'pic', 'fbId']
+              })
+              .then(function(users){
+                judges.push(judge);
+                res.json({
+                  success: true, 
+                  room: room,
+                  host: host,
+                  judges: judges,
+                  Users: users
+                });
+              }).catch(function(errors){
+                res.json({success: false, errors: errors});
               });
             })
             .catch(function(errors){

@@ -28,7 +28,6 @@ describe('Creating a room', function() {
           res.body.success.should.equal(true);
           res.body.room.name.should.equal(roomData.name);
           res.body.room.maxPlayers.should.equal(roomData.maxPlayers);
-          res.body.user.roomId.should.equal(res.body.room.id);
           res.body.host.userId.should.equal(testUser.id);
           res.body.host.roomId.should.equal(res.body.room.id);
           res.body.judges[0].userId.should.equal(testUser.id);
@@ -72,7 +71,6 @@ describe('Joining a room', function(){
               res.body.success.should.equal(true);
               res.body.room.name.should.equal(roomData.name);
               res.body.room.maxPlayers.should.equal(roomData.maxPlayers);
-              res.body.user.roomId.should.equal(res.body.room.id);
               res.body.host.userId.should.equal(testUser.id);
               res.body.host.roomId.should.equal(res.body.room.id);
               res.body.judges[0].userId.should.equal(testUser.id);
@@ -95,21 +93,34 @@ describe('Getting room details', function(){
   });
 
   it('should get a room', function(done){
-    models.Room.create({
-      name: "test room", 
-      maxPlayers: 5,
-      pic: "testPic",
-      name: "testName"
-    })
-    .then(function(room) {
-      request(app).get('/rooms/'+room.id)
+    apiHelper.getTestUserAndRun(function(testUser){
+      var roomData = {
+        name: "test room",
+        maxPlayers: 4
+      };
+      var roomId;
+      request(app).post('/rooms')
+        .set("Content-Type", "application/json")
+        .set("Authorization", "Token "+testUser.fbToken)
+        .send({"room": roomData})
         .expect('Content-Type', /json/)
         .expect(200)
         .expect(function(res){
-          res.body.room.name.should.equal(room.name);
-          res.body.room.maxPlayers.should.equal(room.maxPlayers);
+          roomId = res.body.room.id;
         })
-        .end(done);
+        .end(function(room) {
+          request(app).get('/rooms/'+roomId)
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .expect(function(res){
+              res.body.room.name.should.equal(roomData.name);
+              res.body.room.maxPlayers.should.equal(roomData.maxPlayers);
+              res.body.Users[0].fbId.should.equal('testFbId');
+              res.body.Users[0].name.should.equal('testName');
+              res.body.Users[0].pic.should.equal('testPic');
+            })
+            .end(done);
+        });
     });
   });
 
