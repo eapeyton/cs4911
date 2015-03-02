@@ -19,15 +19,61 @@ function StartGameService(socket){
 StartGameService.prototype.startGame = function(){
   var socket = this.socket;
 
-  getFirstJudge({})
+  validate()
+  .then(getFirstJudge)
   .then(getBlackCard)
   .then(createGame)
   .then(createRound)
   .then(createHands)
   .then(createPlayerStates)
-  .then(broadcastResponse);
+  .then(broadcastResponse)
+  .catch(function(errors){
+    socket.emit('error', errors);
+    reject(errors);
+  });
 
-  function getFirstJudge(response){
+  function validate(){
+    return new Promise(function(resolve, reject){
+      validateHost()
+      .then(validateGameNotStarted)
+      .then(resolve);
+    });
+
+    function validateHost(){
+      return new Promise(function(resolve, reject){
+        models.Host.find({
+          where: {roomId: socket.roomId}
+        })
+        .then(function(host){
+          if(host.userId !== socket.userId){
+            reject("user is not host");
+          }else{
+            resolve();
+          }
+        });
+      });
+    }
+
+    function validateGameNotStarted(){
+      return new Promise(function(resolve, reject){
+        models.Game.findAll({
+          where: {roomId: socket.roomId},
+          order: 'finishTime DESC'
+        })
+        .then(function(games){
+          game = games[0]
+          if(game !== undefined && game.finishTime === null){
+            reject("game is already being played");
+          }else{
+            resolve();
+          }
+        });
+      });
+    }
+  }
+
+  function getFirstJudge(){
+    var response = {};
     return new Promise(function(resolve, reject){
       models.Judge.findAll({
         where: {roomId: socket.roomId},
@@ -37,10 +83,6 @@ StartGameService.prototype.startGame = function(){
         response.judge = judges[0];
         resolve(response);
       })
-      .catch(function(errors){
-        socket.emit('error', errors);
-        reject(errors);
-      });
     });
   }
 
@@ -55,10 +97,6 @@ StartGameService.prototype.startGame = function(){
         response.blackCard = blackCard[0];
         resolve(response);
       })
-      .catch(function(errors){
-        socket.emit('error', errors);
-        reject(errors);
-      });
     });
   }
 
@@ -72,10 +110,6 @@ StartGameService.prototype.startGame = function(){
         response.game = game;
         resolve(response);
       })
-      .catch(function(errors){
-        socket.emit('error', errors);
-        reject(errors);
-      });
     });
   }
 
@@ -91,10 +125,6 @@ StartGameService.prototype.startGame = function(){
         response.round = round;
         resolve(response);
       })
-      .catch(function(errors){
-        socket.emit('error', errors);
-        reject(errors);
-      });
     });
   }
 
@@ -104,10 +134,6 @@ StartGameService.prototype.startGame = function(){
       .then(getWhiteCards)
       .then(dealCards)
       .then(resolve)
-      .catch(function(errors){
-        socket.emit('error', errors);
-        reject(errors);
-      });
 
       function getWhiteCards(players){
         return new Promise(function(resolve, reject){
@@ -157,10 +183,6 @@ StartGameService.prototype.startGame = function(){
       .then(createPlayerStates)
       .then(addStatesToResponse)
       .then(resolve)
-      .catch(function(errors){
-        socket.emit('error', errors);
-        reject(errors);
-      });
 
       function createPlayerStates(players){
         return new Promise(function(resolve, reject){
