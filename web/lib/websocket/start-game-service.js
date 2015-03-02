@@ -14,7 +14,7 @@ function StartGameService(socket){
   -create Round, state "waiting for players"
   -create players' PlayerState with state "playing"
   -create judge's PlayerState with state "waiting for players"
-  -broadcast  "new game" state with hand ids, black card, and who the judge is. (front end will get players cards through hand ids with token)
+  -broadcast  "host started game" with black card, the judge, player states, and the round
 */
 StartGameService.prototype.startGame = function(){
   var socket = this.socket;
