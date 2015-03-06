@@ -42,24 +42,13 @@ module.exports = {
     });
   },
 
-  connectClientsAndWaitForEvents: function(events){
+  waitForEvents: function(clients){
+    var events = this.events;
     return new Promise(function(resolve, reject){
-      var clients;
-
-      Promise.join(
-        connectClient(1),
-        connectClient(2),
-        connectClient(3),
-        function(client1, client2, client3){
-          client2.players = client1.players;
-          client3.players = client1.players;
-          clients = [client1, client2, client3];
-          Promise.each(events, waitForEvent)
-          .finally(function(){
-            resolve(clients);
-          });
-        }
-      );
+      Promise.each(events, waitForEvent)
+      .finally(function(){
+        resolve(clients);
+      });
 
       function waitForEvent(event){
         return new Promise(function(resolve, reject){
@@ -74,7 +63,7 @@ module.exports = {
               resolve([clients[0], clients[1], clients[2]]);
             }
           );
-          clients[event.sender].emit(event.sendKey);
+          clients[event.sender].emit(event.sendKey, event.sendMsg);
         });
       }
     });
