@@ -204,7 +204,7 @@ GameLoop.prototype.handlePlay = function() {
           }; 
 
           models.PlayerState.update(values, {
-            where: ["'gameId' = ? AND 'userId' != ?", response.game.id, ]
+            where: ['"gameId" = ? AND "userId" != ?', response.game.id, response.round.judge]
           }).then(function(count, obj) {
             resolve();
           });
