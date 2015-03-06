@@ -56,7 +56,7 @@ StartGameService.prototype.startGame = function(){
 
     function validateGameNotStarted(){
       return new Promise(function(resolve, reject){
-        console.log("\n\n\ntrying to get games", models.Game.attributes.finishTime);
+        console.log("\n\n\ntrying to get games");
         models.Game.findAll({
           where: {roomId: socket.roomId},
           order: 'finishTime DESC'
