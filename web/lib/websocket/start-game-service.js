@@ -56,11 +56,13 @@ StartGameService.prototype.startGame = function(){
 
     function validateGameNotStarted(){
       return new Promise(function(resolve, reject){
+        console.log("\n\n\ntrying to get games", models.Game);
         models.Game.findAll({
           where: {roomId: socket.roomId},
           order: 'finishTime DESC'
         })
         .then(function(games){
+          console.log("games=", games);
           game = games[0]
           if(game !== undefined && game.finishTime === null){
             reject("game is already being played");
