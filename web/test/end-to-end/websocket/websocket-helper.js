@@ -9,7 +9,7 @@ var
 var should = require('should');
 var io = require('socket.io-client');
 
-var socketURL = 'http://0.0.0.0:3000';
+var socketURL = 'https://ah-jeez.herokuapp.com';
 
 var options ={
   transports: ['websocket'],
@@ -72,7 +72,7 @@ module.exports = {
   createCards: function(){
     return new Promise(function(resolve, reject){
       var options = {
-        url: 'http://localhost:3000/test/cards'
+        url: socketURL+'/test/cards'
       };
       var callback = function(error, response){
         resolve();
@@ -100,7 +100,7 @@ module.exports = {
     function getClientsCards(num){
       return new Promise(function(resolve, reject){
         var options = {
-          url: 'http://localhost:3000/hands',
+          url: socketURL+'/hands',
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Token testFbToken" + num
@@ -127,7 +127,7 @@ function clientWaitFor(client, msg){
 function dbReset(){
   return new Promise(function(resolve, reject){
     var options = {
-      url: 'http://localhost:3000/test/reset'
+      url: socketURL+'/test/reset'
     };
     var callback = function(error, response){
       resolve();
@@ -147,7 +147,7 @@ function createClientAndCreateRoom(){
   function createRoom(user){
     return new Promise(function(resolve, reject){
       var options = {
-        url: 'http://localhost:3000/rooms',
+        url: socketURL+'/rooms',
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Token "+user.fbToken
@@ -180,7 +180,7 @@ function createNextClientAndJoinRoom(roomResponse){
   function joinRoom(user){
     return new Promise(function(resolve, reject){
       var options = {
-        url: 'http://localhost:3000/rooms/join/'+roomResponse.room.id,
+        url: socketURL+'/rooms/join/'+roomResponse.room.id,
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Token "+user.fbToken
@@ -198,7 +198,7 @@ function createNextClientAndJoinRoom(roomResponse){
 function getClient(num){
   return new Promise(function(resolve, reject){
     var options = {
-      url: 'http://localhost:3000/users/login',
+      url: socketURL+'/users/login',
       headers: {
         'content-type': 'application/json'
       },
@@ -220,7 +220,7 @@ function getClient(num){
 function createClient(num){
   return new Promise(function(resolve, reject){
     var options = {
-      url: 'http://localhost:3000/users/login',
+      url: socketURL+'/users/login',
       headers: {
         'content-type': 'application/json'
       },
