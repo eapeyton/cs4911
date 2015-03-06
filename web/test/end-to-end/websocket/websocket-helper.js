@@ -34,6 +34,7 @@ module.exports = {
         connectClient(2),
         connectClient(3),
         function(client1, client2, client3){
+          console.log("\n\n\nclients connected");
           client2.players = client1.players;
           client3.players = client1.players;
           resolve([client1, client2, client3]);
@@ -52,11 +53,13 @@ module.exports = {
 
       function waitForEvent(event){
         return new Promise(function(resolve, reject){
+          console.log("waiting for...", event);
           Promise.join(
             clientWaitFor(clients[0], event.resKey),
             clientWaitFor(clients[1], event.resKey),
             clientWaitFor(clients[2], event.resKey),
             function(client1Res, client2Res, client3Res){
+              console.log("completed", event);
               clients[0].lastResponse = client1Res;
               clients[1].lastResponse = client2Res;
               clients[2].lastResponse = client3Res;
