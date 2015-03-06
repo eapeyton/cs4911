@@ -26,7 +26,7 @@ GameLoop.prototype.getCurrentRound = function(game) {
   var self = this;
   return new Promise(function(resolve, reject) {
     models.Round.find({
-      where: ["gameId = ? AND state != ?", game.id, "over"]
+      where: ['"gameId" = ? AND "state" != ?', game.id, "over"]
     })
     .then(function(round) {
       self.round = round;
@@ -204,7 +204,7 @@ GameLoop.prototype.handlePlay = function() {
           }; 
 
           models.PlayerState.update(values, {
-            where: ["gameId = ? AND userId != ?", response.game.id, ]
+            where: ['"gameId" = ? AND "userId" != ?", 'esponse.game.id, ]
           }).then(function(count, obj) {
             resolve();
           });
