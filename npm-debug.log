@@ -9,7 +9,7 @@
 8 verbose unsafe-perm in lifecycle true
 9 info web@0.0.0 Failed to exec test-socket script
 10 verbose stack Error: web@0.0.0 test-socket: `mocha 'web/test/end-to-end/websocket/**/*.js' --timeout 20000`
-10 verbose stack Exit status 4
+10 verbose stack Exit status 2
 10 verbose stack     at EventEmitter.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/lifecycle.js:213:16)
 10 verbose stack     at EventEmitter.emit (events.js:98:17)
 10 verbose stack     at ChildProcess.<anonymous> (/usr/local/lib/node_modules/npm/lib/utils/spawn.js:14:12)
@@ -24,7 +24,7 @@
 16 error npm  v2.4.1
 17 error code ELIFECYCLE
 18 error web@0.0.0 test-socket: `mocha 'web/test/end-to-end/websocket/**/*.js' --timeout 20000`
-18 error Exit status 4
+18 error Exit status 2
 19 error Failed at the web@0.0.0 test-socket script 'mocha 'web/test/end-to-end/websocket/**/*.js' --timeout 20000'.
 19 error This is most likely a problem with the web package,
 19 error not with npm itself.

@@ -58,7 +58,8 @@ StartGameService.prototype.startGame = function(){
       return new Promise(function(resolve, reject){
         console.log("\n\n\ntrying to get games");
         models.Game.findAll({
-          where: {roomId: socket.roomId}
+          where: {roomId: socket.roomId},
+          order: '"finishTime" DESC'
         })
         .then(function(games){
           console.log("games=");
