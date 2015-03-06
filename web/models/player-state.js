@@ -20,12 +20,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       unique: 'userGameIndex'
     },
-    handId: {
-      type: DataTypes.UUID,
-      references: 'Hands',
-      referencesKey: 'id',
-      allowNull: false,
-    },
     state: DataTypes.STRING,
     points: DataTypes.INTEGER,
     place: DataTypes.INTEGER,
@@ -36,7 +30,6 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         PlayerState.belongsTo(models.User, { foreignKey: 'userId' });
         PlayerState.belongsTo(models.Game, { foreignKey: 'gameId' });
-        PlayerState.belongsTo(models.Hand, { foreignKey: 'handId' });
       }
     }
   });

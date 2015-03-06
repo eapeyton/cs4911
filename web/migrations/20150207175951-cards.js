@@ -14,7 +14,7 @@ module.exports = {
           type: DataTypes.UUID,
           references: 'Users',
           referencesKey: 'id',
-          allowNull: false
+          allowNull: true
         },
         text: DataTypes.STRING,
         type: DataTypes.STRING,

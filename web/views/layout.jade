@@ -3,5 +3,16 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src="/socket.io/socket.io.js")
+    script(type='text/javascript').
+      var socket = io();
+      socket.on('message', function(msg) {
+        console.log(msg);
+      });
+
+      socket.on('pong', function(msg) {
+        console.log('pong');
+      });
+
   body
     block content

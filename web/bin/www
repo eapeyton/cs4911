@@ -8,6 +8,8 @@ var app = require('../app');
 var debug = require('debug')('web:server');
 var http = require('http');
 var db = require('../models');
+var socketio = require('socket.io');
+var ws = require('../websocket');
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +22,7 @@ app.set('port', port);
  * Create HTTP server and listen
  */
 var server;
+var io;
 db.sequelize.sync().complete(function(err) {
   if (err) {
     throw err;
@@ -28,6 +31,8 @@ db.sequelize.sync().complete(function(err) {
     server.listen(port);
     server.on('error', onError);
     server.on('listening', onListening);
+    io = socketio(server);
+    wshandler = ws(io)
   }
 })
 
