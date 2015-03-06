@@ -1,5 +1,5 @@
 var StartGameService = require('./lib/websocket/start-game-service');
-var RunGameLoop = require('./lib/websocket/run-game-loop')
+var GameLoop = require('./lib/websocket/game-loop')
 
 var WebSocketHandler = function(io) {
   io.on('connection', function(socket) {
@@ -43,8 +43,8 @@ var WebSocketHandler = function(io) {
         else
         -just broadcast that this player played a card
       */
-      var GameLoop = new GameLoop(socket, msg);
-      GameLoop.handlePlay();
+      var gameLoop = new GameLoop(socket, msg);
+      gameLoop.handlePlay();
     });
 
     socket.on('time up for card playing',function(msg) {
@@ -71,8 +71,8 @@ var WebSocketHandler = function(io) {
         - update Game finnishTime
         broadcast "game review" state with winner and stats
       */
-     var GameLoop = new GameLoop(socket, msg);
-     GameLoop.handleJudgement();
+     var gameLoop = new GameLoop(socket, msg);
+      gameLoop.handleJudgement();
     });
 
     socket.on('time up for judge', function(msg) {

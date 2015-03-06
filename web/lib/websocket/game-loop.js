@@ -6,39 +6,38 @@ var
 function GameLoop(socket, msg) {
   this.socket = socket;
   this.msg = msg;
-  this.round = null;
-  this.judge = null;
-  this.game = null;
 }
 
-GameLoop.prototype.getGameId = function() {
+GameLoop.prototype.getGame = function() {
   var self = this;
   return new Promise(function(resolve, reject) {
     models.Game.find({
       where: {
-        roomId: room,
+        roomId: self.socket.roomId,
         finishTime: null
       } 
     }).then(function(game) {
-      self.game = game.id; 
-      resolve();
+      resolve(game);
     }); 
   });
 }
 
-GameLoop.prototype.getCurrentRoundAndJudge = function() {
+GameLoop.prototype.getCurrentRound = function(game) {
   var self = this;
   return new Promise(function(resolve, reject) {
     models.Round.find({
       where: {
-        gameId: game,
+        gameId: game.id,
         state: {
           $not: "over" 
         }
       }
     }).then(function(round) {
-      self.round = round.id; 
-      self.judge = round.judge;
+      self.round = round;
+      resolve({
+        round: round,
+        game: game
+      });
     }); 
   });
 }
@@ -63,14 +62,14 @@ GameLoop.prototype.handlePlay = function() {
   var self = this;
 
   var socket = self.socket;
-  var user = socket.userId;
-  var room = socket.roomId;
+  var userId = socket.userId;
+  var roomId = socket.roomId;
 
   var msg = self.msg;
-  var card = msg.card;
+  var cardId = msg.cardId;
 
-  self.getGameId()
-  .then(self.getCurrentRoundAndJudge)
+  self.getGame()
+  .then(self.getCurrentRound)
   .then(createPlayedCard)
   .then(updateHandToPlayed)
   .then(updatePlayerStateToWaiting)
@@ -82,19 +81,20 @@ GameLoop.prototype.handlePlay = function() {
   });
 
   
-  function createPlayedCard() {
+  function createPlayedCard(response) {
     return new Promise(function(resolve, reject) {
       models.PlayedCard.create({
-        userId: user,
-        cardId: card,
-        roundId: round
+        userId: userId,
+        cardId: cardId,
+        roundId: response.round.id
       }).then(function(playedCard) {
-        resolve();
+        response.playedCard = playedCard;
+        resolve(response);
       })
     });
   }
 
-  function updateHandToPlayed() {
+  function updateHandToPlayed(response) {
     return new Promise(function(resolve, reject) {
       var values = {
         played: true 
@@ -102,22 +102,25 @@ GameLoop.prototype.handlePlay = function() {
 
       models.Hand.find({
         where: {
-          cardId: card,
-          gameId: game,
-          userId: user,
+          cardId: cardId,
+          gameId: response.game.id,
+          userId: userId,
           played: false
         } 
       }).then(function(hand) {
-        models.Hand.update(values, {
-          where: {id: hand}
-        }).then(function(count, obj) {
-          resolve();
-        });
+        if(hand === null){
+          reject("card is not in hand or already played")
+        }else{
+          hand.updateAttributes(values)
+          .then(function(){
+            resolve(response)
+          })
+        }
       });
     });
   }
 
-  function updatePlayerStateToReady() {
+  function updatePlayerStateToReady(response) {
     return new Promise(function(resolve, reject) {
       var values = {
         state: "waiting for players"
@@ -125,35 +128,44 @@ GameLoop.prototype.handlePlay = function() {
 
       models.PlayerState.update(values, {
         where: {
-          gameId: game,
-          userId: user
+          gameId: response.game.id,
+          userId: userId
         } 
       }).then(function(count, obj) {
-        resolve(); 
+        resolve(response); 
       });
     });
   }
 
-  function updateGameState() {
-    var response = {};
+  function updateGameState(response) {
     return new Promise(function(resolve, reject) {
-      models.PlayerState.findAll({
-        where: {gameId: socket.roomId}
-      })
+      getPlayerStates()
       .then(checkAllPlayersForPlay)
       .then(adjustGameState)
-      .then(function(responseKey, response) {
-        resolve(responseKey, response);
+      .finally(function(){
+        resolve(response);
       });
+
+      function getPlayerStates(){
+        return new Promise(function(resolve, reject) {
+          models.PlayerState.findAll({
+            where: {
+              gameId: response.game.id
+            }
+          }).then(function(playerStates){
+            resolve(playerStates);
+          });
+        });
+      }
       
       function checkAllPlayersForPlay(playerStates) {
-        var allPlayed = true;
         return new Promise(function(resolve, reject) {
           for (var i = 0; i < playerStates.length; i++) {
             if (playerStates[i].state !== "waiting for players") {
               resolve(false);
             }
-          }  
+          }
+          resolve(true);
         });
       }
 
@@ -161,16 +173,14 @@ GameLoop.prototype.handlePlay = function() {
         return new Promise(function(resolve, reject) {
           if (allPlayed) {
             updateRoundStateToJudge()      
-            .then(updatePlayersPlayerStatesToJudge)
-            .then(updateJudgesPlayerStatetoJudge)
+            .then(updatePlayersPlayerStates)
+            .then(updateJudgesPlayerState)
             .then(getPlayedCardsForRound)
-            .then(function(responseKey, response) {
-              resolve(responseKey, response);
-            });
+            .then(resolve);
           } else {
-            var responseKey = 'user has played';
-            var response = {user: user};
-            resolve(responseKey, response);
+            response.key = "user has played";
+            response.user = user;
+            resolve();
           }
         });
       }
@@ -183,7 +193,7 @@ GameLoop.prototype.handlePlay = function() {
 
           models.Round.update(values, {
             where: {
-              id: round
+              id: response.round.id
             } 
           }).then(function(count, obj) {
             resolve();
@@ -191,7 +201,7 @@ GameLoop.prototype.handlePlay = function() {
         });
       }
 
-      function updatePlayersPlayerStatesToJudge() {
+      function updatePlayersPlayerStates() {
         return new Promise(function(resolve, reject) {
           var values = {
             state: "waiting for judge" 
@@ -199,10 +209,10 @@ GameLoop.prototype.handlePlay = function() {
 
           models.PlayerState.update(values, {
             where: {
-              id: {
-                $not: judge              
+              userId: {
+                $not: response.round.judge             
               },
-              gameId: game
+              gameId: response.game.id
             }
           }).then(function(count, obj) {
             resolve();
@@ -210,7 +220,7 @@ GameLoop.prototype.handlePlay = function() {
         }); 
       }
 
-      function updateJudgesPlayerStateToJudge() {
+      function updateJudgesPlayerState() {
         return new Promise(function(resolve, reject) {
           var values = {
             state: "judging" 
@@ -218,7 +228,8 @@ GameLoop.prototype.handlePlay = function() {
 
           models.PlayerState.update(values, {
             where: {
-              id: judge
+              userId: judge,
+              gameId: response.game.id
             } 
           }).then(function(count, obj) {
             resolve();
@@ -230,20 +241,25 @@ GameLoop.prototype.handlePlay = function() {
         return new Promise(function(resolve, reject) {
           models.PlayedCard.findAll({
             where: {
-              roundId: round 
+              roundId: response.round.id,
+              include:[{
+                model: models.Card,
+                attributes: ['id', 'userId', 'type', 'text']
+              }]
             } 
           }).then(function(playedCards) {
-            var responseKey = 'waiting for judge';
-            var response = {playedCards: playedCards};
-            resolve(responseKey, response);
+            response.key = 'waiting for judge';
+            response.playedCards = playedCards;
+            resolve();
           });
         });
       }
     });
   }
 
-  function broadcastResponse(responseKey, response) {
-    socket.broadcast.to(socket.roomId).emit(responseKey, response);
+  function broadcastResponse(response) {
+    socket.broadcast.to(socket.roomId).emit(resonse.key, response);
+    socket.emit(response.key, response);
   }
 }
 
@@ -290,7 +306,7 @@ GameLoop.prototype.handleJudgement = function() {
     reject(errors)
   });
 
-  function updateRoundWithJudgement() {
+  function updateRoundWithJudgement(response) {
     return new Promise(function(resolve,reject) {
       var values = {
         winner: winner,
@@ -300,15 +316,15 @@ GameLoop.prototype.handleJudgement = function() {
 
       models.Round.update({
         where: {
-          id: self.round 
+          id: response.round.id
         }
       }).then(function(count, obj) {
-        resolve();
+        resolve(response);
       });
     });
   }
 
-  function updatePlayerStatesWithJudgement() {
+  function updatePlayerStatesWithJudgement(response) {
     return new Promise(function(resolve, reject) {
       var values = {
         state: "round review" 
@@ -316,16 +332,15 @@ GameLoop.prototype.handleJudgement = function() {
 
       models.PlayerState.update(values, {
         where: {
-          gameId: self.game
+          gameId: response.game.id
         } 
       }).then(function(count, obj) {
-        resolve();
+        resolve(response);
       });
     }); 
   }
   
-  function getWinningCard() {
-    var response = {};
+  function getWinningCard(response) {
     return new Promise(function(resolve, reject) {
       models.Card.find({
         where: {
@@ -352,6 +367,7 @@ GameLoop.prototype.handleJudgement = function() {
   }
 
   function broadcastResponse(response) {
-    socket.broadcast.to(socket.roomId).emit('round review', response);
+    socket.broadcast.to(socket.roomId).emit(resonse.key, response);
+    socket.emit(response.key, response);
   }
 }

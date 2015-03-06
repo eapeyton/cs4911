@@ -27,7 +27,7 @@ module.exports = {
     })
   },
 
-  connectClients: function(room){
+  connectClients: function(){
     return new Promise(function(resolve, reject){
       Promise.join(
         connectClient(1),
@@ -39,6 +39,44 @@ module.exports = {
           resolve([client1, client2, client3]);
         }
       );
+    });
+  },
+
+  connectClientsAndWaitForEvents: function(events){
+    return new Promise(function(resolve, reject){
+      var clients;
+
+      Promise.join(
+        connectClient(1),
+        connectClient(2),
+        connectClient(3),
+        function(client1, client2, client3){
+          client2.players = client1.players;
+          client3.players = client1.players;
+          clients = [client1, client2, client3];
+          Promise.each(events, waitForEvent)
+          .finally(function(){
+            resolve(clients);
+          });
+        }
+      );
+
+      function waitForEvent(event){
+        return new Promise(function(resolve, reject){
+          Promise.join(
+            clientWaitFor(clients[0], event.resKey),
+            clientWaitFor(clients[1], event.resKey),
+            clientWaitFor(clients[2], event.resKey),
+            function(client1Res, client2Res, client3Res){
+              clients[0].lastResponse = client1Res;
+              clients[1].lastResponse = client2Res;
+              clients[2].lastResponse = client3Res;
+              resolve([clients[0], clients[1], clients[2]]);
+            }
+          );
+          clients[event.sender].emit(event.sendKey);
+        });
+      }
     });
   },
 
@@ -55,13 +93,15 @@ module.exports = {
     });
   },
 
-  clientWaitFor: function(client, msg){
-    return new Promise(function(resolve, reject){
-      client.on(msg, function(data){
-        resolve(data)
-      });
+  
+}
+
+function clientWaitFor(client, msg){
+  return new Promise(function(resolve, reject){
+    client.on(msg, function(data){
+      resolve(data)
     });
-  }
+  });
 }
 
 function dbReset(){
