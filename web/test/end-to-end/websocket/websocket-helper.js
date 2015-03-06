@@ -82,7 +82,38 @@ module.exports = {
     });
   },
 
-  
+  updateClientsCards: function(clients){
+    return new Promise(function(resolve, reject){
+      Promise.join(
+        getClientsCards(1),
+        getClientsCards(2),
+        getClientsCards(3),
+        function(client1Res, client2Res, client3Res){
+          clients[0].cards = client1Res;
+          clients[1].cards = client2Res;
+          clients[2].cards = client3Res;
+          resolve([clients[0], clients[1], clients[2]]);
+        }
+      );
+    });
+
+    function getClientsCards(num){
+      return new Promise(function(resolve, reject){
+        var options = {
+          url: 'http://localhost:3000/hands',
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Token testFbToken" + num
+          }
+        };
+        var callback = function(error, response){
+          resolve(JSON.parse(response.body).cards);
+        }
+
+        request.get(options, callback);  
+      });
+    }
+  }
 }
 
 function clientWaitFor(client, msg){

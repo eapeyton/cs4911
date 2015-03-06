@@ -18,7 +18,6 @@ describe("'start game'",function(){
       {
         sender: 0,
         sendKey: 'start game',
-        sendMsg: '',
         resKey: 'host started game'
       }
     ];
@@ -27,7 +26,7 @@ describe("'start game'",function(){
     .then(websocketHelper.waitForEvents.bind({events: startGameEvents}))
     .then(function(clients){
       //add testing here or use responses to create more events
-      console.log(clients[0].lastResponse);
+      //console.log(clients[0].lastResponse);
       done();
     });
   });

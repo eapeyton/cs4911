@@ -26,13 +26,9 @@ GameLoop.prototype.getCurrentRound = function(game) {
   var self = this;
   return new Promise(function(resolve, reject) {
     models.Round.find({
-      where: {
-        gameId: game.id,
-        state: {
-          $not: "over" 
-        }
-      }
-    }).then(function(round) {
+      where: ["gameId = ? AND state != ?", game.id, "over"]
+    })
+    .then(function(round) {
       self.round = round;
       resolve({
         round: round,
@@ -120,7 +116,7 @@ GameLoop.prototype.handlePlay = function() {
     });
   }
 
-  function updatePlayerStateToReady(response) {
+  function updatePlayerStateToWaiting(response) {
     return new Promise(function(resolve, reject) {
       var values = {
         state: "waiting for players"
@@ -179,7 +175,7 @@ GameLoop.prototype.handlePlay = function() {
             .then(resolve);
           } else {
             response.key = "user has played";
-            response.user = user;
+            response.userId = userId;
             resolve();
           }
         });
@@ -208,12 +204,7 @@ GameLoop.prototype.handlePlay = function() {
           }; 
 
           models.PlayerState.update(values, {
-            where: {
-              userId: {
-                $not: response.round.judge             
-              },
-              gameId: response.game.id
-            }
+            where: ["gameId = ? AND userId != ?", response.game.id, ]
           }).then(function(count, obj) {
             resolve();
           });
@@ -228,7 +219,7 @@ GameLoop.prototype.handlePlay = function() {
 
           models.PlayerState.update(values, {
             where: {
-              userId: judge,
+              userId: response.round.judge,
               gameId: response.game.id
             } 
           }).then(function(count, obj) {
@@ -241,12 +232,11 @@ GameLoop.prototype.handlePlay = function() {
         return new Promise(function(resolve, reject) {
           models.PlayedCard.findAll({
             where: {
-              roundId: response.round.id,
-              include:[{
-                model: models.Card,
-                attributes: ['id', 'userId', 'type', 'text']
-              }]
-            } 
+              roundId: response.round.id
+            },
+            include:[{
+              model: models.Card
+            }]
           }).then(function(playedCards) {
             response.key = 'waiting for judge';
             response.playedCards = playedCards;
@@ -258,7 +248,7 @@ GameLoop.prototype.handlePlay = function() {
   }
 
   function broadcastResponse(response) {
-    socket.broadcast.to(socket.roomId).emit(resonse.key, response);
+    socket.broadcast.to(socket.roomId).emit(response.key, response);
     socket.emit(response.key, response);
   }
 }
@@ -367,7 +357,7 @@ GameLoop.prototype.handleJudgement = function() {
   }
 
   function broadcastResponse(response) {
-    socket.broadcast.to(socket.roomId).emit(resonse.key, response);
+    socket.broadcast.to(socket.roomId).emit(response.key, response);
     socket.emit(response.key, response);
   }
 }
