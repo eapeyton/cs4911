@@ -28,19 +28,57 @@ module.exports = {
   },
 
   connectClients: function(){
+    var clients = new Array(3);
+    var connectCount = 0;
     return new Promise(function(resolve, reject){
-      Promise.join(
-        connectClient(1),
-        connectClient(2),
-        connectClient(3),
-        function(client1, client2, client3){
-          console.log("\n\n\nclients connected");
-          client2.players = client1.players;
-          client3.players = client1.players;
-          resolve([client1, client2, client3]);
-        }
-      );
+      Promise.each([1, 2, 3], connectClient)
+      .then(syncClients)
+      .then(resolve);
     });
+
+    function connectClient(num){
+      return new Promise(function(resolve, reject){
+        var client = io.connect(socketURL, options);
+        client.on('connect', function(data){
+          getClient(num)
+          .then(setupWebsocket)
+          .then(resolve);
+
+          function setupWebsocket(user){
+            return new Promise(function(){
+              client.fbToken = user.fbToken;
+              client.players = [];
+              client.on('user joined', function(joinedUser){
+                console.log(user.name, "registered the join of", joinedUser.name);
+                client.players.push(joinedUser);
+                clients[num-1]=client;
+                connectCount++;
+                if(user.id === joinedUser.id){
+                  resolve();
+                }
+              });
+              client.emit("setup socket for user", user);
+            });
+          }
+        });
+      });
+    }
+
+
+    function syncClients(){
+      while(connectCount<6){}
+      var players = clients[0].players;
+      if(clients[1].players.length === 3){
+        players = clients[1].players;
+      }else if(clients[2].players.length === 3){
+        players = clients[2].players;
+      }
+      console.log("players=", players);
+      clients[0].players = players;
+      clients[1].players = players;
+      clients[2].players = players;
+      resolve(clients);
+    }
   },
 
   waitForEvents: function(clients){
@@ -53,13 +91,11 @@ module.exports = {
 
       function waitForEvent(event){
         return new Promise(function(resolve, reject){
-          console.log("waiting for...", event);
           Promise.join(
             clientWaitFor(clients[0], event.resKey),
             clientWaitFor(clients[1], event.resKey),
             clientWaitFor(clients[2], event.resKey),
             function(client1Res, client2Res, client3Res){
-              console.log("completed", event);
               clients[0].lastResponse = client1Res;
               clients[1].lastResponse = client2Res;
               clients[2].lastResponse = client3Res;
@@ -244,27 +280,3 @@ function createClient(num){
   });
 }
 
-function connectClient(num){
-  return new Promise(function(resolve, reject){
-    var client = io.connect(socketURL, options);
-    client.on('connect', function(data){
-      getClient(num)
-      .then(setupWebsocket)
-      .then(resolve);
-
-      function setupWebsocket(user){
-        return new Promise(function(){
-          client.fbToken = user.fbToken;
-          client.players = [];
-          client.on('user joined', function(joinedUser){
-            if(user.id === joinedUser.id){
-              resolve(client);
-            }
-            client.players.push(joinedUser);
-          });
-          client.emit("setup socket for user", user);
-        });
-      }
-    });
-  });
-}
