@@ -9,7 +9,7 @@ var
 var should = require('should');
 var io = require('socket.io-client');
 
-var socketURL = 'https://ah-jeez.herokuapp.com';
+var socketURL = 'http://localhost:3000';
 
 var options ={
   transports: ['websocket'],
@@ -45,11 +45,10 @@ module.exports = {
           .then(resolve);
 
           function setupWebsocket(user){
-            return new Promise(function(){
+            return new Promise(function(resolve, reject){
               client.fbToken = user.fbToken;
               client.players = [];
               client.on('user joined', function(joinedUser){
-                console.log(user.name, "registered the join of", joinedUser.name);
                 client.players.push(joinedUser);
                 clients[num-1]=client;
                 connectCount++;
@@ -66,18 +65,24 @@ module.exports = {
 
 
     function syncClients(){
-      while(connectCount<6){}
-      var players = clients[0].players;
-      if(clients[1].players.length === 3){
-        players = clients[1].players;
-      }else if(clients[2].players.length === 3){
-        players = clients[2].players;
-      }
-      console.log("players=", players);
-      clients[0].players = players;
-      clients[1].players = players;
-      clients[2].players = players;
-      resolve(clients);
+      return new Promise(function(resolve, reject){
+        waitUntil.bind({
+          flag: function(){return connectCount === 6;},
+          next: returnClients
+        })();
+        function returnClients(){
+          var players = clients[0].players;
+          if(clients[1].players.length === 3){
+            players = clients[1].players;
+          }else if(clients[2].players.length === 3){
+            players = clients[2].players;
+          }
+          clients[0].players = players;
+          clients[1].players = players;
+          clients[2].players = players;
+          resolve(clients);
+        }
+      });
     }
   },
 
@@ -280,3 +285,12 @@ function createClient(num){
   });
 }
 
+function waitUntil(){
+  var flag = this.flag;
+  var next = this.next;
+  if(flag()){
+    next();
+  }else{
+    setTimeout(waitUntil.bind({flag: flag, next: next}), 100);
+  }
+}
