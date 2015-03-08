@@ -1,5 +1,6 @@
 module.exports = GameLoop;
 var
+  cp = require('child_process');
   Promise = require('bluebird');
   models = require('../../models');
 
@@ -51,7 +52,7 @@ GameLoop.prototype.getCurrentRound = function(game) {
 
   msg is of the form:
   {
-     card: id of card played
+     cardId: id of card played
   }
  */
 GameLoop.prototype.handlePlay = function() {
@@ -285,11 +286,11 @@ GameLoop.prototype.handleJudgement = function() {
   var winningCard = msg.winningCard;
 
   self.getGameId()
-  .then(self.getCurrentRoundAndJudge)
+  .then(self.getCurrentRound)
   .then(updateRoundWithJudgement)
-  .then(updatePlayerStatesWithJudgement)
   .then(getWinningCard)
   .then(getWinner)
+  .then(getRoundsByWinner)
   .then(broadcastResponse)
   .catch(function(errors) {
     socket.emit('error', errors);
@@ -312,22 +313,6 @@ GameLoop.prototype.handleJudgement = function() {
         resolve(response);
       });
     });
-  }
-
-  function updatePlayerStatesWithJudgement(response) {
-    return new Promise(function(resolve, reject) {
-      var values = {
-        state: "round review" 
-      } 
-
-      models.PlayerState.update(values, {
-        where: {
-          gameId: response.game.id
-        } 
-      }).then(function(count, obj) {
-        resolve(response);
-      });
-    }); 
   }
   
   function getWinningCard(response) {
@@ -356,8 +341,52 @@ GameLoop.prototype.handleJudgement = function() {
     }); 
   }
 
+  function getRoundsByWinner(response){
+    return new Promise(function(resolve, reject) {
+      models.Round.findAll({
+        where: {
+          gameId: response.game.id
+        } 
+      }).then(function(rounds) {
+        var leader = {userId: null, points: -1};
+        var roundsByWinner = {};
+        for(var i=0; i<rounds.length; i++){
+          if(rounds[i].winner in roundsByWinner){
+            roundsByWinner[rounds[i].winner].push(rounds[i]); 
+          }else{
+            roundsByWinner[rounds[i].winner] = [rounds[i]]; 
+          }
+          if(leader.points < roundsByWinner[rounds[i].winner].length){
+            leader.userId = rounds[i].winner;
+            leader.points = roundsByWinner[rounds[i].winner].length;
+          }
+        }
+
+        response.roundsByWinner = roundsByWinner;
+        response.leader = leader;
+        resolve(response);
+      });
+    }); 
+  }
+
   function broadcastResponse(response) {
-    socket.broadcast.to(socket.roomId).emit(response.key, response);
-    socket.emit(response.key, response);
+    return new Promise(function(resolve, reject) {
+      if(response.leader.points < 7){
+        response.sentTime = new Date();
+        socket.broadcast.to(socket.roomId).emit("round review", response);
+        socket.emit("round review", response);
+
+        nextRoundService = new nextRoundService();
+        nextRoundService.setupNextRound(socket, response)
+        .then(resolve);
+      }else{
+        socket.broadcast.to(socket.roomId).emit("game review", response);
+        socket.emit("game review", response);
+
+        //endGameService = new endGameService();
+        //endGameService.endGame(socket, response)
+        //.then(resolve);
+      }
+    });
   }
 }

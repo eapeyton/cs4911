@@ -195,9 +195,7 @@ StartGameService.prototype.startGame = function(){
             playerStateEntries.push({
               userId: players[i].id,
               gameId: response.game.dataValues.id,
-              state: state,
-              points: 0,
-              place: 1
+              state: state
             });
           }
           models.PlayerState.bulkCreate(playerStateEntries)

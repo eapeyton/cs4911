@@ -21,8 +21,6 @@ module.exports = function(sequelize, DataTypes) {
       unique: 'userGameIndex'
     },
     state: DataTypes.STRING,
-    points: DataTypes.INTEGER,
-    place: DataTypes.INTEGER,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
   }, {
