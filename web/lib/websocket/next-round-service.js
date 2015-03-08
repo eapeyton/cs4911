@@ -1,7 +1,8 @@
 module.exports = NextRoundService;
 var
-  Promise = require('bluebird');
-  models = require('../../models');
+  Promise = require('bluebird'),
+  models = require('../../models'),
+  ChildProcessService = require('./child-process-service');
 
 function NextRoundService(socket, roundOverResponse){
   this.socket = socket;
@@ -181,7 +182,8 @@ StartGameService.prototype.setupNextRound = function(){
     return new Promise(function(resolve, reject) {
       var delay = (new Date()) - roundOverResponse.sendTime;
       var ROUND_REVIEW_TIME = 10000;
-      ChildTimerService.sendMsgWithDelay("new round", response, socket, ROUND_REVIEW_TIME-delay);
+      var childProcessService = new ChildProcessService();
+      ChildProcessService.sendMsgWithDelay("new round", response, socket, ROUND_REVIEW_TIME-delay);
       resolve();
     });
   }
