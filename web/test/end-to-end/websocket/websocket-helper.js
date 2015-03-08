@@ -46,6 +46,7 @@ module.exports = {
 
           function setupWebsocket(user){
             return new Promise(function(resolve, reject){
+              client.id = user.id;
               client.fbToken = user.fbToken;
               client.players = [];
               client.on('user joined', function(joinedUser){

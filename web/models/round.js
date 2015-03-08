@@ -43,7 +43,7 @@ module.exports = function(sequelize, DataTypes) {
         Round.belongsTo(models.Game, { foreignKey: 'gameId' });
         Round.belongsTo(models.User, { foreignKey: 'judge' });
         Round.belongsTo(models.Card, { foreignKey: 'blackCard' });
-        Round.belongsTo(models.User, { as:'winner', foreignKey: 'winner' });
+        Round.belongsTo(models.User, { foreignKey: 'winner' });
         Round.belongsTo(models.Card, { foreignKey: 'winningCard' });
         Round.hasMany(models.PlayedCard, { foreignKey: 'roundId' });
       }

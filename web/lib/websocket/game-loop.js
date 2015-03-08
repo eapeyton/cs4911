@@ -1,8 +1,8 @@
 module.exports = GameLoop;
 var
-  cp = require('child_process');
-  Promise = require('bluebird');
-  models = require('../../models');
+  Promise = require('bluebird'),
+  models = require('../../models'),
+  NextRoundService = require('./next-round-service');
 
 function GameLoop(socket, msg) {
   this.socket = socket;
@@ -285,7 +285,7 @@ GameLoop.prototype.handleJudgement = function() {
   var winner = msg.winner;
   var winningCard = msg.winningCard;
 
-  self.getGameId()
+  self.getGame()
   .then(self.getCurrentRound)
   .then(updateRoundWithJudgement)
   .then(getWinningCard)
@@ -305,7 +305,7 @@ GameLoop.prototype.handleJudgement = function() {
         state: "over"
       }
 
-      models.Round.update({
+      models.Round.update(values, {
         where: {
           id: response.round.id
         }
@@ -333,7 +333,8 @@ GameLoop.prototype.handleJudgement = function() {
       models.User.find({
         where: {
           id: winner 
-        } 
+        },
+        attributes: ['id', 'fbId', 'name', 'pic']
       }).then(function(user) {
         response.winner = user; 
         resolve(response);
@@ -376,8 +377,8 @@ GameLoop.prototype.handleJudgement = function() {
         socket.broadcast.to(socket.roomId).emit("round review", response);
         socket.emit("round review", response);
 
-        nextRoundService = new nextRoundService();
-        nextRoundService.setupNextRound(socket, response)
+        nextRoundService = new NextRoundService(socket, response);
+        nextRoundService.setupNextRound()
         .then(resolve);
       }else{
         socket.broadcast.to(socket.roomId).emit("game review", response);

@@ -18,20 +18,21 @@ function NextRoundService(socket, roundOverResponse){
   -create judge's PlayerState with state "waiting for players"
   -broadcast  "host started game" with black card, the judge, player states, and the round
 */
-StartGameService.prototype.setupNextRound = function(){
+NextRoundService.prototype.setupNextRound = function(){
   var socket = this.socket;
   var roundOverResponse = this.roundOverResponse;
-
-  getNextJudge()
-  .then(getBlackCard)
-  .then(createRound)
-  .then(dealReplacementCards)
-  .then(updatePlayerStates)
-  .then(setupChildProcessBroadcast)
-
-  .catch(function(errors){
-    socket.emit('error', errors);
-    reject(errors);
+  return new Promise(function(resolve, reject){
+    getNextJudge()
+    .then(getBlackCard)
+    .then(createRound)
+    .then(dealReplacementCards)
+    .then(updatePlayerStates)
+    .then(setupChildProcessBroadcast)
+    .then(resolve)
+    .catch(function(errors){
+      socket.emit('error', errors);
+      reject(errors);
+    });
   });
 
   function getNextJudge(){
@@ -94,6 +95,7 @@ StartGameService.prototype.setupNextRound = function(){
       .then(dealCards)
       .then(resolve)
 
+      //TODO: MAKE CARDS NOT DUPLICATE AND RANDOM
       function getWhiteCards(players){
         return new Promise(function(resolve, reject){
           models.Card.findAll({
@@ -139,7 +141,7 @@ StartGameService.prototype.setupNextRound = function(){
 
   function updatePlayerStates(response){
     return new Promise(function(resolve, reject){
-      updatePlayersPlayerStates
+      updatePlayersPlayerStates()
       .then(updateJudgesPlayerState)
       .then(resolve);
 
@@ -183,7 +185,8 @@ StartGameService.prototype.setupNextRound = function(){
       var delay = (new Date()) - roundOverResponse.sendTime;
       var ROUND_REVIEW_TIME = 10000;
       var childProcessService = new ChildProcessService();
-      ChildProcessService.sendMsgWithDelay("new round", response, socket, ROUND_REVIEW_TIME-delay);
+      childProcessService.sendMsgWithDelay("new round", response, socket, ROUND_REVIEW_TIME-delay);
+      console.log("\n\n\nserver side, response=", response);
       resolve();
     });
   }
