@@ -373,7 +373,7 @@ GameLoop.prototype.handleJudgement = function() {
   function broadcastResponse(response) {
     return new Promise(function(resolve, reject) {
       if(response.leader.points < 7){
-        response.sentTime = new Date();
+        response.sendTime = new Date();
         socket.broadcast.to(socket.roomId).emit("round review", response);
         socket.emit("round review", response);
 

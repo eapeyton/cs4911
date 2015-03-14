@@ -1,5 +1,5 @@
 var StartGameService = require('./lib/websocket/start-game-service');
-var GameLoop = require('./lib/websocket/game-loop')
+var GameLoop = require('./lib/websocket/game-loop');
 
 var WebSocketHandler = function(io) {
   io.on('connection', function(socket) {
@@ -13,6 +13,7 @@ var WebSocketHandler = function(io) {
         name: user.name,
         pic: user.pic
       }
+
       socket.broadcast.to(socket.roomId).emit('user joined', newUser);
       socket.emit('user joined', newUser);
     });

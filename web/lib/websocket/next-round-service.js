@@ -50,7 +50,7 @@ NextRoundService.prototype.setupNextRound = function(){
           }
         }
         var nextJudgeIndex = lastJudgeIndex+1;
-        if(lastJudgeIndex = judges.length){
+        if(lastJudgeIndex >= judges.length){
           nextJudgeIndex = 0;
         }
         response.judge = judges[nextJudgeIndex];
@@ -173,7 +173,7 @@ NextRoundService.prototype.setupNextRound = function(){
               gameId: roundOverResponse.game.id
             } 
           }).then(function(count, obj) {
-            resolve();
+            resolve(response);
           });
         });
       }
@@ -183,10 +183,9 @@ NextRoundService.prototype.setupNextRound = function(){
   function setupChildProcessBroadcast(response){
     return new Promise(function(resolve, reject) {
       var delay = (new Date()) - roundOverResponse.sendTime;
-      var ROUND_REVIEW_TIME = 10000;
+      var ROUND_REVIEW_TIME = 5000;
       var childProcessService = new ChildProcessService();
       childProcessService.sendMsgWithDelay("new round", response, socket, ROUND_REVIEW_TIME-delay);
-      console.log("\n\n\nserver side, response=", response);
       resolve();
     });
   }
