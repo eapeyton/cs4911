@@ -3,6 +3,7 @@ var
   Promise = require('bluebird'),
   models = require('../../models'),
   NextRoundService = require('./next-round-service');
+  EndGameService = require('./end-game-service');
 
 function GameLoop(socket, msg) {
   this.socket = socket;
@@ -372,8 +373,8 @@ GameLoop.prototype.handleJudgement = function() {
 
   function broadcastResponse(response) {
     return new Promise(function(resolve, reject) {
-      if(response.leader.points < 7){
-        response.sendTime = new Date();
+      response.sendTime = new Date();
+      if(response.leader.points < 3){
         socket.broadcast.to(socket.roomId).emit("round review", response);
         socket.emit("round review", response);
 
@@ -384,9 +385,9 @@ GameLoop.prototype.handleJudgement = function() {
         socket.broadcast.to(socket.roomId).emit("game review", response);
         socket.emit("game review", response);
 
-        //endGameService = new endGameService();
-        //endGameService.endGame(socket, response)
-        //.then(resolve);
+        endGameService = new EndGameService(socket, response);
+        endGameService.endGame()
+        .then(resolve);
       }
     });
   }

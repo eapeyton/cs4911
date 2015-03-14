@@ -8,16 +8,7 @@ function NextRoundService(socket, roundOverResponse){
   this.socket = socket;
   this.roundOverResponse = roundOverResponse;
 }
-/*
-  -get first Judge
-  -get a Black Card
-  -create Game
-  -create Hand for each user
-  -create Round, state "waiting for players"
-  -create players' PlayerState with state "playing"
-  -create judge's PlayerState with state "waiting for players"
-  -broadcast  "host started game" with black card, the judge, player states, and the round
-*/
+
 NextRoundService.prototype.setupNextRound = function(){
   var socket = this.socket;
   var roundOverResponse = this.roundOverResponse;
@@ -50,7 +41,7 @@ NextRoundService.prototype.setupNextRound = function(){
           }
         }
         var nextJudgeIndex = lastJudgeIndex+1;
-        if(lastJudgeIndex >= judges.length){
+        if(nextJudgeIndex >= judges.length){
           nextJudgeIndex = 0;
         }
         response.judge = judges[nextJudgeIndex];
@@ -183,7 +174,7 @@ NextRoundService.prototype.setupNextRound = function(){
   function setupChildProcessBroadcast(response){
     return new Promise(function(resolve, reject) {
       var delay = (new Date()) - roundOverResponse.sendTime;
-      var ROUND_REVIEW_TIME = 5000;
+      var ROUND_REVIEW_TIME = 2000;
       var childProcessService = new ChildProcessService();
       childProcessService.sendMsgWithDelay("new round", response, socket, ROUND_REVIEW_TIME-delay);
       resolve();

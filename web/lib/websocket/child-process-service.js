@@ -19,6 +19,6 @@ ChildProcessService.prototype.sendMsgWithDelay = function(msgKey, msgBody, socke
 
   child.on('message', function(m) {
     socket.broadcast.to(socket.roomId).emit(msgKey, msgBody);
-    socket.emit('new round', msgBody);
+    socket.emit(msgKey, msgBody);
   });
 }
