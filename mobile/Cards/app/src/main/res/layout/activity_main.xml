@@ -52,6 +52,13 @@
             android:background="@drawable/main_menu_background"
             android:text="@string/go_to_editor"/>
 
+        <com.facebook.widget.LoginButton
+            android:id="@+id/authButton"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp" />
+
     </LinearLayout>
 
 

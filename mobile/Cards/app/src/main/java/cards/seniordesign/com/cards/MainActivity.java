@@ -26,7 +26,7 @@ public class MainActivity extends Activity {
         TextView splashText = (TextView) findViewById(R.id.splash_text);
         splashText.setTypeface(blendaFont);
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
+/*        RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://ah-jeez.herokuapp.com")
                 .build();
 
@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
             public void failure(RetrofitError error) {
                 System.err.println(error);
             }
-        });
+        });*/
     }
 
     public void goToGame(View view) {
