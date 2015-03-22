@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="#303040" >
+
+    <include android:id="@+id/selection_splash_title" layout="@layout/splash_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="60"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_margin="@dimen/menu_margin"
+            android:padding="@dimen/card_padding"
+            android:textAllCaps="false"
+            android:background="@drawable/main_menu_background"
+            android:text="@string/go_to_game"
+            android:onClick="goToGame"/>
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_margin="@dimen/menu_margin"
+            android:padding="@dimen/card_padding"
+            android:textAllCaps="false"
+            android:background="@drawable/main_menu_background"
+            android:text="@string/go_to_lobby"
+            android:onClick="goToLobby"/>
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_margin="@dimen/menu_margin"
+            android:padding="@dimen/card_padding"
+            android:textAllCaps="false"
+            android:background="@drawable/main_menu_background"
+            android:text="@string/go_to_editor"/>
+    </LinearLayout>
+</LinearLayout>
