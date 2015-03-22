@@ -4,63 +4,19 @@
     tools:context=".MainActivity"
     style="@style/ActivityBase">
 
-    <TextView
-        android:id="@+id/splash_text"
-        android:text="@string/hello_world"
-        android:textSize="72sp"
-        android:textColor="@android:color/white"
-        android:gravity="center"
+    <fragment android:name="cards.seniordesign.com.cards.SelectionFragment"
+        android:id="@+id/selectionFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="40"/>
+        android:layout_height="match_parent" />
 
-    <LinearLayout
+    <fragment android:name="cards.seniordesign.com.cards.SplashFragment"
+        android:id="@+id/splashFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="60"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_height="match_parent" />
 
-
-
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_margin="@dimen/menu_margin"
-            android:padding="@dimen/card_padding"
-            android:textAllCaps="false"
-            android:background="@drawable/main_menu_background"
-            android:text="@string/go_to_game"
-            android:onClick="goToGame"/>
-
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_margin="@dimen/menu_margin"
-            android:padding="@dimen/card_padding"
-            android:textAllCaps="false"
-            android:background="@drawable/main_menu_background"
-            android:text="@string/go_to_lobby"
-            android:onClick="goToLobby"/>
-
-        <Button
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_margin="@dimen/menu_margin"
-            android:padding="@dimen/card_padding"
-            android:textAllCaps="false"
-            android:background="@drawable/main_menu_background"
-            android:text="@string/go_to_editor"/>
-
-        <com.facebook.widget.LoginButton
-            android:id="@+id/authButton"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp" />
-
-    </LinearLayout>
-
-
+    <fragment android:name="com.facebook.widget.UserSettingsFragment"
+        android:id="@+id/userSettingsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
