@@ -25,8 +25,6 @@ module.exports = {
           unique: 'userGameIndex'
         },
         state: DataTypes.STRING,
-        points: DataTypes.INTEGER,
-        place: DataTypes.INTEGER,
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE
       })

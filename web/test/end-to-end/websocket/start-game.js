@@ -13,7 +13,7 @@ describe("'start game'",function(){
     .finally(done);
   });
 
-  it('broadcast "host started" with hand ids, black card, and who the judge is', function(done){
+  it('broadcast "host started" with black card and who the judge is', function(done){
     var startGameEvents = [
       {
         sender: 0,
@@ -26,7 +26,7 @@ describe("'start game'",function(){
     .then(websocketHelper.waitForEvents.bind({events: startGameEvents}))
     .then(function(clients){
       //add testing here or use responses to create more events
-      //console.log(clients[0].lastResponse);
+      console.log(clients[0].lastResponse);
       done();
     });
   });

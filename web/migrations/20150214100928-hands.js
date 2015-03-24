@@ -14,22 +14,19 @@ module.exports = {
           type: DataTypes.UUID,
           references: 'Cards',
           referencesKey: 'id',
-          allowNull: false,
-          unique: 'cardGameUserIndex'
+          allowNull: false
         },
         gameId: {
           type: DataTypes.UUID,
           references: 'Games',
           referencesKey: 'id',
-          allowNull: false,
-          unique: 'cardGameUserIndex'
+          allowNull: false
         },
         userId: {
           type: DataTypes.UUID,
           references: 'Users',
           referencesKey: 'id',
-          allowNull: false,
-          unique: 'cardGameUserIndex'
+          allowNull: false
         },
         played: DataTypes.BOOLEAN,
         createdAt: DataTypes.DATE,

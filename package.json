@@ -5,11 +5,12 @@
   "scripts": {
     "start": "node ./web/bin/www",
     "test-api": "NODE_ENV=test mocha 'web/test/end-to-end/api/**/*.js' --timeout 5000",
-    "test-socket": "mocha 'web/test/end-to-end/websocket/**/*.js' --timeout 20000"
+    "test-socket": "mocha 'web/test/end-to-end/websocket/**/*.js' --timeout 30000"
   },
   "dependencies": {
     "bluebird": "^2.9.13",
     "body-parser": "~1.10.2",
+    "circular-json": "^0.1.6",
     "cookie-parser": "~1.3.3",
     "debug": "~2.1.1",
     "express": "~4.11.1",
