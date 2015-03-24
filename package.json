@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./web/bin/www",
     "test-api": "NODE_ENV=test mocha 'web/test/end-to-end/api/**/*.js' --timeout 5000",
-    "test-socket": "mocha 'web/test/end-to-end/websocket/**/*.js' --timeout 20000"
+    "test-socket": "mocha 'web/test/end-to-end/websocket/**/*.js' --timeout 30000"
   },
   "dependencies": {
     "bluebird": "^2.9.13",
