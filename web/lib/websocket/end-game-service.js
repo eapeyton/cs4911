@@ -29,6 +29,7 @@ EndGameService.prototype.endGame = function(){
       var values = {
         finishTime: new Date()
       }; 
+      
       roundOverResponse.game.updateAttributes(values)
       .then(function(game){
         response.game = game;
