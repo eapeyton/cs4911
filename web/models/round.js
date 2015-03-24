@@ -43,7 +43,8 @@ module.exports = function(sequelize, DataTypes) {
         Round.belongsTo(models.Game, { foreignKey: 'gameId' });
         Round.belongsTo(models.User, { foreignKey: 'judge' });
         Round.belongsTo(models.Card, { foreignKey: 'blackCard' });
-        Round.belongsTo(models.User, { as: 'WinnerModel', foreignKey: 'winner' });
+        //TODO: get heroku to deploy with the line below.
+        //Round.belongsTo(models.User, { foreignKey: 'winner' });
         Round.belongsTo(models.Card, { foreignKey: 'winningCard' });
         Round.hasMany(models.PlayedCard, { foreignKey: 'roundId' });
       }
