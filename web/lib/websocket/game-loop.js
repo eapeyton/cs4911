@@ -306,11 +306,9 @@ GameLoop.prototype.handleJudgement = function() {
         state: "over"
       }
 
-      models.Round.update(values, {
-        where: {
-          id: response.round.id
-        }
-      }).then(function(count, obj) {
+      response.round.updateAttributes(values)
+      .then(function(round) {
+        response.round = round;
         resolve(response);
       });
     });

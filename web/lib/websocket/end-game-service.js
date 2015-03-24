@@ -29,13 +29,9 @@ EndGameService.prototype.endGame = function(){
       var values = {
         finishTime: new Date()
       }; 
-      models.Game.update(values, {
-        where:{
-          id: roundOverResponse.game.id,
-        }
-      })
-      .then(function(count, obj){
-        response.game = count;
+      roundOverResponse.game.updateAttributes(values)
+      .then(function(game){
+        response.game = game;
         resolve(response);
       })
     });
