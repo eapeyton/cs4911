@@ -9,7 +9,7 @@ var
 var should = require('should');
 var io = require('socket.io-client');
 
-var socketURL = 'https://ah-jeez.herokuapp.com/';
+var socketURL = 'https://ah-jeez.herokuapp.com';
 
 var options ={
   transports: ['websocket'],

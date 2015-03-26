@@ -115,9 +115,9 @@ describe('Getting room details', function(){
             .expect(function(res){
               res.body.room.name.should.equal(roomData.name);
               res.body.room.maxPlayers.should.equal(roomData.maxPlayers);
-              res.body.Users[0].fbId.should.equal('testFbId');
-              res.body.Users[0].name.should.equal('testName');
-              res.body.Users[0].pic.should.equal('testPic');
+              res.body.room.Users[0].fbId.should.equal('testFbId');
+              res.body.room.Users[0].name.should.equal('testName');
+              res.body.room.Users[0].pic.should.equal('testPic');
             })
             .end(done);
         });
