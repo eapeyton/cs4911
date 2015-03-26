@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -60,23 +61,6 @@ public class MainActivity extends FragmentActivity {
         TextView selectionSplashText = (TextView) findViewById(R.id.selection_splash_title);
         splashText.setTypeface(blendaFont);
         selectionSplashText.setTypeface(blendaFont);
-
-/*        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://ah-jeez.herokuapp.com")
-                .build();
-
-        JeezAPI api = restAdapter.create(JeezAPI.class);
-        api.getCards(new Callback<List<Card>>() {
-            @Override
-            public void success(List<Card> cards, Response response) {
-                System.out.println(cards.size());
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                System.err.println(error);
-            }
-        });*/
     }
 
     public void goToGame(View view) {
@@ -133,7 +117,6 @@ public class MainActivity extends FragmentActivity {
                 // If the session state is open:
                 // Show the authenticated fragment
                 showFragment(SELECTION, false);
-                System.out.println(session.getAccessToken());
             } else if (state.isClosed()) {
                 // If the session state is closed:
                 // Show the login fragment
