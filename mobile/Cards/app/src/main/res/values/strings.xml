@@ -41,6 +41,7 @@
     <string name="get_started">To get started, log in using Facebook</string>
     <string name="settings">Settings</string>
     <string name="login_with_email">Login with Email</string>
+    <string name="title_activity_apitest">APITestActivity</string>
 
 
 </resources>
