@@ -11,9 +11,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
+
+import cards.seniordesign.com.cards.api.JeezAPI;
+import cards.seniordesign.com.cards.models.User;
+import retrofit.Callback;
+import retrofit.RetrofitError;
 
 public class MainActivity extends FragmentActivity {
 
@@ -34,6 +43,8 @@ public class MainActivity extends FragmentActivity {
                 }
             };
     private MenuItem settings;
+
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,23 +71,6 @@ public class MainActivity extends FragmentActivity {
         TextView selectionSplashText = (TextView) findViewById(R.id.selection_splash_title);
         splashText.setTypeface(blendaFont);
         selectionSplashText.setTypeface(blendaFont);
-
-/*        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://ah-jeez.herokuapp.com")
-                .build();
-
-        JeezAPI api = restAdapter.create(JeezAPI.class);
-        api.getCards(new Callback<List<Card>>() {
-            @Override
-            public void success(List<Card> cards, Response response) {
-                System.out.println(cards.size());
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                System.err.println(error);
-            }
-        });*/
     }
 
     public void goToGame(View view) {
@@ -132,8 +126,8 @@ public class MainActivity extends FragmentActivity {
             if (state.isOpened()) {
                 // If the session state is open:
                 // Show the authenticated fragment
+                loginWith(session);
                 showFragment(SELECTION, false);
-                System.out.println(session.getAccessToken());
             } else if (state.isClosed()) {
                 // If the session state is closed:
                 // Show the login fragment
@@ -141,6 +135,36 @@ public class MainActivity extends FragmentActivity {
             }
         }
     }
+
+    private void loginWith(final Session session) {
+        Request request = Request.newMeRequest(session,
+                new Request.GraphUserCallback() {
+                    @Override
+                    public void onCompleted(GraphUser graphUser, Response response) {
+                        if (session == Session.getActiveSession()) {
+                            if (graphUser != null) {
+                                loginWith(new User(graphUser, session.getAccessToken()));
+                            }
+                        }
+                    }
+                });
+        request.executeAsync();
+    }
+
+    private void loginWith(User requestUser) {
+        JeezAPI.API.userLogin(requestUser, new Callback<User>() {
+            @Override
+            public void success(User responseUser, retrofit.client.Response response) {
+                currentUser = responseUser;
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                System.err.println(error);
+            }
+        });
+    }
+
 
     @Override
     protected void onResumeFragments() {
