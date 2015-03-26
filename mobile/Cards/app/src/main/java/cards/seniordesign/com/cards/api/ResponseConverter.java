@@ -63,6 +63,9 @@ public class ResponseConverter implements Converter {
 
         if (obj.has(SUCCESS_FIELD)) {
             checkForErrors(obj);
+            if (obj.entrySet().size() == 1) {
+                return obj.get(SUCCESS_FIELD).getAsBoolean();
+            }
             obj.remove(SUCCESS_FIELD);
         }
 

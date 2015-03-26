@@ -1,5 +1,7 @@
 package cards.seniordesign.com.cards.models;
 
+import com.facebook.model.GraphUser;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -10,11 +12,22 @@ public class User {
     private UUID id;
     private String fbToken;
     private String fbId;
-    private String picture;
+    private String pic;
     private String name;
     private Date updatedAt;
     private Date createdAt;
     private UUID roomId;
+
+    public User() {
+
+    }
+
+    public User(GraphUser graphUser, String accessToken) {
+        setFbToken(accessToken);
+        setFbId(graphUser.getId());
+        setName(graphUser.getName());
+        setPic("https://graph.facebook.com/" + getFbId() + "/pic?type=large");
+    }
 
     public UUID getId() {
         return id;
@@ -40,12 +53,12 @@ public class User {
         this.fbId = fbId;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getPic() {
+        return pic;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setPic(String pic) {
+        this.pic = pic;
     }
 
     public String getName() {
@@ -78,5 +91,9 @@ public class User {
 
     public void setRoomId(UUID roomId) {
         this.roomId = roomId;
+    }
+
+    public String getAuthHeader() {
+        return "Token " + getFbToken();
     }
 }
