@@ -40,3 +40,6 @@ proguard/
 *.ipr
 *.iws
 .idea/
+
+# npm debug logs
+npm-debug.log

@@ -59,7 +59,22 @@ describe("Clients recieve 'new round'",function(){
 
       runPlayCardEvents(clients)
       .then(function(clients){
-        console.log(clients[0].lastResponse);
+        var lastResponse = clients[0].lastResponse;
+
+        // check for judge
+        lastResponse.should.have.property('round').with.property('judge');
+
+        // check for black card
+        lastResponse.should.have.property('blackCard');
+        
+        // check for correct round state
+        lastResponse.should.have.property('round').with.property('state');
+        lastResponse.round.state.should.be.exactly('waiting for players');
+
+        // round should not have winner / winning card
+        lastResponse.round.should.have.property('winner', null);
+        lastResponse.round.should.have.property('winningCard', null);
+
         done();
       })
     });
