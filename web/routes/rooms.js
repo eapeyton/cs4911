@@ -73,9 +73,10 @@ router.get('/:id', function(req, res) {
       attributes: ['id', 'fbId', 'name', 'pic']
     })
     .then(function(users){
+
+      room.dataValues.Users = users;
       res.json({
-        room: room,
-        Users: users
+        room: room
       });
     });
   });
