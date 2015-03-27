@@ -139,6 +139,7 @@ StartGameService.prototype.startGame = function(){
         return new Promise(function(resolve, reject){
           models.Card.findAll({
             where: {type: 'white'},
+            order: 'RANDOM()',
             limit: players.length*7
           })
           .then(function(cards){

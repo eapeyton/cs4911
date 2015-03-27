@@ -86,11 +86,14 @@ NextRoundService.prototype.setupNextRound = function(){
       .then(dealCards)
       .then(resolve)
 
-      //TODO: MAKE CARDS NOT DUPLICATE AND RANDOM
+      //TODO: MAKE CARDS NOT DUPLICATE
       function getWhiteCards(players){
         return new Promise(function(resolve, reject){
           models.Card.findAll({
-            where: {type: 'white'},
+            where: {
+              type: 'white',
+            },
+            order: 'RANDOM()',
             limit: players.length
           })
           .then(function(cards){
