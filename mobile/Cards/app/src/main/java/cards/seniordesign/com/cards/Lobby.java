@@ -32,6 +32,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import cards.seniordesign.com.cards.api.JeezAPI;
+import cards.seniordesign.com.cards.models.Room;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 
 public class Lobby extends Activity {
 
@@ -92,50 +98,43 @@ public class Lobby extends Activity {
             selectItem(0);
         }
 
-        addSampleLobbies();
+        JeezAPI.API.getRooms(new Callback<List<Room>>(){
+            @Override
+            public void success(List<Room> rooms, Response response) {
+                for(Room room: rooms) {
+                    LinearLayout lobby_holder = (LinearLayout) findViewById(R.id.lobby_holder);
+                    if (!room.isEmpty()) {
+                        addLobby(lobby_holder, room);
+                    }
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
 
     }
 
-    public void addSampleLobbies() {
-        LinearLayout lobby_holder = (LinearLayout) findViewById(R.id.lobby_holder);
+    private void addLobby(ViewGroup lobby_holder, Room room) {
+        String name = room.getName().toUpperCase();
+        String count = room.getUsers().size() + "/" + room.getMaxPlayers() + " players";
 
-        for (String sampleText: getResources().getStringArray(R.array.lobby_samples)) {
-            addSampleLobby(lobby_holder, sampleText);
-        }
-    }
-
-    public void addSampleLobby(ViewGroup layout, String sampleText) {
-
-        int splitIndex = sampleText.indexOf("\n");
-        Button button = (Button) getLayoutInflater().inflate(R.layout.lobby_item, layout, false);
-        Spannable span = new SpannableString(sampleText);
-        span.setSpan(new StyleSpan(Typeface.BOLD), 0, splitIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        span.setSpan(new RelativeSizeSpan(0.5f), splitIndex, sampleText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
+        Button button = (Button) getLayoutInflater().inflate(R.layout.lobby_item, lobby_holder, false);
+        Spannable span = new SpannableString(name + "\n" + count);
+        span.setSpan(new StyleSpan(Typeface.BOLD), 0, name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        span.setSpan(new RelativeSizeSpan(0.5f), name.length() + 1, name.length() + 1 + count.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         button.setTypeface(lobby_name_font);
         button.setText(span);
 
+        Bitmap placeholder = getScaledBitmap(R.drawable.placeholder);
 
-        List<Bitmap> bms = new ArrayList<>();
-        bms.add(getScaledBitmap(R.drawable.lobby_rikin));
-        bms.add(getScaledBitmap(R.drawable.lobby_ben));
-        bms.add(getScaledBitmap(R.drawable.lobby_hunter));
-        bms.add(getScaledBitmap(R.drawable.lobby_eric));
-        bms.add(getScaledBitmap(R.drawable.lobby_ben2));
-        bms.add(getScaledBitmap(R.drawable.lobby_rikin2));
-        bms.add(getScaledBitmap(R.drawable.lobby_rand1));
-        bms.add(getScaledBitmap(R.drawable.lobby_rand2));
-        bms.add(getScaledBitmap(R.drawable.lobby_rand3));
-
-
-        Bitmap combined = Bitmap.createBitmap(scale_size * bms.size(), scale_size, bms.get(0).getConfig());
+        Bitmap combined = Bitmap.createBitmap(scale_size * room.getUsers().size(), scale_size, placeholder.getConfig());
         Canvas combCanvas = new Canvas(combined);
-
-        Collections.shuffle(bms);
-
-        for(int i=0; i < bms.size(); i++) {
-            combCanvas.drawBitmap(bms.get(i), i * scale_size, 0, null);
+        for(int i=0; i < room.getUsers().size(); i++) {
+            combCanvas.drawBitmap(placeholder, i * scale_size, 0, null);
         }
 
         BitmapDrawable replace = new BitmapDrawable(getResources(), combined);
@@ -152,8 +151,10 @@ public class Lobby extends Activity {
         lobbyItemBg.addState(new int[] {android.R.attr.state_pressed}, pressed);
 
         button.setBackgroundDrawable(lobbyItemBg);
-        layout.addView(button);
+
+        lobby_holder.addView(button);
     }
+
 
     public Bitmap getScaledBitmap(int drawable) {
         return Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), drawable), scale_size, scale_size, false);

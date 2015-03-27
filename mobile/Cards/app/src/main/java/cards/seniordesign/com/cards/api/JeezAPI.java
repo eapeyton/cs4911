@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import cards.seniordesign.com.cards.models.Card;
+import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -39,4 +40,7 @@ public interface JeezAPI {
 
     @GET("/cards")
     public void getCards(Callback<List<Card>> card);
+
+    @GET("/rooms")
+    public void getRooms(Callback<List<Room>> cb);
 }
