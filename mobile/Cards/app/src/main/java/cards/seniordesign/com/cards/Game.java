@@ -1,7 +1,6 @@
 package cards.seniordesign.com.cards;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;

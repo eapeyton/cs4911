@@ -3,7 +3,7 @@
     package="cards.seniordesign.com.cards" >
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="15"
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.INTERNET" />
