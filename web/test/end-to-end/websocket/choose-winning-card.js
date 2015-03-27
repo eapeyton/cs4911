@@ -53,7 +53,18 @@ describe("Judge send 'choose winning card'",function(){
 
       runPlayCardEvents(clients)
       .then(function(clients){
-        console.log(clients[0].lastResponse);
+        var lastResponse = clients[0].lastResponse;
+
+        // ensure the round is judged and over
+        lastResponse.should.have.property('round').with.property('state', 'over');
+
+        // ensure the proper winner across multiple models
+        lastResponse.should.have.property('round').with.property('winner');
+        lastResponse.should.have.property('winner').with.property('id', lastResponse.round.winner);
+
+        // ensure the proper winning card acress multiple models
+        lastResponse.should.have.property('round').with.property('winningCard');
+        lastResponse.should.have.property('winningCard').with.property('id', lastResponse.round.winningCard);
         done();
       })
     });

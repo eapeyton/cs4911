@@ -144,7 +144,12 @@ describe("Clients recieve 'game review' then 'pre-game'",function(){
 
       runPlayCardEvents(clients)
       .then(function(clients){
-        console.log(clients[0].lastResponse);
+        var lastResponse = clients[0].lastResponse;
+
+        // ending the game sends the clients back to the pregame state (3)
+        lastResponse.should.have.property('playerStates').with.lengthOf(1);
+        lastResponse.playerStates[0].should.be.exactly(3);
+
         done();
       })
     });

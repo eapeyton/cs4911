@@ -38,7 +38,12 @@ describe("A single client sends 'play card'",function(){
 
       runPlayCardEvents(clients)
       .then(function(clients){
-        console.log(clients[0].lastResponse);
+        var lastResponse = clients[0].lastResponse;
+
+        lastResponse.should.have.property('key', 'user has played');
+        lastResponse.should.have.property('round').with.property('state', 'waiting for players');
+        lastResponse.should.have.property('playedCard');
+
         done();
       })
     });
@@ -83,7 +88,13 @@ describe("All clients send 'play card'",function(){
 
       runPlayCardEvents(clients)
       .then(function(clients){
-        console.log(clients[0].lastResponse);
+        var lastResponse = clients[0].lastResponse;
+
+        lastResponse.should.have.property('key', 'waiting for judge');
+        lastResponse.should.have.property('round').with.property('state', 'waiting for players');
+        lastResponse.should.have.property('playedCard');
+        lastResponse.should.have.property('playedCards').with.lengthOf(2);
+
         done();
       })
     });

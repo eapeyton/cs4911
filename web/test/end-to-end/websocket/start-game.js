@@ -25,8 +25,16 @@ describe("'start game'",function(){
     websocketHelper.connectClients()
     .then(websocketHelper.waitForEvents.bind({events: startGameEvents}))
     .then(function(clients){
-      //add testing here or use responses to create more events
-      console.log(clients[0].lastResponse);
+      var lastResponse = clients[0].lastResponse;
+
+      lastResponse.should.have.property('judge');
+      lastResponse.should.have.property('blackCard').with.property('type', 'black');
+      lastResponse.should.have.property('round').with.property('winner', null);
+      lastResponse.should.have.property('round').with.property('winningCard', null);
+      lastResponse.should.have.property('playerStates');
+
+      // one of the players should be waiting, the others playing
+      lastResponse.playerStates.should.containDeep([{state: 'waiting for players'},{state: 'playing'},{state: 'playing'}]);
       done();
     });
   });
