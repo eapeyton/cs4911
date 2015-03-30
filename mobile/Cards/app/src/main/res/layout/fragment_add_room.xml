@@ -3,8 +3,43 @@
     android:layout_height="match_parent"
     tools:context="cards.seniordesign.com.cards.AddRoomFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/add_room_fragment" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding=" 10dp">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/add_room_title"/>
+
+        <Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Private Room"
+            android:layout_gravity="left"
+            android:textSize="20sp"
+            android:layout_marginTop="10dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Room Size"
+                android:layout_weight="0.19"
+                android:textSize="20sp" />
+            <Button
+                android:id="@+id/room_size_button"
+                android:layout_width="wrap_content"
+                android:layout_height="33dp"
+                android:text="5"
+                android:onClick="showSizePicker"/>
+        </LinearLayout>
+
+    </LinearLayout>
 
 </FrameLayout>
