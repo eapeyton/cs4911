@@ -2,8 +2,10 @@ package cards.seniordesign.com.cards;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,7 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 
 
 public class Lobby extends Activity implements AddRoomFragment.OnFragmentInteractionListener {
@@ -69,6 +73,8 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction().add(R.id.content_frame, new ListRoomsFragment()).commit();
         }
+
+
     }
 
     @Override
@@ -151,6 +157,30 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void showSizePicker(View view) {
+        final NumberPicker picker = (NumberPicker) getLayoutInflater().inflate(R.layout.size_picker, null);
+        picker.setMinValue(2);
+        picker.setMaxValue(20);
+        picker.setWrapSelectorWheel(false);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Room Size:")
+                .setView(picker)
+                .setPositiveButton("Set",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                Button button = (Button) findViewById(R.id.room_size_button);
+                                button.setText(Integer.toString(picker.getValue()));
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        })
+                .create();
+        dialog.show();
     }
 
 }
