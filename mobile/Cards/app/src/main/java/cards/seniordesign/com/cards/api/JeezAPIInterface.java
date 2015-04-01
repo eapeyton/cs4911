@@ -6,6 +6,7 @@ import java.util.UUID;
 import cards.seniordesign.com.cards.models.Card;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
+import cards.seniordesign.com.cards.models.response.AddRoomResponse;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
@@ -23,7 +24,7 @@ public interface JeezAPIInterface {
     public void userLogin(@Body User user, Callback<User> cb);
 
     @DELETE("/users/{id}")
-    public void deleteUser(@Header("Authorization") String token, @Path("id") UUID id, Callback<Boolean> cb);
+    public void deleteUser(@Path("id") UUID id, Callback<Boolean> cb);
 
     @GET("/users")
     public void getUsers(Callback<List<User>> cb);
@@ -33,4 +34,7 @@ public interface JeezAPIInterface {
 
     @GET("/rooms")
     public void getRooms(Callback<List<Room>> cb);
+
+    @POST("/rooms")
+    public void addRoom(@Body Room newRoom, Callback<AddRoomResponse> cb);
 }
