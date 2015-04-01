@@ -7,7 +7,6 @@ import cards.seniordesign.com.cards.models.Card;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
 import retrofit.Callback;
-import retrofit.RestAdapter;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
@@ -18,16 +17,7 @@ import retrofit.http.Path;
 /**
  * Created by eric on 3/5/15.
  */
-public interface JeezAPI {
-
-    public static RestAdapter restAdapter = new RestAdapter.Builder()
-            .setEndpoint("http://ah-jeez.herokuapp.com")
-            .setConverter(new ResponseConverter())
-            .setLogLevel(RestAdapter.LogLevel.FULL)
-            .build();
-
-    public static JeezAPI API = restAdapter.create(JeezAPI.class);
-
+public interface JeezAPIInterface {
 
     @POST("/users/login")
     public void userLogin(@Body User user, Callback<User> cb);

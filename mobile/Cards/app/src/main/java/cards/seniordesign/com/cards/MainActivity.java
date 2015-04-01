@@ -19,7 +19,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 
-import cards.seniordesign.com.cards.api.JeezAPI;
+import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.User;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -152,7 +152,8 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void loginWith(User requestUser) {
-        JeezAPI.API.userLogin(requestUser, new Callback<User>() {
+        JeezAPIClient.setToken(requestUser.getFbToken());
+        JeezAPIClient.getAPI().userLogin(requestUser, new Callback<User>() {
             @Override
             public void success(User responseUser, retrofit.client.Response response) {
                 currentUser = responseUser;

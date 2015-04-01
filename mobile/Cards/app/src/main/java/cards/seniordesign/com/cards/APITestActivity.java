@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import java.util.List;
 
-import cards.seniordesign.com.cards.api.JeezAPI;
+import cards.seniordesign.com.cards.api.JeezAPIInterface;
 import cards.seniordesign.com.cards.api.ResponseConverter;
 import cards.seniordesign.com.cards.models.User;
 import retrofit.Callback;
@@ -28,7 +28,7 @@ public class APITestActivity extends Activity {
                 .build();
 
         restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
-        JeezAPI api = restAdapter.create(JeezAPI.class);
+        JeezAPIInterface api = restAdapter.create(JeezAPIInterface.class);
         User user = new User();
         user.setFbToken("myfbtoken" + System.currentTimeMillis());
         user.setFbId("myfbid" + System.currentTimeMillis());

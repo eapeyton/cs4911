@@ -24,7 +24,7 @@ import android.widget.LinearLayout;
 
 import java.util.List;
 
-import cards.seniordesign.com.cards.api.JeezAPI;
+import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Room;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -122,10 +122,10 @@ public class ListRoomsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        JeezAPI.API.getRooms(new Callback<List<Room>>(){
+        JeezAPIClient.getAPI().getRooms(new Callback<List<Room>>() {
             @Override
             public void success(List<Room> rooms, Response response) {
-                for(Room room: rooms) {
+                for (Room room : rooms) {
                     LinearLayout lobby_holder = (LinearLayout) getView().findViewById(R.id.lobby_holder);
                     if (!room.isEmpty()) {
                         addLobby(lobby_holder, room);
