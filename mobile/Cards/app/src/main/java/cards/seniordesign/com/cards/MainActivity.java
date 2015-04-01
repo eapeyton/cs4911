@@ -19,6 +19,9 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 
+import java.util.Random;
+import java.util.UUID;
+
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.User;
 import retrofit.Callback;
@@ -127,6 +130,7 @@ public class MainActivity extends FragmentActivity {
                 // If the session state is open:
                 // Show the authenticated fragment
                 loginWith(session);
+                //loginRandom();
                 showFragment(SELECTION, false);
             } else if (state.isClosed()) {
                 // If the session state is closed:
@@ -149,6 +153,18 @@ public class MainActivity extends FragmentActivity {
                     }
                 });
         request.executeAsync();
+    }
+
+    private void loginRandom() {
+        Random rand = new Random();
+
+        User randomUser = new User();
+        randomUser.setFbToken(UUID.randomUUID().toString());
+        randomUser.setFbId(Integer.toString(rand.nextInt(100000) + 100000));
+        randomUser.setName("FakeUser" + rand.nextInt(100000));
+        randomUser.setPic("www.facebook.com/fakepic");
+
+        loginWith(randomUser);
     }
 
     private void loginWith(User requestUser) {
