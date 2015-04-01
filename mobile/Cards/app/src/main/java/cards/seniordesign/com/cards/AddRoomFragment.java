@@ -1,6 +1,8 @@
 package cards.seniordesign.com.cards;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -14,7 +16,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Room;
+import cards.seniordesign.com.cards.models.response.AddRoomResponse;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 /**
@@ -26,16 +33,10 @@ import cards.seniordesign.com.cards.models.Room;
  * create an instance of this fragment.
  */
 public class AddRoomFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    public static final int LOWER_SIZE = 2;
+    public static final int UPPER_SIZE = 20;
 
     /**
      * Use this factory method to create a new instance of
@@ -48,10 +49,6 @@ public class AddRoomFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static AddRoomFragment newInstance(String param1, String param2) {
         AddRoomFragment fragment = new AddRoomFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -81,19 +78,55 @@ public class AddRoomFragment extends Fragment {
         String name = ((TextView) view.findViewById(R.id.add_room_name)).getText().toString();
         Integer size = Integer.parseInt(((Button) view.findViewById(R.id.add_room_size)).getText().toString());
 
+        if (name.isEmpty()) {
+            showErrorDialog("Room name must not be empty");
+        } else if (isInvalidSize(size)) {
+            showErrorDialog(String.format("Size must be between %d and %d", LOWER_SIZE, UPPER_SIZE));
+        } else {
+            addRoom(name, size);
+        }
+    }
+
+    private void addRoom(String name, Integer size) {
         Room newRoom = new Room();
         newRoom.setName(name);
         newRoom.setMaxPlayers(size);
+        JeezAPIClient.getAPI().addRoom(newRoom, new Callback<AddRoomResponse>() {
+            @Override
+            public void success(AddRoomResponse addRoomResponse, Response response) {
+                Log.i("AddRoom", "Room added successfully");
+                mListener.exitAddRoom();
+            }
 
+            @Override
+            public void failure(RetrofitError error) {
+                showErrorDialog("Failed to add room. Perhaps you are already inside of one?");
+            }
+        });
+    }
+
+    private void showErrorDialog(String s) {
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                .setMessage(s)
+                .setNeutralButton("Ok",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        })
+                .create();
+        dialog.show();
+    }
+
+    private boolean isInvalidSize(int roomSize) {
+        if (roomSize < LOWER_SIZE || roomSize > UPPER_SIZE) {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
         setHasOptionsMenu(true);
     }
 
@@ -139,6 +172,7 @@ public class AddRoomFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
+        public void exitAddRoom();
         public void closeAddRoom();
     }
 

@@ -110,6 +110,11 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
         getActionBar().setTitle("New room");
     }
 
+    public void exitAddRoom() {
+        FragmentManager fm = getFragmentManager();
+        fm.popBackStackImmediate();
+    }
+
     public void closeAddRoom() {
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
@@ -161,8 +166,8 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
 
     public void showSizePicker(View view) {
         final NumberPicker picker = (NumberPicker) getLayoutInflater().inflate(R.layout.size_picker, null);
-        picker.setMinValue(2);
-        picker.setMaxValue(20);
+        picker.setMinValue(AddRoomFragment.LOWER_SIZE);
+        picker.setMaxValue(AddRoomFragment.UPPER_SIZE);
         picker.setWrapSelectorWheel(false);
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("Room Size:")
