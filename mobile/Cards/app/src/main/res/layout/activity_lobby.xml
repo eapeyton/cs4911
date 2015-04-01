@@ -6,20 +6,9 @@
     android:id="@+id/lobby_drawer">
 
     <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:id="@+id/lobby_holder"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"/>
-        </ScrollView>
-
-    </FrameLayout>
+        android:layout_height="match_parent" />
 
     <ListView
         android:id="@+id/nav_drawer"
