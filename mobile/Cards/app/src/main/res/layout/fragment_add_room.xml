@@ -7,10 +7,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding=" 10dp">
+        android:padding="10dp">
         <EditText
+            android:id="@+id/add_room_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="20sp"
             android:hint="@string/add_room_title"/>
 
         <Switch
@@ -30,12 +32,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Room Size"
-                android:layout_weight="0.19"
+                android:layout_weight="0.2"
                 android:textSize="20sp" />
             <Button
-                android:id="@+id/room_size_button"
+                android:id="@+id/add_room_size"
                 android:layout_width="wrap_content"
-                android:layout_height="33dp"
+                android:layout_height="40dp"
                 android:text="5"
                 android:onClick="showSizePicker"/>
         </LinearLayout>

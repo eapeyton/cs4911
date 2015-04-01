@@ -170,7 +170,7 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
                 .setPositiveButton("Set",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                Button button = (Button) findViewById(R.id.room_size_button);
+                                Button button = (Button) findViewById(R.id.add_room_size);
                                 button.setText(Integer.toString(picker.getValue()));
                             }
                         })

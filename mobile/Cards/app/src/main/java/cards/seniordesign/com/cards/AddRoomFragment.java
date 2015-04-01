@@ -3,11 +3,18 @@ package cards.seniordesign.com.cards;
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import cards.seniordesign.com.cards.models.Room;
 
 
 /**
@@ -57,6 +64,27 @@ public class AddRoomFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         inflater.inflate(R.menu.menu_add_room, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_accept:
+                validateAndAddRoom();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void validateAndAddRoom() {
+        View view = getView();
+        String name = ((TextView) view.findViewById(R.id.add_room_name)).getText().toString();
+        Integer size = Integer.parseInt(((Button) view.findViewById(R.id.add_room_size)).getText().toString());
+
+        Room newRoom = new Room();
+        newRoom.setName(name);
+        newRoom.setMaxPlayers(size);
+
     }
 
     @Override
