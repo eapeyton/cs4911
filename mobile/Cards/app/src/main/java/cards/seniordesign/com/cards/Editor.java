@@ -20,7 +20,7 @@ public class Editor extends Activity {
         setContentView(R.layout.activity_editor);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new CreateCardFragment())
                     .commit();
         }
     }
