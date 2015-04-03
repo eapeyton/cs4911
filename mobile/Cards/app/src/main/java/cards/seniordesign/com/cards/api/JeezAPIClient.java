@@ -8,7 +8,7 @@ public class JeezAPIClient {
 
     public static JeezAPIInterface getAPI() {
         if (service == null) {
-            ServiceGenerator.createService(null);
+            service = ServiceGenerator.createService(null);
         }
         return service;
     }
