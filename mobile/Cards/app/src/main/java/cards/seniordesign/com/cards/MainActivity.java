@@ -86,6 +86,11 @@ public class MainActivity extends FragmentActivity {
         startActivity(intent);
     }
 
+    public void goToEditor(View view) {
+        Intent intent = new Intent(this, Editor.class);
+        startActivity(intent);
+    }
+
     private void showFragment(int fragmentIndex, boolean addToBackStack) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();

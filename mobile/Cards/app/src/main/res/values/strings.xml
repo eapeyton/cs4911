@@ -46,6 +46,7 @@
     <string name="add_room_fragment">Add a room soon here</string>
     <string name="action_accept">Accept</string>
     <string name="add_room_title">Room Name</string>
+    <string name="title_activity_editor">Editor</string>
 
 
 </resources>
