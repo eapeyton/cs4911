@@ -3,7 +3,9 @@ var GameLoop = require('./lib/websocket/game-loop');
 
 var WebSocketHandler = function(io) {
   io.on('connection', function(socket) {
+    console.log("\n\n\nconnection event fired");
     socket.on('setup socket for user', function(user){
+      console.log("\n\n\nsetup socket for user");
       //todo authenticate user
       socket.roomId = user.roomId;
       socket.userId = user.id
@@ -14,6 +16,7 @@ var WebSocketHandler = function(io) {
         pic: user.pic
       }
 
+      console.log('broadcast "user joined" and newUser=', newUser);
       socket.broadcast.to(socket.roomId).emit('user joined', newUser);
       socket.emit('user joined', newUser);
     });
