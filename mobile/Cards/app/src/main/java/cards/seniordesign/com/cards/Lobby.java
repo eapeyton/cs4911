@@ -20,6 +20,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 
+import cards.seniordesign.com.cards.models.User;
+
 
 public class Lobby extends Activity implements AddRoomFragment.OnFragmentInteractionListener {
 
@@ -33,10 +35,14 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    private User currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
+
+        currentUser = getIntent().getExtras().getParcelable(MainActivity.CURRENT_USER);
 
         mTitle = mDrawerTitle = getTitle();
         mDrawerNames = getResources().getStringArray(R.array.drawers);
@@ -71,7 +77,7 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction().add(R.id.content_frame, new ListRoomsFragment()).commit();
+            getFragmentManager().beginTransaction().add(R.id.content_frame, ListRoomsFragment.newInstance(currentUser)).commit();
         }
 
 
@@ -100,7 +106,7 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
     }
 
     private void openAddRoom() {
-        Fragment addRoomFragment = new AddRoomFragment();
+        Fragment addRoomFragment = AddRoomFragment.newInstance();
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, addRoomFragment).addToBackStack(null).commit();
