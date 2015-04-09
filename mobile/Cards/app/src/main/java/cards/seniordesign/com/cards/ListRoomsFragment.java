@@ -16,16 +16,22 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
+import java.net.URISyntaxException;
 import java.util.List;
 
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Room;
+import cards.seniordesign.com.cards.models.User;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -42,32 +48,28 @@ import retrofit.client.Response;
 public class ListRoomsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private User currentUser;
 
     private int scale_size;
     private Typeface lobby_name_font;
 
     private OnFragmentInteractionListener mListener;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ListRoomsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ListRoomsFragment newInstance(String param1, String param2) {
+    private Socket mSocket;
+    {
+        try {
+            mSocket = IO.socket("http://ah-jeez.herokuapp.com");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static ListRoomsFragment newInstance(User currentUser) {
         ListRoomsFragment fragment = new ListRoomsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(MainActivity.CURRENT_USER, currentUser);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,11 +83,7 @@ public class ListRoomsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         lobby_name_font = Typeface.createFromAsset(getActivity().getAssets(), "Seravek.ttc");
         scale_size = (int) getResources().getDimension(R.dimen.lobby_item_height);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
+        currentUser = getArguments().getParcelable(MainActivity.CURRENT_USER);
     }
 
     @Override
@@ -174,8 +172,26 @@ public class ListRoomsFragment extends Fragment {
         lobbyItemBg.addState(new int[] {android.R.attr.state_pressed}, pressed);
 
         button.setBackgroundDrawable(lobbyItemBg);
+        button.setOnClickListener(new OnClickRoom(room));
+
 
         lobby_holder.addView(button);
+    }
+
+    public class OnClickRoom implements View.OnClickListener {
+        private Room room;
+
+        public OnClickRoom(Room room) {
+            this.room = room;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Log.i("ListRooms", room.getId().toString());
+            Log.i("ListRooms", currentUser.getName().toString());
+            mSocket.connect();
+            mSocket.emit("setup socket for user", "hello");
+        }
     }
 
 

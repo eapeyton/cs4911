@@ -38,16 +38,7 @@ public class AddRoomFragment extends Fragment {
     public static final int LOWER_SIZE = 2;
     public static final int UPPER_SIZE = 20;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AddRoomFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AddRoomFragment newInstance(String param1, String param2) {
+    public static AddRoomFragment newInstance() {
         AddRoomFragment fragment = new AddRoomFragment();
         return fragment;
     }
