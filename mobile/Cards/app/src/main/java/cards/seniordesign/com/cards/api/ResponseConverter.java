@@ -22,16 +22,30 @@ import retrofit.mime.TypedOutput;
 public class ResponseConverter implements Converter {
     private static final String SUCCESS_FIELD = "success";
     private static final String ERRORS_FIELD = "errors";
-    private final Gson gson;
+    private static Gson gson;
     private final JsonParser parser;
     private String charset;
 
     public ResponseConverter() {
-        this.gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                .create();
         this.parser = new JsonParser();
         this.charset = "UTF-8";
+    }
+
+    private static Gson getGson() {
+        if (gson == null) {
+            gson = new GsonBuilder()
+                    .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                    .create();
+        }
+        return gson;
+    }
+
+    public static String toJson(Object obj) {
+        return getGson().toJson(obj);
+    }
+
+    public static <T> T fromJson(String json, Class<T> clazz) {
+        return getGson().fromJson(json, clazz);
     }
 
     @Override public Object fromBody(TypedInput body, Type type) throws ConversionException {
@@ -71,10 +85,10 @@ public class ResponseConverter implements Converter {
 
         if (obj.entrySet().size() == 1) {
             JsonElement singleElement = obj.entrySet().iterator().next().getValue();
-            return gson.fromJson(singleElement, type);
+            return getGson().fromJson(singleElement, type);
         }
 
-        return gson.fromJson(obj, type);
+        return getGson().fromJson(obj, type);
     }
 
     private void checkForErrors(JsonObject obj) {
@@ -91,10 +105,10 @@ public class ResponseConverter implements Converter {
 
     @Override public TypedOutput toBody(Object object) {
         try {
-            JsonElement innerElement = gson.toJsonTree(object);
+            JsonElement innerElement = getGson().toJsonTree(object);
             JsonObject outerObj = new JsonObject();
             outerObj.add(object.getClass().getSimpleName().toLowerCase(), innerElement);
-            return new JsonTypedOutput(gson.toJson(outerObj).getBytes(charset), charset);
+            return new JsonTypedOutput(getGson().toJson(outerObj).getBytes(charset), charset);
         } catch (UnsupportedEncodingException e) {
             throw new AssertionError(e);
         }
