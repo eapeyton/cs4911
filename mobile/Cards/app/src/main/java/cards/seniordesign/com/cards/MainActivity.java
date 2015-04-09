@@ -1,5 +1,6 @@
 package cards.seniordesign.com.cards;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,6 +49,7 @@ public class MainActivity extends FragmentActivity {
             };
     private MenuItem settings;
 
+    public static final String CURRENT_USER = "CURRENT_USER";
     private User currentUser;
 
     @Override
@@ -77,17 +80,20 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void goToGame(View view) {
-        Intent intent = new Intent(this, Game.class);
-        startActivity(intent);
+        goToActivity(Game.class);
     }
 
     public void goToLobby(View view) {
-        Intent intent = new Intent(this, Lobby.class);
-        startActivity(intent);
+        goToActivity(Lobby.class);
     }
 
     public void goToEditor(View view) {
-        Intent intent = new Intent(this, Editor.class);
+        goToActivity(Editor.class);
+    }
+
+    public void goToActivity(Class<? extends Activity> activity) {
+        Intent intent = new Intent(this, activity);
+        intent.putExtra(CURRENT_USER, currentUser);
         startActivity(intent);
     }
 
@@ -182,7 +188,7 @@ public class MainActivity extends FragmentActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                System.err.println(error);
+                Log.e(this.getClass().getName(), error.toString());
             }
         });
     }
