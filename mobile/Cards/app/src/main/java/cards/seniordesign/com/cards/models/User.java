@@ -1,5 +1,8 @@
 package cards.seniordesign.com.cards.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.facebook.model.GraphUser;
 
 import java.util.Date;
@@ -8,7 +11,7 @@ import java.util.UUID;
 /**
  * Created by Eric on 3/24/15.
  */
-public class User {
+public class User implements Parcelable {
     private UUID id;
     private String fbToken;
     private String fbId;
@@ -95,5 +98,44 @@ public class User {
 
     public String getAuthHeader() {
         return "Token " + getFbToken();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(getId().toString());
+        dest.writeString(getFbToken());
+        dest.writeString(getFbId());
+        dest.writeString(getPic());
+        dest.writeString(getName());
+        dest.writeLong(getUpdatedAt().getTime());
+        dest.writeLong(getCreatedAt().getTime());
+        dest.writeString(getRoomId().toString());
+    }
+
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    // example constructor that takes a Parcel and gives you an object populated with it's values
+    private User(Parcel in) {
+        setId(UUID.fromString(in.readString()));
+        setFbToken(in.readString());
+        setFbId(in.readString());
+        setPic(in.readString());
+        setName(in.readString());
+        setUpdatedAt(new Date(in.readLong()));
+        setCreatedAt(new Date(in.readLong()));
+        setRoomId(UUID.fromString(in.readString()));
     }
 }
