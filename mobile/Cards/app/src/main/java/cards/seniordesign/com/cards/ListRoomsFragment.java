@@ -23,12 +23,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.List;
 
+import cards.seniordesign.com.cards.api.JeezConverter;
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
@@ -84,7 +88,26 @@ public class ListRoomsFragment extends Fragment {
         lobby_name_font = Typeface.createFromAsset(getActivity().getAssets(), "Seravek.ttc");
         scale_size = (int) getResources().getDimension(R.dimen.lobby_item_height);
         currentUser = getArguments().getParcelable(MainActivity.CURRENT_USER);
+
+        mSocket.on("user joined", onUserJoined);
     }
+
+    private Emitter.Listener onUserJoined = new Emitter.Listener() {
+
+        @Override
+        public void call(final Object... args) {
+            getActivity().runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    JSONObject obj = (JSONObject) args[0];
+                    User user = JeezConverter.fromJson(obj, User.class);
+                    Log.i("ListRooms", user.getName() + " joined.");
+                    Log.i("ListRooms",obj.toString());
+                }
+            });
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -123,8 +146,9 @@ public class ListRoomsFragment extends Fragment {
         JeezAPIClient.getAPI().getRooms(new Callback<List<Room>>() {
             @Override
             public void success(List<Room> rooms, Response response) {
+                LinearLayout lobby_holder = (LinearLayout) getView().findViewById(R.id.lobby_holder);
+                lobby_holder.removeAllViews();
                 for (Room room : rooms) {
-                    LinearLayout lobby_holder = (LinearLayout) getView().findViewById(R.id.lobby_holder);
                     if (!room.isEmpty()) {
                         addLobby(lobby_holder, room);
                     }
@@ -136,6 +160,14 @@ public class ListRoomsFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mSocket.disconnect();
+        mSocket.off("user joined", onUserJoined);
     }
 
     private void addLobby(ViewGroup lobby_holder, Room room) {
@@ -187,10 +219,9 @@ public class ListRoomsFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Log.i("ListRooms", room.getId().toString());
-            Log.i("ListRooms", currentUser.getName().toString());
+            Log.i("ListRooms", "Setting up socket for:" + room.getId().toString());
             mSocket.connect();
-            mSocket.emit("setup socket for user", "hello");
+            mSocket.emit("setup socket for user", JeezConverter.toJson(currentUser));
         }
     }
 
