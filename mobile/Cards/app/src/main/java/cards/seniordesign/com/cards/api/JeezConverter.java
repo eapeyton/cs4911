@@ -7,6 +7,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -19,14 +22,14 @@ import retrofit.mime.MimeUtil;
 import retrofit.mime.TypedInput;
 import retrofit.mime.TypedOutput;
 
-public class ResponseConverter implements Converter {
+public class JeezConverter implements retrofit.converter.Converter {
     private static final String SUCCESS_FIELD = "success";
     private static final String ERRORS_FIELD = "errors";
     private static Gson gson;
     private final JsonParser parser;
     private String charset;
 
-    public ResponseConverter() {
+    public JeezConverter() {
         this.parser = new JsonParser();
         this.charset = "UTF-8";
     }
@@ -40,12 +43,16 @@ public class ResponseConverter implements Converter {
         return gson;
     }
 
-    public static String toJson(Object obj) {
-        return getGson().toJson(obj);
+    public static JSONObject toJson(Object obj) {
+        try {
+            return new JSONObject(getGson().toJson(obj));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static <T> T fromJson(String json, Class<T> clazz) {
-        return getGson().fromJson(json, clazz);
+    public static <T> T fromJson(JSONObject obj, Class<T> clazz) {
+        return getGson().fromJson(obj.toString(), clazz);
     }
 
     @Override public Object fromBody(TypedInput body, Type type) throws ConversionException {
