@@ -107,14 +107,14 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(getId().toString());
+        dest.writeValue(getId());
         dest.writeString(getFbToken());
         dest.writeString(getFbId());
         dest.writeString(getPic());
         dest.writeString(getName());
         dest.writeLong(getUpdatedAt().getTime());
         dest.writeLong(getCreatedAt().getTime());
-        dest.writeString(getRoomId().toString());
+        dest.writeValue(getRoomId());
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
@@ -129,13 +129,13 @@ public class User implements Parcelable {
 
     // example constructor that takes a Parcel and gives you an object populated with it's values
     private User(Parcel in) {
-        setId(UUID.fromString(in.readString()));
+        setId((UUID)in.readValue(UUID.class.getClassLoader()));
         setFbToken(in.readString());
         setFbId(in.readString());
         setPic(in.readString());
         setName(in.readString());
         setUpdatedAt(new Date(in.readLong()));
         setCreatedAt(new Date(in.readLong()));
-        setRoomId(UUID.fromString(in.readString()));
+        setRoomId((UUID)in.readValue(UUID.class.getClassLoader()));
     }
 }
