@@ -5,7 +5,7 @@ var WebSocketHandler = function(io) {
   io.on('connection', function(socket) {
     console.log("\n\n\nconnection event fired");
     socket.on('setup socket for user', function(user){
-      console.log("\n\n\nsetup socket for user");
+      console.log("\n\n\nsetup socket for user =", user);
       //todo authenticate user
       socket.roomId = user.roomId;
       socket.userId = user.id
