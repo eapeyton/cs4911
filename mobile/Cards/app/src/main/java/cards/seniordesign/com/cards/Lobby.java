@@ -106,7 +106,7 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
     }
 
     private void openAddRoom() {
-        Fragment addRoomFragment = AddRoomFragment.newInstance();
+        Fragment addRoomFragment = AddRoomFragment.newInstance(currentUser);
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, addRoomFragment).addToBackStack(null).commit();
@@ -116,7 +116,8 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
         getActionBar().setTitle("New room");
     }
 
-    public void exitAddRoom() {
+    public void exitAddRoom(User currentUser) {
+        this.currentUser = currentUser;
         FragmentManager fm = getFragmentManager();
         fm.popBackStackImmediate();
     }

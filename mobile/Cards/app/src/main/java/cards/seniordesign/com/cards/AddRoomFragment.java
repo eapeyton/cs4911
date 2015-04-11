@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Room;
+import cards.seniordesign.com.cards.models.User;
 import cards.seniordesign.com.cards.models.response.AddRoomResponse;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -37,9 +38,13 @@ public class AddRoomFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     public static final int LOWER_SIZE = 2;
     public static final int UPPER_SIZE = 20;
+    private User currentUser;
 
-    public static AddRoomFragment newInstance() {
+    public static AddRoomFragment newInstance(User currentUser) {
         AddRoomFragment fragment = new AddRoomFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(MainActivity.CURRENT_USER, currentUser);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -70,9 +75,9 @@ public class AddRoomFragment extends Fragment {
         Integer size = Integer.parseInt(((Button) view.findViewById(R.id.add_room_size)).getText().toString());
 
         if (name.isEmpty()) {
-            showErrorDialog("Room name must not be empty");
+            Dialog.showError(getActivity(),"Room name must not be empty");
         } else if (isInvalidSize(size)) {
-            showErrorDialog(String.format("Size must be between %d and %d", LOWER_SIZE, UPPER_SIZE));
+            Dialog.showError(getActivity(),String.format("Size must be between %d and %d", LOWER_SIZE, UPPER_SIZE));
         } else {
             addRoom(name, size);
         }
@@ -86,26 +91,15 @@ public class AddRoomFragment extends Fragment {
             @Override
             public void success(AddRoomResponse addRoomResponse, Response response) {
                 Log.i("AddRoom", "Room added successfully");
-                mListener.exitAddRoom();
+                currentUser.setRoomId(addRoomResponse.room.getId());
+                mListener.exitAddRoom(currentUser);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                showErrorDialog("Failed to add room. Perhaps you are already inside of one?");
+                Dialog.showError(getActivity(), "Failed to add room. Perhaps you are already inside of one?");
             }
         });
-    }
-
-    private void showErrorDialog(String s) {
-        AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setMessage(s)
-                .setNeutralButton("Ok",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                            }
-                        })
-                .create();
-        dialog.show();
     }
 
     private boolean isInvalidSize(int roomSize) {
@@ -119,6 +113,7 @@ public class AddRoomFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        currentUser = getArguments().getParcelable(MainActivity.CURRENT_USER);
     }
 
     @Override
@@ -163,7 +158,7 @@ public class AddRoomFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void exitAddRoom();
+        public void exitAddRoom(User currentUser);
         public void closeAddRoom();
     }
 

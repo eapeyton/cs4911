@@ -1,6 +1,7 @@
 package cards.seniordesign.com.cards;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -36,6 +37,7 @@ import cards.seniordesign.com.cards.api.JeezConverter;
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
+import cards.seniordesign.com.cards.models.response.JoinRoomResponse;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -219,10 +221,45 @@ public class ListRoomsFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Log.i("ListRooms", "Setting up socket for:" + room.getId().toString());
-            mSocket.connect();
-            mSocket.emit("setup socket for user", JeezConverter.toJson(currentUser));
+            if (room.isFull()) {
+                Dialog.showError(getActivity(), "Room is already full.");
+            } else if (currentUser.isInRoom()) {
+                if (room.contains(currentUser)) {
+                    goToGameRoom(room);
+                } else {
+                    Dialog.showError(getActivity(), "You are already in a different room.");
+                }
+            } else {
+                currentUser.setRoomId(room.getId());
+                joinRoom(room);
+                goToGameRoom(room);
+            }
         }
+    }
+
+    private void goToGameRoom(Room room) {
+        Intent intent = new Intent(getActivity(), Game.class);
+        intent.putExtra(Game.CURRENT_ROOM, room);
+        intent.putExtra(MainActivity.CURRENT_USER, currentUser);
+        startActivity(intent);
+    }
+
+    private void joinRoom(Room room) {
+        JeezAPIClient.getAPI().joinRoom(room.getId(), new Callback<JoinRoomResponse>() {
+            @Override
+            public void success(JoinRoomResponse joinRoomResponse, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                currentUser.setRoomId(null);
+                Log.e(this.getClass().getName(), error.toString());
+            }
+        });
+        //Log.i("ListRooms", "Setting up socket for:" + room.getId().toString());
+        //mSocket.connect();
+        //mSocket.emit("setup socket for user", JeezConverter.toJson(currentUser));
     }
 
 
