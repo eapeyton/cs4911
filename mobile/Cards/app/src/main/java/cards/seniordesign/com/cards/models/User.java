@@ -32,6 +32,10 @@ public class User implements Parcelable {
         setPic("https://graph.facebook.com/" + getFbId() + "/pic?type=large");
     }
 
+    public boolean isInRoom() {
+        return !(getRoomId() == null);
+    }
+
     public UUID getId() {
         return id;
     }
@@ -101,6 +105,23 @@ public class User implements Parcelable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (!id.equals(user.id)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -112,8 +133,8 @@ public class User implements Parcelable {
         dest.writeString(getFbId());
         dest.writeString(getPic());
         dest.writeString(getName());
-        dest.writeLong(getUpdatedAt().getTime());
-        dest.writeLong(getCreatedAt().getTime());
+        dest.writeValue(getUpdatedAt());
+        dest.writeValue(getCreatedAt());
         dest.writeValue(getRoomId());
     }
 
@@ -134,8 +155,8 @@ public class User implements Parcelable {
         setFbId(in.readString());
         setPic(in.readString());
         setName(in.readString());
-        setUpdatedAt(new Date(in.readLong()));
-        setCreatedAt(new Date(in.readLong()));
+        setUpdatedAt((Date)in.readValue(Date.class.getClassLoader()));
+        setCreatedAt((Date)in.readValue(Date.class.getClassLoader()));
         setRoomId((UUID)in.readValue(UUID.class.getClassLoader()));
     }
 }
