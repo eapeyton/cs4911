@@ -34,7 +34,6 @@ StartGameService.prototype.startGame = function(){
 
   function validate(){
     return new Promise(function(resolve, reject){
-      console.log("\n\n\nvalidating")
       validateHost()
       .then(validateGameNotStarted)
       .then(resolve);
@@ -47,7 +46,6 @@ StartGameService.prototype.startGame = function(){
         })
         .then(function(host){
           if(host.userId !== socket.userId){
-            console.log("\n\n\nuser is not host");
             reject("user is not host");
           }else{
             console.log("\n\n\nuser is host");
@@ -66,10 +64,8 @@ StartGameService.prototype.startGame = function(){
         .then(function(games){
           game = games[0]
           if(game !== undefined && game.finishTime === null){
-            console.log("\n\n\nbad - game already being played");
             reject("game is already being played");
           }else{
-            console.log("\n\n\ngood - game not started");
             resolve();
           }
         });
@@ -230,7 +226,6 @@ StartGameService.prototype.startGame = function(){
   }
 
   function broadcastResponse(response){
-    console.log("\n\n\nresponse=", response);
     socket.broadcast.to(socket.roomId).emit('host started game', response);
     socket.emit('host started game', response);
   }
