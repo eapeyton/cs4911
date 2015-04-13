@@ -1,0 +1,48 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cards.seniordesign.com.cards.game.GameplayFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="55"
+            android:gravity="center"
+            android:text="The class field trip was completely ruined by __________."
+            android:background="@drawable/game_bcard_background"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:layout_margin="40dp"
+            android:padding="20dp"
+            />
+
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="35">
+
+            <LinearLayout
+                android:id="@+id/card_hand"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <include layout="@layout/white_card"/>
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"/>
+
+    </LinearLayout>
+
+</FrameLayout>

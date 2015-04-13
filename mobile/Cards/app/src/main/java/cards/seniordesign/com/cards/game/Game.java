@@ -2,33 +2,18 @@ package cards.seniordesign.com.cards.game;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.LinearLayout;
 
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
-
-import org.json.JSONObject;
-
-import java.net.URISyntaxException;
-
-import cards.seniordesign.com.cards.MainActivity;
+import cards.seniordesign.com.cards.Args;
 import cards.seniordesign.com.cards.R;
-import cards.seniordesign.com.cards.api.JeezConverter;
 import cards.seniordesign.com.cards.api.JeezSocket;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
 
 
 public class Game extends Activity {
-
-    public static final String CURRENT_ROOM = "CURRENT_ROOM";
 
     private Room currentRoom;
     private User currentUser;
@@ -40,9 +25,8 @@ public class Game extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_game);
-        currentRoom = getIntent().getExtras().getParcelable(CURRENT_ROOM);
-        currentUser = getIntent().getExtras().getParcelable(MainActivity.CURRENT_USER);
-        addCardButtons();
+        currentRoom = getIntent().getExtras().getParcelable(Args.CURRENT_ROOM);
+        currentUser = getIntent().getExtras().getParcelable(Args.CURRENT_USER);
     }
 
     @Override
@@ -55,21 +39,6 @@ public class Game extends Activity {
     protected void onStop() {
         super.onStop();
         socket.close();
-    }
-
-    protected void addCardButtons() {
-        LinearLayout layout = (LinearLayout)findViewById(R.id.card_hand);
-
-        for (String cardText:getResources().getStringArray(R.array.cards)) {
-            addCardButton(layout,cardText);
-        }
-
-    }
-
-    protected void addCardButton(ViewGroup layout, String cardText) {
-        Button button = (Button)this.getLayoutInflater().inflate(R.layout.white_card,layout,false);
-        button.setText(cardText);
-        layout.addView(button);
     }
 
 
