@@ -63,15 +63,6 @@ public class ListRoomsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private Socket mSocket;
-    {
-        try {
-            mSocket = IO.socket("http://ah-jeez.herokuapp.com");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static ListRoomsFragment newInstance(User currentUser) {
         ListRoomsFragment fragment = new ListRoomsFragment();
         Bundle args = new Bundle();
@@ -90,26 +81,10 @@ public class ListRoomsFragment extends Fragment {
         lobby_name_font = Typeface.createFromAsset(getActivity().getAssets(), "Seravek.ttc");
         scale_size = (int) getResources().getDimension(R.dimen.lobby_item_height);
         currentUser = getArguments().getParcelable(MainActivity.CURRENT_USER);
-
-        mSocket.on("user joined", onUserJoined);
+        Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
     }
 
-    private Emitter.Listener onUserJoined = new Emitter.Listener() {
 
-        @Override
-        public void call(final Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-                    JSONObject obj = (JSONObject) args[0];
-                    User user = JeezConverter.fromJson(obj, User.class);
-                    Log.i("ListRooms", user.getName() + " joined.");
-                    Log.i("ListRooms",obj.toString());
-                }
-            });
-        }
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -164,14 +139,6 @@ public class ListRoomsFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        mSocket.disconnect();
-        mSocket.off("user joined", onUserJoined);
-    }
-
     private void addLobby(ViewGroup lobby_holder, Room room) {
         String name = room.getName().toUpperCase();
         String count = room.getUsers().size() + "/" + room.getMaxPlayers() + " players";
@@ -223,7 +190,7 @@ public class ListRoomsFragment extends Fragment {
         public void onClick(View v) {
             if (room.isFull()) {
                 Dialog.showError(getActivity(), "Room is already full.");
-            } else if (currentUser.isInRoom()) {
+            } else if (currentUser.isInARoom()) {
                 if (room.contains(currentUser)) {
                     goToGameRoom(room);
                 } else {
@@ -257,9 +224,6 @@ public class ListRoomsFragment extends Fragment {
                 Log.e(this.getClass().getName(), error.toString());
             }
         });
-        //Log.i("ListRooms", "Setting up socket for:" + room.getId().toString());
-        //mSocket.connect();
-        //mSocket.emit("setup socket for user", JeezConverter.toJson(currentUser));
     }
 
 

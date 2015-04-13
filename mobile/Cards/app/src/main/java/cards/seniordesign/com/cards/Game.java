@@ -2,25 +2,57 @@ package cards.seniordesign.com.cards;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
+
+import cards.seniordesign.com.cards.api.JeezConverter;
+import cards.seniordesign.com.cards.api.JeezSocket;
+import cards.seniordesign.com.cards.models.Room;
+import cards.seniordesign.com.cards.models.User;
+
 
 public class Game extends Activity {
+
+    public static final String CURRENT_ROOM = "CURRENT_ROOM";
+
+    private Room currentRoom;
+    private User currentUser;
+
+    private JeezSocket socket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_game);
+        currentRoom = getIntent().getExtras().getParcelable(CURRENT_ROOM);
+        currentUser = getIntent().getExtras().getParcelable(MainActivity.CURRENT_USER);
         addCardButtons();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        socket = new JeezSocket(this, currentUser, currentRoom);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        socket.close();
     }
 
     protected void addCardButtons() {
