@@ -1,6 +1,5 @@
-package cards.seniordesign.com.cards;
+package cards.seniordesign.com.cards.lobby;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -20,6 +19,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 
+import cards.seniordesign.com.cards.MainActivity;
+import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.models.User;
 
 

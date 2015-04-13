@@ -1,8 +1,6 @@
-package cards.seniordesign.com.cards;
+package cards.seniordesign.com.cards.lobby;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -13,9 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
+import cards.seniordesign.com.cards.Dialog;
+import cards.seniordesign.com.cards.MainActivity;
+import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
@@ -75,7 +75,7 @@ public class AddRoomFragment extends Fragment {
         Integer size = Integer.parseInt(((Button) view.findViewById(R.id.add_room_size)).getText().toString());
 
         if (name.isEmpty()) {
-            Dialog.showError(getActivity(),"Room name must not be empty");
+            Dialog.showError(getActivity(), "Room name must not be empty");
         } else if (isInvalidSize(size)) {
             Dialog.showError(getActivity(),String.format("Size must be between %d and %d", LOWER_SIZE, UPPER_SIZE));
         } else {

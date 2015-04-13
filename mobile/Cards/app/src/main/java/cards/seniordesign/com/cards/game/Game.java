@@ -1,4 +1,4 @@
-package cards.seniordesign.com.cards;
+package cards.seniordesign.com.cards.game;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -18,6 +18,8 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import cards.seniordesign.com.cards.MainActivity;
+import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezConverter;
 import cards.seniordesign.com.cards.api.JeezSocket;
 import cards.seniordesign.com.cards.models.Room;

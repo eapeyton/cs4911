@@ -25,6 +25,8 @@ import java.util.Random;
 import java.util.UUID;
 
 import cards.seniordesign.com.cards.api.JeezAPIClient;
+import cards.seniordesign.com.cards.game.Game;
+import cards.seniordesign.com.cards.lobby.Lobby;
 import cards.seniordesign.com.cards.models.User;
 import retrofit.Callback;
 import retrofit.RetrofitError;

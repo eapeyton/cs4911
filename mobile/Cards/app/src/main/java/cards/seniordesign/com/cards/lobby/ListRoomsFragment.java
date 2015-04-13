@@ -1,4 +1,4 @@
-package cards.seniordesign.com.cards;
+package cards.seniordesign.com.cards.lobby;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -24,16 +24,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
-
-import org.json.JSONObject;
-
-import java.net.URISyntaxException;
 import java.util.List;
 
-import cards.seniordesign.com.cards.api.JeezConverter;
+import cards.seniordesign.com.cards.Dialog;
+import cards.seniordesign.com.cards.game.Game;
+import cards.seniordesign.com.cards.MainActivity;
+import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
