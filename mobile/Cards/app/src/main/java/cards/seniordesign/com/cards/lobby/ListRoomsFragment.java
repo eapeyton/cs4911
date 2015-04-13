@@ -26,9 +26,9 @@ import android.widget.LinearLayout;
 
 import java.util.List;
 
+import cards.seniordesign.com.cards.Args;
 import cards.seniordesign.com.cards.Dialog;
 import cards.seniordesign.com.cards.game.Game;
-import cards.seniordesign.com.cards.MainActivity;
 import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Room;
@@ -62,7 +62,7 @@ public class ListRoomsFragment extends Fragment {
     public static ListRoomsFragment newInstance(User currentUser) {
         ListRoomsFragment fragment = new ListRoomsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(MainActivity.CURRENT_USER, currentUser);
+        args.putParcelable(Args.CURRENT_USER, currentUser);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,7 +76,7 @@ public class ListRoomsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         lobby_name_font = Typeface.createFromAsset(getActivity().getAssets(), "Seravek.ttc");
         scale_size = (int) getResources().getDimension(R.dimen.lobby_item_height);
-        currentUser = getArguments().getParcelable(MainActivity.CURRENT_USER);
+        currentUser = getArguments().getParcelable(Args.CURRENT_USER);
         Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
     }
 
@@ -202,8 +202,8 @@ public class ListRoomsFragment extends Fragment {
 
     private void goToGameRoom(Room room) {
         Intent intent = new Intent(getActivity(), Game.class);
-        intent.putExtra(Game.CURRENT_ROOM, room);
-        intent.putExtra(MainActivity.CURRENT_USER, currentUser);
+        intent.putExtra(Args.CURRENT_ROOM, room);
+        intent.putExtra(Args.CURRENT_USER, currentUser);
         startActivity(intent);
     }
 

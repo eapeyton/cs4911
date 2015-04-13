@@ -19,7 +19,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 
-import cards.seniordesign.com.cards.MainActivity;
+import cards.seniordesign.com.cards.Args;
 import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.models.User;
 
@@ -43,7 +43,7 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
 
-        currentUser = getIntent().getExtras().getParcelable(MainActivity.CURRENT_USER);
+        currentUser = getIntent().getExtras().getParcelable(Args.CURRENT_USER);
 
         mTitle = mDrawerTitle = getTitle();
         mDrawerNames = getResources().getStringArray(R.array.drawers);

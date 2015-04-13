@@ -51,7 +51,6 @@ public class MainActivity extends FragmentActivity {
             };
     private MenuItem settings;
 
-    public static final String CURRENT_USER = "CURRENT_USER";
     private User currentUser;
 
     @Override
@@ -95,7 +94,7 @@ public class MainActivity extends FragmentActivity {
 
     public void goToActivity(Class<? extends Activity> activity) {
         Intent intent = new Intent(this, activity);
-        intent.putExtra(CURRENT_USER, currentUser);
+        intent.putExtra(Args.CURRENT_USER, currentUser);
         startActivity(intent);
     }
 

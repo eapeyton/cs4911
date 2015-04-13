@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import cards.seniordesign.com.cards.Args;
 import cards.seniordesign.com.cards.Dialog;
-import cards.seniordesign.com.cards.MainActivity;
 import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Room;
@@ -43,7 +43,7 @@ public class AddRoomFragment extends Fragment {
     public static AddRoomFragment newInstance(User currentUser) {
         AddRoomFragment fragment = new AddRoomFragment();
         Bundle args = new Bundle();
-        args.putParcelable(MainActivity.CURRENT_USER, currentUser);
+        args.putParcelable(Args.CURRENT_USER, currentUser);
         fragment.setArguments(args);
         return fragment;
     }
@@ -113,7 +113,7 @@ public class AddRoomFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        currentUser = getArguments().getParcelable(MainActivity.CURRENT_USER);
+        currentUser = getArguments().getParcelable(Args.CURRENT_USER);
     }
 
     @Override
