@@ -20,4 +20,8 @@ public class Dialog {
                 .create();
         dialog.show();
     }
+
+    public static void showNotification(Activity activity, String notification) {
+        showError(activity, notification);
+    }
 }
