@@ -32,7 +32,7 @@ public class User implements Parcelable {
         setPic("https://graph.facebook.com/" + getFbId() + "/pic?type=large");
     }
 
-    public boolean isInRoom() {
+    public boolean isInARoom() {
         return !(getRoomId() == null);
     }
 
