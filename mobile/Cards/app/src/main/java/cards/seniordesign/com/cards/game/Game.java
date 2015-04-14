@@ -10,11 +10,13 @@ import android.view.Window;
 import cards.seniordesign.com.cards.Args;
 import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezSocket;
+import cards.seniordesign.com.cards.models.Card;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
+import cards.seniordesign.com.cards.models.response.StartGameResponse;
 
 
-public class Game extends Activity {
+public class Game extends Activity implements GameplayFragment.GameplayListener {
 
     private Room currentRoom;
     private User currentUser;
@@ -38,10 +40,13 @@ public class Game extends Activity {
         }
     }
 
-    public void goToGameplay(View view) {
-        GameplayFragment gameplay = GameplayFragment.newInstance(currentUser, currentRoom);
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, gameplay).addToBackStack(null).commit();
+    public void startGame(View view) {
         socket.startGame();
+    }
+
+    public void goToGameplay(StartGameResponse response) {
+        GameplayFragment gameplay = GameplayFragment.newInstance(response);
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, gameplay).addToBackStack(null).commit();
     }
 
     @Override
@@ -50,4 +55,9 @@ public class Game extends Activity {
         socket.close();
     }
 
+
+    @Override
+    public void playCard(Card card) {
+        socket.playCard(card);
+    }
 }

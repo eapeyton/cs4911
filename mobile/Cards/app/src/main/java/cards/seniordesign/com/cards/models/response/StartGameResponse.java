@@ -1,5 +1,6 @@
 package cards.seniordesign.com.cards.models.response;
 
+import java.io.Serializable;
 import java.util.List;
 
 import cards.seniordesign.com.cards.models.Card;
@@ -10,10 +11,10 @@ import cards.seniordesign.com.cards.models.Round;
 /**
  * Created by Eric on 4/13/15.
  */
-public class StartGameResponse {
-    Player judge;
-    Card blackCard;
-    GameModel game;
-    Round round;
-    List<Player.PlayerState> playerStates;
+public class StartGameResponse implements Serializable {
+    public Player judge;
+    public Card blackCard;
+    public GameModel game;
+    public Round round;
+    public List<Player.PlayerState> playerStates;
 }
