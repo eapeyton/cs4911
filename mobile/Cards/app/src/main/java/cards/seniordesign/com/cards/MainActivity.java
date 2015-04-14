@@ -94,6 +94,10 @@ public class MainActivity extends FragmentActivity {
 
     public void goToActivity(Class<? extends Activity> activity) {
         Intent intent = new Intent(this, activity);
+        if (currentUser == null) {
+            loginWith(Session.getActiveSession());
+        }
+        Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
         intent.putExtra(Args.CURRENT_USER, currentUser);
         startActivity(intent);
     }
@@ -141,8 +145,8 @@ public class MainActivity extends FragmentActivity {
             if (state.isOpened()) {
                 // If the session state is open:
                 // Show the authenticated fragment
-                loginWith(session);
-                //loginRandom();
+                //loginWith(session);
+                loginRandom();
                 showFragment(SELECTION, false);
             } else if (state.isClosed()) {
                 // If the session state is closed:
