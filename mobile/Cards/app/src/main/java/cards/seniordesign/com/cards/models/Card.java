@@ -1,12 +1,15 @@
 package cards.seniordesign.com.cards.models;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 /**
  * Created by eric on 3/5/15.
  */
-public class Card {
+public class Card implements Serializable {
     private UUID id;
     private UUID userId;
     private String text;
@@ -15,7 +18,9 @@ public class Card {
     private Date updatedAt;
 
     public enum CardType {
+        @SerializedName("white")
         WHITE,
+        @SerializedName("black")
         BLACK
     }
 

@@ -1,12 +1,13 @@
 package cards.seniordesign.com.cards.models;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 /**
  * Created by Eric on 4/1/15.
  */
-public class Player {
+public class Player implements Serializable {
     private UUID id;
     private UUID userId;
     private UUID roomId;
@@ -62,7 +63,7 @@ public class Player {
         this.createdAt = createdAt;
     }
 
-    public static class PlayerState {
+    public static class PlayerState implements Serializable {
         public UUID id;
         public UUID userId;
         public UUID gameId;
