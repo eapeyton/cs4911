@@ -27,16 +27,12 @@ StartGameService.prototype.startGame = function(){
   .then(createHands)
   .then(createPlayerStates)
   .then(broadcastResponse)
-  .catch(function(errors){
-    socket.emit('error', errors);
-    reject(errors);
-  });
 
   function validate(){
     return new Promise(function(resolve, reject){
       validateHost()
       .then(validateGameNotStarted)
-      .then(resolve);
+      .then(resolve)
     });
 
     function validateHost(){
@@ -46,9 +42,9 @@ StartGameService.prototype.startGame = function(){
         })
         .then(function(host){
           if(host.userId !== socket.userId){
+            socket.emit("user is not host", {});
             reject("user is not host");
           }else{
-            console.log("\n\n\nuser is host");
             resolve();
           }
         });
@@ -64,7 +60,8 @@ StartGameService.prototype.startGame = function(){
         .then(function(games){
           game = games[0]
           if(game !== undefined && game.finishTime === null){
-            reject("game is already being played");
+            socket.emit('game is already being played', {});
+            reject('game is already being played');
           }else{
             resolve();
           }
@@ -151,8 +148,6 @@ StartGameService.prototype.startGame = function(){
                 player: players[i]
               });
             }
-            console.log("\n\n\nplayersWithCards-", playersWithCards);
-            console.log("\n\n\ncards-", cards);
             resolve(playersWithCards);
           })
         });
@@ -174,7 +169,6 @@ StartGameService.prototype.startGame = function(){
 
           models.Hand.bulkCreate(handEntries)
           .then(function(hands){
-            console.log('hands -', hands);
             resolve(response);
           })
         });

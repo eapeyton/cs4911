@@ -71,10 +71,6 @@ describe("Clients recieve 'new round'",function(){
         lastResponse.should.have.property('round').with.property('state');
         lastResponse.round.state.should.be.exactly('waiting for players');
 
-        // round should not have winner / winning card
-        lastResponse.round.should.have.property('winner', null);
-        lastResponse.round.should.have.property('winningCard', null);
-
         done();
       })
     });

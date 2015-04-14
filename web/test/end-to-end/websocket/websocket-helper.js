@@ -9,7 +9,7 @@ var
 var should = require('should');
 var io = require('socket.io-client');
 
-var socketURL = 'https://ah-jeez.herokuapp.com';
+var socketURL = 'http://localhost:3000';
 
 var options ={
   transports: ['websocket'],
@@ -87,6 +87,18 @@ module.exports = {
     }
   },
 
+  waitForError: function(clients){
+    var errorEvent = this.errorEvent;
+    return new Promise(function(resolve, reject){
+      clientWaitFor(clients[errorEvent.sender], errorEvent.resKey)
+      .finally(function(){
+        resolve(clients);
+      });
+
+      clients[errorEvent.sender].emit(errorEvent.sendKey, errorEvent.sendMsg);
+    });
+  },
+
   waitForEvents: function(clients){
     var events = this.events;
     return new Promise(function(resolve, reject){
@@ -102,9 +114,6 @@ module.exports = {
             clientWaitFor(clients[1], event.resKey),
             clientWaitFor(clients[2], event.resKey),
             function(client1Res, client2Res, client3Res){
-              clients[0].lastResponse = client1Res;
-              clients[1].lastResponse = client2Res;
-              clients[2].lastResponse = client3Res;
               resolve([clients[0], clients[1], clients[2]]);
             }
           );
@@ -164,6 +173,7 @@ module.exports = {
 function clientWaitFor(client, msg){
   return new Promise(function(resolve, reject){
     client.on(msg, function(data){
+      client.lastResponse = data;
       resolve(data)
     });
   });

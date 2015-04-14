@@ -74,7 +74,6 @@ GameLoop.prototype.handlePlay = function() {
   .then(updateGameState)
   .then(broadcastResponse)
   .catch(function(errors) {
-    socket.emit('error', errors);
     reject(errors)
   });
 
@@ -107,6 +106,7 @@ GameLoop.prototype.handlePlay = function() {
         } 
       }).then(function(hand) {
         if(hand === null){
+          socket.emit("card is not in hand or already played", {});
           reject("card is not in hand or already played")
         }else{
           hand.updateAttributes(values)

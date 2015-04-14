@@ -100,3 +100,39 @@ describe("All clients send 'play card'",function(){
     });
   });
 });
+
+
+describe("User plays card that's not in his/her hand",function(){
+  before(function(done) {
+    websocketHelper.createClients()
+    .then(websocketHelper.createCards)
+    .finally(done);
+  });
+
+  it('error is sent back to user', function(done){
+    var startGameEvents = [
+      {
+        sender: 0,
+        sendKey: 'start game',
+        resKey: 'host started game'
+      }
+    ];
+
+    websocketHelper.connectClients()
+    .then(websocketHelper.waitForEvents.bind({events: startGameEvents}))
+    .then(websocketHelper.updateClientsCards)
+    .then(function(clients){
+      var errorEvent = {
+        sender:1,
+        sendKey: 'play card',
+        sendMsg: {cardId: clients[0].cards[0].id},
+        resKey: 'card is not in hand or already played'
+      };
+      var runPlayCardEvents = websocketHelper.waitForError.bind({errorEvent: errorEvent})
+      runPlayCardEvents(clients)
+      .then(function(clients){
+        done();
+      });
+    });
+  });
+});
