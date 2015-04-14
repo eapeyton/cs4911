@@ -31,6 +31,7 @@ public class JeezSocket {
     private static final String GAME_BEING_PLAYED = "game is already being played";
     private static final String PLAY_CARD = "play card";
     private static final String USER_HAS_PLAYED = "user has played";
+    private static final String WAITING_FOR_JUDGE = "waiting for judge";
 
     private Game game;
     private User currentUser;
@@ -55,6 +56,7 @@ public class JeezSocket {
         webSocket.on(USER_NOT_HOST, new NotifyListener("The user is not the host."));
         webSocket.on(GAME_BEING_PLAYED, new NotifyListener("The game is already being played."));
         webSocket.on(USER_HAS_PLAYED, new NotifyListener("User played card"));
+        webSocket.on(WAITING_FOR_JUDGE, new NotifyListener("Waiting for judge..."));
 
         webSocket.connect();
         webSocket.emit(SETUP_SOCKET, JeezConverter.toJson(currentUser));
@@ -87,10 +89,10 @@ public class JeezSocket {
 
     public void playCard(Card card) {
         try {
-            Log.i(this.getClass().getName(), "Played card:" + card.getId());
             JSONObject cardObj =  new JSONObject();
             cardObj.put("cardId", card.getId());
             webSocket.emit(PLAY_CARD, cardObj);
+            Log.i(this.getClass().getName(), "Played card:" + cardObj.toString());
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
