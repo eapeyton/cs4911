@@ -3,10 +3,23 @@
     android:layout_height="match_parent"
     tools:context="cards.seniordesign.com.cards.game.PreGameFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="start game"
-        android:onClick="goToGameplay"/>
+        android:text="send start game message"
+        android:onClick="startGame"/>
+
+    <!--<Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="go to gameplay screen"
+        android:onClick="goToGameplay"/>-->
+
+    </LinearLayout>
 
 </FrameLayout>
