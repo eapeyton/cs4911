@@ -1,12 +1,13 @@
 package cards.seniordesign.com.cards.models;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 /**
  * Created by Eric on 4/13/15.
  */
-public class Round {
+public class Round implements Serializable {
     private UUID id;
     private UUID gameId;
     private UUID judge;

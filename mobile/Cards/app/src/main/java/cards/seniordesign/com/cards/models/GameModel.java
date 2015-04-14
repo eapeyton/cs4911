@@ -1,12 +1,13 @@
 package cards.seniordesign.com.cards.models;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 /**
  * Created by Eric on 4/13/15.
  */
-public class GameModel {
+public class GameModel implements Serializable{
     private UUID id;
     private UUID roomId;
     private Date finishTime;
