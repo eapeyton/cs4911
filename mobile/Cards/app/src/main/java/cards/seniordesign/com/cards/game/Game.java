@@ -35,7 +35,7 @@ public class Game extends Activity implements GameplayFragment.GameplayListener 
 
         socket = new JeezSocket(this, currentUser, currentRoom);
 
-        PreGameFragment pregame = PreGameFragment.newInstance(currentUser, currentRoom);
+        PreGameFragment pregame = PreGameFragment.newInstance(currentUser, currentRoom, isHost);
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction().add(R.id.content_frame, pregame).commit();

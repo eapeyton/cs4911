@@ -9,16 +9,17 @@
         android:orientation="vertical">
 
     <Button
+        android:id="@+id/start_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="send start game message"
+        android:text="Start the game."
         android:onClick="startGame"/>
 
-    <!--<Button
+    <TextView
+        android:id="@+id/waiting_for_host"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="go to gameplay screen"
-        android:onClick="goToGameplay"/>-->
+        android:text="Waiting for host to start game..."/>
 
     </LinearLayout>
 
