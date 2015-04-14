@@ -38,4 +38,31 @@ describe("'start game'",function(){
       done();
     });
   });
+  /*
+  it('if non-host tries to start game, send errror ', function(done){
+    var startGameEvents = [
+      {
+        sender: 1,
+        sendKey: 'start game',
+        resKey: 'host started game'
+      }
+    ];
+
+    websocketHelper.connectClients()
+    .then(websocketHelper.waitForError.bind({events: startGameEvents}))
+    .then(function(clients){
+      var lastResponse = clients[0].lastResponse;
+
+      lastResponse.should.have.property('judge');
+      lastResponse.should.have.property('blackCard').with.property('type', 'black');
+      lastResponse.should.have.property('round').with.property('winner', null);
+      lastResponse.should.have.property('round').with.property('winningCard', null);
+      lastResponse.should.have.property('playerStates');
+
+      // one of the players should be waiting, the others playing
+      lastResponse.playerStates.should.containDeep([{state: 'waiting for players'},{state: 'playing'},{state: 'playing'}]);
+      done();
+    });
+  });
+*/
 });

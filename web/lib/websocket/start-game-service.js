@@ -151,6 +151,8 @@ StartGameService.prototype.startGame = function(){
                 player: players[i]
               });
             }
+            console.log("\n\n\nplayersWithCards-", playersWithCards);
+            console.log("\n\n\ncards-", cards);
             resolve(playersWithCards);
           })
         });
@@ -172,6 +174,7 @@ StartGameService.prototype.startGame = function(){
 
           models.Hand.bulkCreate(handEntries)
           .then(function(hands){
+            console.log('hands -', hands);
             resolve(response);
           })
         });
