@@ -30,8 +30,8 @@ public interface JeezAPIInterface {
     @GET("/users")
     public void getUsers(Callback<List<User>> cb);
 
-    @GET("/cards")
-    public void getCards(Callback<List<Card>> card);
+    @GET("/hands")
+    public void getHand(Callback<List<Card>> cb);
 
     @GET("/rooms")
     public void getRooms(Callback<List<Room>> cb);
