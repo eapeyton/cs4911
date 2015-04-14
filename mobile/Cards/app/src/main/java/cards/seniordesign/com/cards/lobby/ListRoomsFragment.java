@@ -184,14 +184,14 @@ public class ListRoomsFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            if (room.isFull()) {
-                Dialog.showError(getActivity(), "Room is already full.");
-            } else if (currentUser.isInARoom()) {
+            if (currentUser.isInARoom()) {
                 if (room.contains(currentUser)) {
                     goToGameRoom(room);
                 } else {
                     Dialog.showError(getActivity(), "You are already in a different room.");
                 }
+            } else if (room.isFull()) {
+                Dialog.showError(getActivity(), "Room is already full.");
             } else {
                 currentUser.setRoomId(room.getId());
                 joinRoom(room);
