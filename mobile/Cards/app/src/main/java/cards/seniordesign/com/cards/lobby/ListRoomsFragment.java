@@ -186,7 +186,9 @@ public class ListRoomsFragment extends Fragment {
         public void onClick(View v) {
             if (currentUser.isInARoom()) {
                 if (room.contains(currentUser)) {
-                    goToGameRoom(room);
+                    // As of now, we cannot rejoin a game
+                    // goToGameRoom(room);
+                    Dialog.showError(getActivity(), "The game is already is progress.");
                 } else {
                     Dialog.showError(getActivity(), "You are already in a different room.");
                 }
