@@ -4,13 +4,12 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * Created by Eric on 4/1/15.
+ * Created by Eric on 4/13/15.
  */
-public class Player {
+public class GameModel {
     private UUID id;
-    private UUID userId;
     private UUID roomId;
-    private int place;
+    private Date finishTime;
     private Date updatedAt;
     private Date createdAt;
 
@@ -22,14 +21,6 @@ public class Player {
         this.id = id;
     }
 
-    public UUID getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
     public UUID getRoomId() {
         return roomId;
     }
@@ -38,12 +29,12 @@ public class Player {
         this.roomId = roomId;
     }
 
-    public int getPlace() {
-        return place;
+    public Date getFinishTime() {
+        return finishTime;
     }
 
-    public void setPlace(int place) {
-        this.place = place;
+    public void setFinishTime(Date finishTime) {
+        this.finishTime = finishTime;
     }
 
     public Date getUpdatedAt() {
@@ -60,14 +51,5 @@ public class Player {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public static class PlayerState {
-        public UUID id;
-        public UUID userId;
-        public UUID gameId;
-        public GameState state;
-        public Date createdAt;
-        public Date updatedAt;
     }
 }
