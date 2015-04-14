@@ -32,8 +32,8 @@ public interface JeezAPIInterface {
     @GET("/users")
     public void getUsers(Callback<List<User>> cb);
 
-    @GET("/cards")
-    public void getCards(Callback<List<Card>> card);
+    @GET("/hands")
+    public void getHand(Callback<List<Card>> cb);
 
     @POST("/cards")
     public void addCard(@Body Card newCard, Callback<AddCardResponse> cb);
