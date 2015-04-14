@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -22,10 +23,12 @@ import android.widget.NumberPicker;
 
 import cards.seniordesign.com.cards.Args;
 import cards.seniordesign.com.cards.R;
+import cards.seniordesign.com.cards.game.Game;
+import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
 
 
-public class Lobby extends Activity implements AddRoomFragment.OnFragmentInteractionListener {
+public class Lobby extends Activity implements AddRoomFragment.AddRoomListener, ListRoomsFragment.ListRoomsListener {
 
     private static final String TAG = "Lobby";
 
@@ -119,18 +122,6 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
         getActionBar().setTitle("New room");
     }
 
-    public void exitAddRoom(User currentUser) {
-        this.currentUser = currentUser;
-        FragmentManager fm = getFragmentManager();
-        fm.popBackStackImmediate();
-    }
-
-    public void closeAddRoom() {
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        getActionBar().setTitle(this.getTitle());
-    }
-
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -197,5 +188,23 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
                 .create();
         dialog.show();
     }
+
+    public void goToGameAsHost(Room room, User currentUser) {
+        Intent intent = new Intent(this, Game.class);
+        intent.putExtra(Args.IS_HOST, true);
+        goToGameRoom(intent, room, currentUser);
+    }
+
+    public void goToGameAsGuest(Room room, User currentUser) {
+        Intent intent = new Intent(this, Game.class);
+        intent.putExtra(Args.IS_HOST, false);
+        goToGameRoom(intent, room, currentUser);
+    }
+
+    private void goToGameRoom(Intent intent, Room room, User currentUser) {
+        intent.putExtra(Args.CURRENT_ROOM, room);
+        intent.putExtra(Args.CURRENT_USER, currentUser);
+        startActivity(intent);
+}
 
 }
