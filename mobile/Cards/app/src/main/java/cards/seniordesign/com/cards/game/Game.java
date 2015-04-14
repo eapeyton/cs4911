@@ -20,6 +20,7 @@ public class Game extends Activity implements GameplayFragment.GameplayListener 
 
     private Room currentRoom;
     private User currentUser;
+    private boolean isHost;
 
     private JeezSocket socket;
 
@@ -30,6 +31,7 @@ public class Game extends Activity implements GameplayFragment.GameplayListener 
         setContentView(R.layout.activity_game);
         currentRoom = getIntent().getExtras().getParcelable(Args.CURRENT_ROOM);
         currentUser = getIntent().getExtras().getParcelable(Args.CURRENT_USER);
+        isHost = getIntent().getExtras().getBoolean(Args.IS_HOST);
 
         socket = new JeezSocket(this, currentUser, currentRoom);
 

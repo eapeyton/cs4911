@@ -197,23 +197,19 @@ public class ListRoomsFragment extends Fragment {
             } else {
                 currentUser.setRoomId(room.getId());
                 joinRoom(room);
-                goToGameRoom(room);
             }
         }
     }
 
-    private void goToGameRoom(Room room) {
-        Intent intent = new Intent(getActivity(), Game.class);
-        intent.putExtra(Args.CURRENT_ROOM, room);
-        intent.putExtra(Args.CURRENT_USER, currentUser);
-        startActivity(intent);
-    }
-
-    private void joinRoom(Room room) {
+    private void joinRoom(final Room room) {
         JeezAPIClient.getAPI().joinRoom(room.getId(), new Callback<JoinRoomResponse>() {
             @Override
             public void success(JoinRoomResponse joinRoomResponse, Response response) {
-
+                if (currentUser.getId().equals(joinRoomResponse.host.getUserId())) {
+                    goToGameAsHost(room);
+                } else {
+                    goToGameAsGuest(room);
+                }
             }
 
             @Override
@@ -224,6 +220,23 @@ public class ListRoomsFragment extends Fragment {
         });
     }
 
+    private void goToGameAsHost(Room room) {
+        Intent intent = new Intent(getActivity(), Game.class);
+        intent.putExtra(Args.IS_HOST, true);
+        goToGameRoom(intent, room);
+    }
+
+    private void goToGameAsGuest(Room room) {
+        Intent intent = new Intent(getActivity(), Game.class);
+        intent.putExtra(Args.IS_HOST, false);
+        goToGameRoom(intent, room);
+    }
+
+    private void goToGameRoom(Intent intent, Room room) {
+        intent.putExtra(Args.CURRENT_ROOM, room);
+        intent.putExtra(Args.CURRENT_USER, currentUser);
+        startActivity(intent);
+    }
 
     public Bitmap getScaledBitmap(int drawable) {
         return Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), drawable), scale_size, scale_size, false);
