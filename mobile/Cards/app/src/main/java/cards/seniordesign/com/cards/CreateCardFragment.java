@@ -2,8 +2,6 @@ package cards.seniordesign.com.cards;
 
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageInstaller;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -13,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethod;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.app.AlertDialog;
@@ -23,7 +19,6 @@ import android.content.DialogInterface;
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Card;
 import cards.seniordesign.com.cards.models.User;
-import cards.seniordesign.com.cards.models.response.AddCardResponse;
 
 import retrofit.RetrofitError;
 import retrofit.Callback;
@@ -132,9 +127,9 @@ public class CreateCardFragment extends Fragment {
         newCard.setUserId(currUser.getId());
 
         // Make api call
-        JeezAPIClient.getAPI().addCard(newCard, new Callback<AddCardResponse>() {
+        JeezAPIClient.getAPI().addCard(newCard, new Callback<Card>() {
             @Override
-            public void success(AddCardResponse addRoomResponse, Response response) {
+            public void success(Card addedCard, Response response) {
                 Log.i("AddCard", "Card added successfully");
                 mListener.exitCreateCard(editor);
             }

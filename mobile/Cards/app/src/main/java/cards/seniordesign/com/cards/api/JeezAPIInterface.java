@@ -8,13 +8,11 @@ import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
 import cards.seniordesign.com.cards.models.response.AddRoomResponse;
 import cards.seniordesign.com.cards.models.response.JoinRoomResponse;
-import cards.seniordesign.com.cards.models.response.AddCardResponse;
 
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
-import retrofit.http.Header;
 import retrofit.http.POST;
 import retrofit.http.Path;
 
@@ -36,7 +34,7 @@ public interface JeezAPIInterface {
     public void getCards(Callback<List<Card>> card);
 
     @POST("/cards")
-    public void addCard(@Body Card newCard, Callback<AddCardResponse> cb);
+    public void addCard(@Body Card newCard, Callback<Card> cb);
 
     @GET("/rooms")
     public void getRooms(Callback<List<Room>> cb);
