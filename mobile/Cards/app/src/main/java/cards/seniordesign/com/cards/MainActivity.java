@@ -133,6 +133,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        Log.i(getClass().getName(), "Session state changed.");
         // Only make changes if the activity is visible
         if (isResumed) {
             FragmentManager manager = getSupportFragmentManager();
