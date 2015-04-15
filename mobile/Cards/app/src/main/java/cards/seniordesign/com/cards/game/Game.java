@@ -7,6 +7,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
+import java.util.List;
+
 import cards.seniordesign.com.cards.Args;
 import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezSocket;
@@ -61,5 +63,8 @@ public class Game extends Activity implements GameplayFragment.GameplayListener 
     @Override
     public void playCard(Card card) {
         socket.playCard(card);
+    }
+
+    public void showPlayedCards(List<Card.PlayedCard> playedCards) {
     }
 }

@@ -71,4 +71,14 @@ public class Card implements Serializable {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    public static class PlayedCard implements Serializable {
+        public UUID id;
+        public UUID userId;
+        public UUID cardId;
+        public UUID roundId;
+        public Date createdAt;
+        public Date updatedAt;
+        public Card Card;
+    }
 }
