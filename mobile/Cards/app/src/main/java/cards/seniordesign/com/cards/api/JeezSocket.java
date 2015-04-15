@@ -16,6 +16,7 @@ import cards.seniordesign.com.cards.game.Game;
 import cards.seniordesign.com.cards.models.Card;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
+import cards.seniordesign.com.cards.models.response.JudgeWaitingResponse;
 import cards.seniordesign.com.cards.models.response.StartGameResponse;
 
 /**
@@ -56,7 +57,7 @@ public class JeezSocket {
         webSocket.on(USER_NOT_HOST, new NotifyListener("The user is not the host."));
         webSocket.on(GAME_BEING_PLAYED, new NotifyListener("The game is already being played."));
         webSocket.on(USER_HAS_PLAYED, new NotifyListener("User played card"));
-        webSocket.on(WAITING_FOR_JUDGE, new NotifyListener("Waiting for judge..."));
+        webSocket.on(WAITING_FOR_JUDGE, onWaitingForJudge);
 
         webSocket.connect();
         webSocket.emit(SETUP_SOCKET, JeezConverter.toJson(currentUser));
@@ -75,6 +76,14 @@ public class JeezSocket {
             Log.i(getClass().getName(), "Object:" + JeezConverter.toJson(response).toString());
             Dialog.showNotification(game, "Game has started.");
             game.goToGameplay(response);
+        }
+    };
+
+    private ResponseListener<JudgeWaitingResponse> onWaitingForJudge = new ResponseListener<JudgeWaitingResponse>(JudgeWaitingResponse.class) {
+        @Override
+        public void callOnUi(JudgeWaitingResponse response) {
+            game.showPlayedCards(response.playedCards);
+            Log.i(getClass().getName(), "Object: " + JeezConverter.toJson(response).toString());
         }
     };
 
@@ -137,6 +146,8 @@ public class JeezSocket {
 
         @Override
         public void callOnUi(Object... args) {
+            JSONObject recObj = (JSONObject) args[0];
+            Log.i(this.getClass().getName(), "Object received: " + recObj.toString());
             Dialog.showNotification(game, message);
         }
     }
