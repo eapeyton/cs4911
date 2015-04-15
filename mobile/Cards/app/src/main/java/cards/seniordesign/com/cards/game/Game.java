@@ -23,6 +23,9 @@ public class Game extends Activity implements GameplayFragment.GameplayListener 
     private Room currentRoom;
     private User currentUser;
     private boolean isHost;
+    private boolean isJudge = false;
+
+    private Card blackCard;
 
     private JeezSocket socket;
 
@@ -49,8 +52,12 @@ public class Game extends Activity implements GameplayFragment.GameplayListener 
     }
 
     public void goToGameplay(StartGameResponse response) {
-        GameplayFragment gameplay = GameplayFragment.newInstance(response);
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, gameplay).addToBackStack(null).commit();
+        blackCard = response.blackCard;
+        if (response.judge.getUserId().equals(currentUser.getId())) {
+            isJudge = true;
+        }
+        GameplayFragment gameplayFragment = GameplayFragment.newInstance(response);
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, gameplayFragment).addToBackStack(null).commit();
     }
 
     @Override
@@ -66,5 +73,7 @@ public class Game extends Activity implements GameplayFragment.GameplayListener 
     }
 
     public void showPlayedCards(List<Card.PlayedCard> playedCards) {
+        JudgeFragment judgeFragment = JudgeFragment.newInstance(playedCards, blackCard, isJudge);
+        getFragmentManager().beginTransaction().replace(R.id.content_frame, judgeFragment).addToBackStack(null).commit();
     }
 }
