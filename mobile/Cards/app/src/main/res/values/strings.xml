@@ -46,6 +46,10 @@
     <string name="add_room_fragment">Add a room soon here</string>
     <string name="action_accept">Accept</string>
     <string name="add_room_title">Room Name</string>
+    <string name="title_activity_editor">Editor</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

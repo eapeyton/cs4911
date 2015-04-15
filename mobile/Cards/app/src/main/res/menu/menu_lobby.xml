@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="cards.seniordesign.com.cards.Lobby">
+    tools:context="cards.seniordesign.com.cards.lobby.Lobby">
     <!-- New Room -->
     <item android:id="@+id/action_add_room"
         android:icon="@drawable/ic_action_new"

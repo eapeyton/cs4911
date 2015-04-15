@@ -1,6 +1,5 @@
-package cards.seniordesign.com.cards;
+package cards.seniordesign.com.cards.lobby;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -11,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +19,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+
+import cards.seniordesign.com.cards.Args;
+import cards.seniordesign.com.cards.R;
+import cards.seniordesign.com.cards.models.User;
 
 
 public class Lobby extends Activity implements AddRoomFragment.OnFragmentInteractionListener {
@@ -33,10 +37,14 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    private User currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
+
+        currentUser = getIntent().getExtras().getParcelable(Args.CURRENT_USER);
 
         mTitle = mDrawerTitle = getTitle();
         mDrawerNames = getResources().getStringArray(R.array.drawers);
@@ -71,7 +79,8 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction().add(R.id.content_frame, new ListRoomsFragment()).commit();
+            Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
+            getFragmentManager().beginTransaction().add(R.id.content_frame, ListRoomsFragment.newInstance(currentUser)).commit();
         }
 
 
@@ -100,7 +109,7 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
     }
 
     private void openAddRoom() {
-        Fragment addRoomFragment = new AddRoomFragment();
+        Fragment addRoomFragment = AddRoomFragment.newInstance(currentUser);
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, addRoomFragment).addToBackStack(null).commit();
@@ -110,7 +119,8 @@ public class Lobby extends Activity implements AddRoomFragment.OnFragmentInterac
         getActionBar().setTitle("New room");
     }
 
-    public void exitAddRoom() {
+    public void exitAddRoom(User currentUser) {
+        this.currentUser = currentUser;
         FragmentManager fm = getFragmentManager();
         fm.popBackStackImmediate();
     }

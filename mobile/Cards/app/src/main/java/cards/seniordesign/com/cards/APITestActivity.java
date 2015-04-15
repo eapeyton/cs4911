@@ -7,8 +7,8 @@ import android.view.MenuItem;
 
 import java.util.List;
 
+import cards.seniordesign.com.cards.api.JeezConverter;
 import cards.seniordesign.com.cards.api.JeezAPIInterface;
-import cards.seniordesign.com.cards.api.ResponseConverter;
 import cards.seniordesign.com.cards.models.User;
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -24,7 +24,7 @@ public class APITestActivity extends Activity {
         setContentView(R.layout.activity_apitest);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://ah-jeez.herokuapp.com")
-                .setConverter(new ResponseConverter())
+                .setConverter(new JeezConverter())
                 .build();
 
         restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);

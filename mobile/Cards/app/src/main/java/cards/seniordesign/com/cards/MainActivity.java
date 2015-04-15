@@ -1,5 +1,6 @@
 package cards.seniordesign.com.cards;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +25,8 @@ import java.util.Random;
 import java.util.UUID;
 
 import cards.seniordesign.com.cards.api.JeezAPIClient;
+import cards.seniordesign.com.cards.game.Game;
+import cards.seniordesign.com.cards.lobby.Lobby;
 import cards.seniordesign.com.cards.models.User;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -77,12 +81,24 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void goToGame(View view) {
-        Intent intent = new Intent(this, Game.class);
-        startActivity(intent);
+        goToActivity(Game.class);
     }
 
     public void goToLobby(View view) {
-        Intent intent = new Intent(this, Lobby.class);
+        goToActivity(Lobby.class);
+    }
+
+    public void goToEditor(View view) {
+        goToActivity(Editor.class);
+    }
+
+    public void goToActivity(Class<? extends Activity> activity) {
+        Intent intent = new Intent(this, activity);
+        if (currentUser == null) {
+            loginWith(Session.getActiveSession());
+        }
+        Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
+        intent.putExtra(Args.CURRENT_USER, currentUser);
         startActivity(intent);
     }
 
@@ -129,8 +145,8 @@ public class MainActivity extends FragmentActivity {
             if (state.isOpened()) {
                 // If the session state is open:
                 // Show the authenticated fragment
-                loginWith(session);
-                //loginRandom();
+                //loginWith(session);
+                loginRandom();
                 showFragment(SELECTION, false);
             } else if (state.isClosed()) {
                 // If the session state is closed:
@@ -177,7 +193,7 @@ public class MainActivity extends FragmentActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                System.err.println(error);
+                Log.e(this.getClass().getName(), error.toString());
             }
         });
     }

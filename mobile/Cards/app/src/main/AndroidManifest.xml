@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Game"
+            android:name=".game.Game"
             android:label="@string/title_activity_game"
             android:parentActivityName=".MainActivity" >
             <meta-data
@@ -39,7 +39,7 @@
                 android:value="cards.seniordesign.com.cards.MainActivity" />
         </activity>
         <activity
-            android:name=".Lobby"
+            android:name=".lobby.Lobby"
             android:label="@string/title_activity_lobby"
             android:parentActivityName=".MainActivity" >
             <meta-data
@@ -58,6 +58,14 @@
         <activity
             android:name=".APITestActivity"
             android:label="@string/title_activity_apitest" >
+        </activity>
+        <activity
+            android:name=".Editor"
+            android:label="@string/title_activity_editor"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cards.seniordesign.com.cards.MainActivity" />
         </activity>
     </application>
 

@@ -1,5 +1,8 @@
 package cards.seniordesign.com.cards.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.facebook.model.GraphUser;
 
 import java.util.Date;
@@ -8,7 +11,7 @@ import java.util.UUID;
 /**
  * Created by Eric on 3/24/15.
  */
-public class User {
+public class User implements Parcelable {
     private UUID id;
     private String fbToken;
     private String fbId;
@@ -27,6 +30,10 @@ public class User {
         setFbId(graphUser.getId());
         setName(graphUser.getName());
         setPic("https://graph.facebook.com/" + getFbId() + "/pic?type=large");
+    }
+
+    public boolean isInARoom() {
+        return !(getRoomId() == null);
     }
 
     public UUID getId() {
@@ -95,5 +102,61 @@ public class User {
 
     public String getAuthHeader() {
         return "Token " + getFbToken();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (!id.equals(user.id)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(getId());
+        dest.writeString(getFbToken());
+        dest.writeString(getFbId());
+        dest.writeString(getPic());
+        dest.writeString(getName());
+        dest.writeValue(getUpdatedAt());
+        dest.writeValue(getCreatedAt());
+        dest.writeValue(getRoomId());
+    }
+
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    // example constructor that takes a Parcel and gives you an object populated with it's values
+    private User(Parcel in) {
+        setId((UUID)in.readValue(UUID.class.getClassLoader()));
+        setFbToken(in.readString());
+        setFbId(in.readString());
+        setPic(in.readString());
+        setName(in.readString());
+        setUpdatedAt((Date)in.readValue(Date.class.getClassLoader()));
+        setCreatedAt((Date)in.readValue(Date.class.getClassLoader()));
+        setRoomId((UUID)in.readValue(UUID.class.getClassLoader()));
     }
 }

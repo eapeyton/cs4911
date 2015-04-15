@@ -1,6 +1,7 @@
-package cards.seniordesign.com.cards;
+package cards.seniordesign.com.cards.lobby;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -16,6 +17,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +26,14 @@ import android.widget.LinearLayout;
 
 import java.util.List;
 
+import cards.seniordesign.com.cards.Args;
+import cards.seniordesign.com.cards.Dialog;
+import cards.seniordesign.com.cards.game.Game;
+import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Room;
+import cards.seniordesign.com.cards.models.User;
+import cards.seniordesign.com.cards.models.response.JoinRoomResponse;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -42,32 +50,19 @@ import retrofit.client.Response;
 public class ListRoomsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private User currentUser;
 
     private int scale_size;
     private Typeface lobby_name_font;
 
     private OnFragmentInteractionListener mListener;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ListRoomsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ListRoomsFragment newInstance(String param1, String param2) {
+    public static ListRoomsFragment newInstance(User currentUser) {
         ListRoomsFragment fragment = new ListRoomsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(Args.CURRENT_USER, currentUser);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,12 +76,11 @@ public class ListRoomsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         lobby_name_font = Typeface.createFromAsset(getActivity().getAssets(), "Seravek.ttc");
         scale_size = (int) getResources().getDimension(R.dimen.lobby_item_height);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
+        currentUser = getArguments().getParcelable(Args.CURRENT_USER);
+        Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -125,8 +119,9 @@ public class ListRoomsFragment extends Fragment {
         JeezAPIClient.getAPI().getRooms(new Callback<List<Room>>() {
             @Override
             public void success(List<Room> rooms, Response response) {
+                LinearLayout lobby_holder = (LinearLayout) getView().findViewById(R.id.lobby_holder);
+                lobby_holder.removeAllViews();
                 for (Room room : rooms) {
-                    LinearLayout lobby_holder = (LinearLayout) getView().findViewById(R.id.lobby_holder);
                     if (!room.isEmpty()) {
                         addLobby(lobby_holder, room);
                     }
@@ -174,8 +169,57 @@ public class ListRoomsFragment extends Fragment {
         lobbyItemBg.addState(new int[] {android.R.attr.state_pressed}, pressed);
 
         button.setBackgroundDrawable(lobbyItemBg);
+        button.setOnClickListener(new OnClickRoom(room));
+
 
         lobby_holder.addView(button);
+    }
+
+    public class OnClickRoom implements View.OnClickListener {
+        private Room room;
+
+        public OnClickRoom(Room room) {
+            this.room = room;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (currentUser.isInARoom()) {
+                if (room.contains(currentUser)) {
+                    goToGameRoom(room);
+                } else {
+                    Dialog.showError(getActivity(), "You are already in a different room.");
+                }
+            } else if (room.isFull()) {
+                Dialog.showError(getActivity(), "Room is already full.");
+            } else {
+                currentUser.setRoomId(room.getId());
+                joinRoom(room);
+                goToGameRoom(room);
+            }
+        }
+    }
+
+    private void goToGameRoom(Room room) {
+        Intent intent = new Intent(getActivity(), Game.class);
+        intent.putExtra(Args.CURRENT_ROOM, room);
+        intent.putExtra(Args.CURRENT_USER, currentUser);
+        startActivity(intent);
+    }
+
+    private void joinRoom(Room room) {
+        JeezAPIClient.getAPI().joinRoom(room.getId(), new Callback<JoinRoomResponse>() {
+            @Override
+            public void success(JoinRoomResponse joinRoomResponse, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                currentUser.setRoomId(null);
+                Log.e(this.getClass().getName(), error.toString());
+            }
+        });
     }
 
 

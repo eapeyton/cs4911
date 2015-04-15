@@ -41,6 +41,7 @@
             android:padding="@dimen/card_padding"
             android:textAllCaps="false"
             android:background="@drawable/main_menu_background"
-            android:text="@string/go_to_editor"/>
+            android:text="@string/go_to_editor"
+            android:onClick="goToEditor"/>
     </LinearLayout>
 </LinearLayout>
