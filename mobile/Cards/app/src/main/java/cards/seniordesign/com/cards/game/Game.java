@@ -18,7 +18,7 @@ import cards.seniordesign.com.cards.models.User;
 import cards.seniordesign.com.cards.models.response.StartGameResponse;
 
 
-public class Game extends Activity implements GameplayFragment.GameplayListener {
+public class Game extends Activity implements GameplayFragment.GameplayListener, JudgeFragment.JudgeListener {
 
     private Room currentRoom;
     private User currentUser;
@@ -75,5 +75,10 @@ public class Game extends Activity implements GameplayFragment.GameplayListener 
     public void showPlayedCards(List<Card.PlayedCard> playedCards) {
         JudgeFragment judgeFragment = JudgeFragment.newInstance(playedCards, blackCard, isJudge);
         getFragmentManager().beginTransaction().replace(R.id.content_frame, judgeFragment).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void pickCard(Card.PlayedCard pickedCard) {
+        socket.pickCard(pickedCard);
     }
 }
