@@ -1,6 +1,7 @@
 package cards.seniordesign.com.cards.game;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -25,15 +26,13 @@ public class JudgeFragment extends Fragment {
     private static final String BLACK_CARD = "BLACK_CARD";
     private static final String IS_JUDGE = "IS_JUDGE";
 
-    private List<Card> playedCards;
+    private List<Card.PlayedCard> playedCards;
     private Card blackCard;
     private boolean isJudge;
+    private JudgeListener listener;
 
     public static JudgeFragment newInstance(List<Card.PlayedCard> playedCards, Card blackCard, boolean isJudge) {
-        ArrayList<Card> cards = new ArrayList<Card>();
-        for (Card.PlayedCard playedCard: playedCards) {
-            cards.add(playedCard.Card);
-        }
+        ArrayList<Card.PlayedCard> cards = new ArrayList<Card.PlayedCard>(playedCards);
 
         JudgeFragment fragment = new JudgeFragment();
         Bundle args = new Bundle();
@@ -51,7 +50,7 @@ public class JudgeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        playedCards = (List<Card>) getArguments().getSerializable(PLAYED_CARDS);
+        playedCards = (List<Card.PlayedCard>) getArguments().getSerializable(PLAYED_CARDS);
         blackCard = (Card) getArguments().getSerializable(BLACK_CARD);
         isJudge = getArguments().getBoolean(IS_JUDGE);
     }
@@ -66,20 +65,31 @@ public class JudgeFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            listener = (JudgeListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement JudgeListener");
+        }
+    }
+
     public void showBlackCard(View view) {
         TextView layoutCard = (TextView) view.findViewById(R.id.black_card);
         layoutCard.setText(blackCard.getText());
     }
 
     private void showPlayedCardsOn(ViewGroup holder) {
-        for (Card playedCard: playedCards) {
+        for (Card.PlayedCard playedCard: playedCards) {
             showCard(holder, playedCard);
         }
     }
 
-    protected void showCard(ViewGroup holder, Card playedCard) {
+    protected void showCard(ViewGroup holder, Card.PlayedCard playedCard) {
         Button button = (Button)this.getActivity().getLayoutInflater().inflate(R.layout.white_card, holder, false);
-        button.setText(playedCard.getText());
+        button.setText(playedCard.Card.getText());
         if (isJudge) {
             button.setOnClickListener(new OnJudgeClick(playedCard));
         } else {
@@ -90,15 +100,20 @@ public class JudgeFragment extends Fragment {
 
 
     private class OnJudgeClick implements View.OnClickListener {
-        private Card playedCard;
+        private Card.PlayedCard playedCard;
 
-        public OnJudgeClick(Card playedCard) {
+        public OnJudgeClick(Card.PlayedCard playedCard) {
             this.playedCard = playedCard;
         }
 
         @Override
         public void onClick(View v) {
-            Log.i(getClass().getName(), "Judge picked card:" + playedCard);
+            Log.i(getClass().getName(), "Judge picked card:" + playedCard.cardId);
+            listener.pickCard(playedCard);
         }
+    }
+
+    public interface JudgeListener {
+        public void pickCard(Card.PlayedCard pickedCard);
     }
 }
