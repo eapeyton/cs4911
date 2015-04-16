@@ -70,16 +70,6 @@ describe("Clients recieve 'new round'",function(){
 
         websocketHelper.getClientsCards(2)
         .then(function(cards){
-          console.log(clients[1].cards);
-          console.log(cards);
-          var a =[];
-          var b =[];
-          for(var i=0; i<cards.length; i++){
-            a.push(clients[1].cards[i].text);
-            b.push(cards[i].text);
-          }
-          console.log(a);
-          console.log(b);
           clients[1].cards.length.should.equal(cards.length);
           clients[1].cards[0].text.should.not.equal(cards[0].text);
           clients[1].cards[1].text.should.equal(cards[1].text);
