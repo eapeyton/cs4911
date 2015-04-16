@@ -19,7 +19,8 @@ router.get('/', authorize, function(req, res) {
     models.Hand.findAll({
       where: {
         userId: req.authorizedUser.id,
-        gameId: game.id
+        gameId: game.id,
+        played: false
       },
       include:[{
         model: models.Card
