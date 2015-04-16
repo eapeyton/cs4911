@@ -29,7 +29,7 @@ router.get('/', authorize, function(req, res) {
     })
     .then(function(hand){
       var cards = [];
-      for(var i=hand.length-1; i>=0; i--){
+      for(var i=0; i<hand.length; i++){
         cards.push(hand[i].Card);
       }
       res.json({

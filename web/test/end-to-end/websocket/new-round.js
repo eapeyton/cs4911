@@ -27,7 +27,7 @@ describe("Clients recieve 'new round'",function(){
         {
           sender:1,
           sendKey: 'play card',
-          sendMsg: {cardId: clients[1].cards[0].id},
+          sendMsg: {cardId: clients[1].cards[3].id},
           resKey: 'user has played'
         },
         {
