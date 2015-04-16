@@ -80,7 +80,8 @@ describe("Clients recieve 'new round'",function(){
           }
           console.log(a);
           console.log(b);
-          clients[1].cards.length.should.equal(cards.length)
+          clients[1].cards.length.should.equal(cards.length);
+          clients[1].cards[0].should.not.equal(cards[0]);
           done();
         });
       })
