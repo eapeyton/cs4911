@@ -22,13 +22,14 @@ router.get('/', authorize, function(req, res) {
         gameId: game.id,
         played: false
       },
+      order: '"Hand.createdAt" DESC',
       include:[{
         model: models.Card
       }]
     })
     .then(function(hand){
       var cards = [];
-      for(var i=0; i<hand.length; i++){
+      for(var i=hand.length-1; i>=0; i--){
         cards.push(hand[i].Card);
       }
       res.json({
