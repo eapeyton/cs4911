@@ -76,7 +76,7 @@ public class Game extends Activity implements GameplayFragment.GameplayListener,
     }
 
     public void showPlayedCards(List<Card.PlayedCard> playedCards) {
-        JudgeFragment judgeFragment = JudgeFragment.newInstance(playedCards, blackCard, isJudge);
+        JudgeFragment judgeFragment = JudgeFragment.newInstance(playedCards, blackCard);
         getFragmentManager().beginTransaction().replace(R.id.content_frame, judgeFragment).addToBackStack(null).commit();
     }
 
