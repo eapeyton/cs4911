@@ -22,7 +22,7 @@ router.get('/', authorize, function(req, res) {
         gameId: game.id,
         played: false
       },
-      order: '"Hand"."createdAt" DESC',
+      order: '`Hand`.`createdAt` DESC',
       include:[{
         model: models.Card
       }]
