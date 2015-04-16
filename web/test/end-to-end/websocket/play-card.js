@@ -13,7 +13,7 @@ describe("A single client sends 'play card'",function(){
     .finally(done);
   });
 
-  it('broadcast "user has played"', function(done){
+  it('broadcast "user has played" and user no longer has card in hand', function(done){
     var startGameEvents = [
       {
         sender: 0,
@@ -44,7 +44,11 @@ describe("A single client sends 'play card'",function(){
         lastResponse.should.have.property('round').with.property('state', 'waiting for players');
         lastResponse.should.have.property('playedCard');
 
-        done();
+        websocketHelper.getClientsCards(2)
+        .then(function(cards){
+          cards.length.should.equal(clients[1].cards.length-1)
+          done();
+        })
       })
     });
   });

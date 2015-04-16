@@ -139,9 +139,9 @@ module.exports = {
   updateClientsCards: function(clients){
     return new Promise(function(resolve, reject){
       Promise.join(
-        getClientsCards(1),
-        getClientsCards(2),
-        getClientsCards(3),
+        helpGetClientsCards(1),
+        helpGetClientsCards(2),
+        helpGetClientsCards(3),
         function(client1Res, client2Res, client3Res){
           clients[0].cards = client1Res;
           clients[1].cards = client2Res;
@@ -150,24 +150,28 @@ module.exports = {
         }
       );
     });
+  },
 
-    function getClientsCards(num){
-      return new Promise(function(resolve, reject){
-        var options = {
-          url: socketURL+'/hands',
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Token testFbToken" + num
-          }
-        };
-        var callback = function(error, response){
-          resolve(JSON.parse(response.body).cards);
-        }
-
-        request.get(options, callback);  
-      });
-    }
+  getClientsCards: function(num){
+    return helpGetClientsCards(num);
   }
+}
+
+function helpGetClientsCards(num){
+  return new Promise(function(resolve, reject){
+    var options = {
+      url: socketURL+'/hands',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Token testFbToken" + num
+      }
+    };
+    var callback = function(error, response){
+      resolve(JSON.parse(response.body).cards);
+    }
+
+    request.get(options, callback);  
+  });
 }
 
 function clientWaitFor(client, msg){
