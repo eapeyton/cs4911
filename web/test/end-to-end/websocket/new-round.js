@@ -7,11 +7,6 @@ var
   websocketHelper = require('./websocket-helper');
 
 describe("Clients recieve 'new round'",function(){
-  before(function(done) {
-    websocketHelper.createClients()
-    .then(websocketHelper.createCards)
-    .finally(done);
-  });
 
   it('server should send "new round" to clients after "round review"', function(done){
     var startGameEvents = [
@@ -22,7 +17,9 @@ describe("Clients recieve 'new round'",function(){
       }
     ];
 
-    websocketHelper.connectClients()
+    websocketHelper.createClients()
+    .then(websocketHelper.createCards)
+    .then(websocketHelper.connectClients)
     .then(websocketHelper.waitForEvents.bind({events: startGameEvents}))
     .then(websocketHelper.updateClientsCards)
     .then(function(clients){
@@ -75,4 +72,66 @@ describe("Clients recieve 'new round'",function(){
       })
     });
   });
+
+  it('players should have cards replaced', function(done){
+    var startGameEvents = [
+      {
+        sender: 0,
+        sendKey: 'start game',
+        resKey: 'host started game'
+      }
+    ];
+
+    websocketHelper.createClients()
+    .then(websocketHelper.createCards)
+    .then(websocketHelper.connectClients)
+    .then(websocketHelper.waitForEvents.bind({events: startGameEvents}))
+    .then(websocketHelper.updateClientsCards)
+    .then(function(clients){
+      var playCardEvents = [
+        {
+          sender:1,
+          sendKey: 'play card',
+          sendMsg: {cardId: clients[1].cards[0].id},
+          resKey: 'user has played'
+        },
+        {
+          sender:2,
+          sendKey: 'play card',
+          sendMsg: {cardId: clients[2].cards[0].id},
+          resKey: 'waiting for judge'
+        },
+        {
+          sender:0,
+          sendKey: 'choose winning card',
+          sendMsg: {
+            winner: clients[2].id,
+            winningCard: clients[2].cards[0].id
+          },
+          resKey: 'round review'
+        },
+        {
+          sender: 0,
+          sendKey: 'blank',
+          sendMsg: {},
+          resKey: 'new round'
+        }
+      ];
+      var runPlayCardEvents = websocketHelper.waitForEvents.bind({events: playCardEvents});
+
+      runPlayCardEvents(clients)
+      .then(function(clients){
+        var lastResponse = clients[0].lastResponse;
+        console.log("original cards=", clients[1].cards);
+        console.log("played card=", clients[1].cards[0]);
+        websocketHelper.getClientsCards(2)
+        .then(function(cards){
+          console.log("next round cards=", cards);
+          console.log("lengths before, after", clients[1].cards.length, cards.length);
+          done();
+        })
+      })
+    });
+  });
 });
+
