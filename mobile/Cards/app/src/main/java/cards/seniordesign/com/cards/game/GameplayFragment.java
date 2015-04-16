@@ -98,7 +98,9 @@ public class GameplayFragment extends Fragment {
         if (!listener.isJudge()) {
             button.setOnClickListener(new OnCardClick(whiteCard));
         } else {
+            int padding = button.getPaddingTop();
             button.setBackgroundDrawable(getResources().getDrawable(R.drawable.game_wcard_unpressable));
+            button.setPadding(padding, padding, padding, padding);
         }
         holder.addView(button);
     }
