@@ -1,6 +1,7 @@
 var models  = require('../models');
 var express = require('express');
 var router  = express.Router();
+var Promise = require("bluebird");
 var authorize = require('../lib/authorization-middleware')().authorize;
 
 
@@ -22,20 +23,28 @@ router.get('/', authorize, function(req, res) {
         gameId: game.id,
         played: false
       },
-      order: [['"createdAt"', 'DESC']],
-      include:[{
-        model: models.Card
-      }]
+      order: '"createdAt" DESC'
     })
-    .then(function(hand){
+    .then(function(handEntries){
       var cards = [];
-      for(var i=0; i<hand.length; i++){
-        cards.push(hand[i].Card);
+      Promise.each(handEntries, addCard)
+      .finally(function(){
+        res.json({
+          success: true,
+          cards: cards
+        });
+      })
+      function addCard(handEntry){
+        return new Promise(function(resolve, reject){
+          models.Card.find(handEntry.cardId)
+          .then(function(card){
+            cards.push(card);
+            resolve();
+          })
+        });
       }
-      res.json({
-        success: true,
-        cards: cards
-      });
+
+
     });
   })
   .catch(function(errors){
