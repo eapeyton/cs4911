@@ -28,14 +28,14 @@ import retrofit.client.Response;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddRoomFragment.OnFragmentInteractionListener} interface
+ * {@link cards.seniordesign.com.cards.lobby.AddRoomFragment.AddRoomListener} interface
  * to handle interaction events.
  * Use the {@link AddRoomFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class AddRoomFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
+    private AddRoomListener listener;
     public static final int LOWER_SIZE = 2;
     public static final int UPPER_SIZE = 20;
     private User currentUser;
@@ -92,7 +92,7 @@ public class AddRoomFragment extends Fragment {
             public void success(AddRoomResponse addRoomResponse, Response response) {
                 Log.i("AddRoom", "Room added successfully");
                 currentUser.setRoomId(addRoomResponse.room.getId());
-                mListener.exitAddRoom(currentUser);
+                listener.goToGameAsHost(addRoomResponse.room, currentUser);
             }
 
             @Override
@@ -127,7 +127,7 @@ public class AddRoomFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            listener = (AddRoomListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -137,8 +137,7 @@ public class AddRoomFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener.closeAddRoom();
-        mListener = null;
+        listener = null;
     }
 
     @Override
@@ -156,10 +155,8 @@ public class AddRoomFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void exitAddRoom(User currentUser);
-        public void closeAddRoom();
+    public interface AddRoomListener {
+        public void goToGameAsHost(Room room, User currentUser);
     }
 
 }

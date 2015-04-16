@@ -1,7 +1,6 @@
 package cards.seniordesign.com.cards.lobby;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -28,7 +27,6 @@ import java.util.List;
 
 import cards.seniordesign.com.cards.Args;
 import cards.seniordesign.com.cards.Dialog;
-import cards.seniordesign.com.cards.game.Game;
 import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Room;
@@ -42,22 +40,18 @@ import retrofit.client.Response;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ListRoomsFragment.OnFragmentInteractionListener} interface
+ * {@link cards.seniordesign.com.cards.lobby.ListRoomsFragment.ListRoomsListener} interface
  * to handle interaction events.
  * Use the {@link ListRoomsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class ListRoomsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
-    // TODO: Rename and change types of parameters
     private User currentUser;
 
     private int scale_size;
     private Typeface lobby_name_font;
 
-    private OnFragmentInteractionListener mListener;
+    private ListRoomsListener listener;
 
     public static ListRoomsFragment newInstance(User currentUser) {
         ListRoomsFragment fragment = new ListRoomsFragment();
@@ -80,8 +74,6 @@ public class ListRoomsFragment extends Fragment {
         Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -89,18 +81,11 @@ public class ListRoomsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_list_rooms, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            //mListener = (OnFragmentInteractionListener) activity;
+            listener = (ListRoomsListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -110,7 +95,7 @@ public class ListRoomsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        listener = null;
     }
 
     @Override
@@ -186,32 +171,26 @@ public class ListRoomsFragment extends Fragment {
         public void onClick(View v) {
             if (currentUser.isInARoom()) {
                 if (room.contains(currentUser)) {
-                    goToGameRoom(room);
+                    // As of now, we cannot rejoin a game
+                    // goToGameRoom(room);
+                    Dialog.showError(getActivity(), "The game is already is progress.");
                 } else {
                     Dialog.showError(getActivity(), "You are already in a different room.");
                 }
             } else if (room.isFull()) {
                 Dialog.showError(getActivity(), "Room is already full.");
             } else {
-                currentUser.setRoomId(room.getId());
                 joinRoom(room);
-                goToGameRoom(room);
             }
         }
     }
 
-    private void goToGameRoom(Room room) {
-        Intent intent = new Intent(getActivity(), Game.class);
-        intent.putExtra(Args.CURRENT_ROOM, room);
-        intent.putExtra(Args.CURRENT_USER, currentUser);
-        startActivity(intent);
-    }
-
-    private void joinRoom(Room room) {
+    private void joinRoom(final Room room) {
         JeezAPIClient.getAPI().joinRoom(room.getId(), new Callback<JoinRoomResponse>() {
             @Override
             public void success(JoinRoomResponse joinRoomResponse, Response response) {
-
+                currentUser.setRoomId(room.getId());
+                listener.goToGameAsGuest(room, currentUser);
             }
 
             @Override
@@ -221,7 +200,6 @@ public class ListRoomsFragment extends Fragment {
             }
         });
     }
-
 
     public Bitmap getScaledBitmap(int drawable) {
         return Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), drawable), scale_size, scale_size, false);
@@ -237,9 +215,9 @@ public class ListRoomsFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface ListRoomsListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void goToGameAsGuest(Room room, User currentUser);
     }
 
 }

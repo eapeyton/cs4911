@@ -96,10 +96,12 @@ public class MainActivity extends FragmentActivity {
         Intent intent = new Intent(this, activity);
         if (currentUser == null) {
             loginWith(Session.getActiveSession());
+            Dialog.showError(this, "Not logged in.");
+        } else {
+            Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
+            intent.putExtra(Args.CURRENT_USER, currentUser);
+            startActivity(intent);
         }
-        Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
-        intent.putExtra(Args.CURRENT_USER, currentUser);
-        startActivity(intent);
     }
 
     private void showFragment(int fragmentIndex, boolean addToBackStack) {
@@ -133,6 +135,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        Log.i(getClass().getName(), "Session state changed.");
         // Only make changes if the activity is visible
         if (isResumed) {
             FragmentManager manager = getSupportFragmentManager();

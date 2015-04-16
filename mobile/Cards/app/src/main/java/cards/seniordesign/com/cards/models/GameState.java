@@ -7,5 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public enum GameState {
     @SerializedName("waiting for players")
-    WAITING
+    WAITING_PLAYERS,
+    @SerializedName("waiting for judge")
+    WAITING_JUDGE
 }

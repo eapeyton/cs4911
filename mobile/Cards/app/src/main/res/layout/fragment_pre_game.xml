@@ -3,10 +3,24 @@
     android:layout_height="match_parent"
     tools:context="cards.seniordesign.com.cards.game.PreGameFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
     <Button
+        android:id="@+id/start_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="start game"
-        android:onClick="goToGameplay"/>
+        android:text="Start the game."
+        android:onClick="startGame"/>
+
+    <TextView
+        android:id="@+id/waiting_for_host"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Waiting for host to start game..."/>
+
+    </LinearLayout>
 
 </FrameLayout>
