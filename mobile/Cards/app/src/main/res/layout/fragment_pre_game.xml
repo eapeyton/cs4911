@@ -3,24 +3,36 @@
     android:layout_height="match_parent"
     tools:context="cards.seniordesign.com.cards.game.PreGameFragment">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
     <Button
         android:id="@+id/start_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start the game."
-        android:onClick="startGame"/>
+        android:onClick="startGame"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/game_wcard_background"
+        android:textColor="@android:color/black"
+        android:layout_margin="40dp"
+        android:padding="20dp"/>
 
     <TextView
         android:id="@+id/waiting_for_host"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Waiting for host to start game..."/>
+        android:text="Waiting for host to start game..."
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/game_bcard_background"
+        android:textColor="@android:color/white"
+        android:layout_margin="40dp"
+        android:padding="20dp"/>
 
-    </LinearLayout>
+
+    </RelativeLayout>
 
 </FrameLayout>
