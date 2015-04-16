@@ -13,6 +13,7 @@ import cards.seniordesign.com.cards.Args;
 import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezSocket;
 import cards.seniordesign.com.cards.models.Card;
+import cards.seniordesign.com.cards.models.Player;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
 import cards.seniordesign.com.cards.models.response.StartGameResponse;
@@ -51,12 +52,14 @@ public class Game extends Activity implements GameplayFragment.GameplayListener,
         socket.startGame();
     }
 
-    public void goToGameplay(StartGameResponse response) {
-        blackCard = response.blackCard;
-        if (response.judge.getUserId().equals(currentUser.getId())) {
+    public void goToGameplay(Player judge, Card blackCard) {
+        this.blackCard = blackCard;
+        if (judge.getUserId().equals(currentUser.getId())) {
             isJudge = true;
+        } else {
+            isJudge = false;
         }
-        GameplayFragment gameplayFragment = GameplayFragment.newInstance(response);
+        GameplayFragment gameplayFragment = GameplayFragment.newInstance(blackCard);
         getFragmentManager().beginTransaction().replace(R.id.content_frame, gameplayFragment).addToBackStack(null).commit();
     }
 
@@ -80,5 +83,13 @@ public class Game extends Activity implements GameplayFragment.GameplayListener,
     @Override
     public void pickCard(Card.PlayedCard pickedCard) {
         socket.pickCard(pickedCard);
+    }
+
+    public boolean isJudge() {
+        return isJudge;
+    }
+
+    public void setIsJudge(boolean isJudge) {
+        this.isJudge = isJudge;
     }
 }

@@ -4,6 +4,7 @@ package cards.seniordesign.com.cards.game;
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,15 +26,15 @@ import retrofit.client.Response;
  */
 public class GameplayFragment extends Fragment {
 
-    public static final String START_GAME = "START_GAME";
+    public static final String BLACK_CARD = "BLACK_CARD";
 
-    private StartGameResponse gameData;
+    private Card blackCard;
     private GameplayListener listener;
 
-    public static GameplayFragment newInstance(StartGameResponse response) {
+    public static GameplayFragment newInstance(Card blackCard) {
         GameplayFragment fragment = new GameplayFragment();
         Bundle args = new Bundle();
-        args.putSerializable(START_GAME, response);
+        args.putSerializable(BLACK_CARD, blackCard);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,7 +46,7 @@ public class GameplayFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        gameData = (StartGameResponse) getArguments().getSerializable(START_GAME);
+        blackCard = (Card) getArguments().getSerializable(BLACK_CARD);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class GameplayFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_gameplay, container, false);
         addCardButtons((ViewGroup)view.findViewById(R.id.card_hand));
-        showBlackCard(view, gameData.blackCard);
+        showBlackCard(view, blackCard);
         return view;
     }
 
@@ -84,7 +85,9 @@ public class GameplayFragment extends Fragment {
     }
 
     protected void addCardButtons(ViewGroup holder, List<Card> cards) {
+        Log.i(getClass().getName(), "Adding new cards...");
         for (Card card: cards) {
+            Log.i(getClass().getName(), "Adding:" + card.getText());
             addCardButton(holder, card);
         }
     }
@@ -92,7 +95,11 @@ public class GameplayFragment extends Fragment {
     protected void addCardButton(ViewGroup holder, Card whiteCard) {
         Button button = (Button)this.getActivity().getLayoutInflater().inflate(R.layout.white_card, holder, false);
         button.setText(whiteCard.getText());
-        button.setOnClickListener(new OnCardClick(whiteCard));
+        if (!listener.isJudge()) {
+            button.setOnClickListener(new OnCardClick(whiteCard));
+        } else {
+            button.setBackgroundDrawable(getResources().getDrawable(R.drawable.game_wcard_unpressable));
+        }
         holder.addView(button);
     }
 
@@ -116,5 +123,6 @@ public class GameplayFragment extends Fragment {
 
     public interface GameplayListener {
         public void playCard(Card card);
+        public boolean isJudge();
     }
 }

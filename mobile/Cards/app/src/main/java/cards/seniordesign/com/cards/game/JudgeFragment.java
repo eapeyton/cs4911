@@ -24,21 +24,18 @@ public class JudgeFragment extends Fragment {
 
     private static final String PLAYED_CARDS = "PLAYED_CARDS";
     private static final String BLACK_CARD = "BLACK_CARD";
-    private static final String IS_JUDGE = "IS_JUDGE";
 
     private List<Card.PlayedCard> playedCards;
     private Card blackCard;
-    private boolean isJudge;
     private JudgeListener listener;
 
-    public static JudgeFragment newInstance(List<Card.PlayedCard> playedCards, Card blackCard, boolean isJudge) {
+    public static JudgeFragment newInstance(List<Card.PlayedCard> playedCards, Card blackCard) {
         ArrayList<Card.PlayedCard> cards = new ArrayList<Card.PlayedCard>(playedCards);
 
         JudgeFragment fragment = new JudgeFragment();
         Bundle args = new Bundle();
         args.putSerializable(PLAYED_CARDS, cards);
         args.putSerializable(BLACK_CARD, blackCard);
-        args.putBoolean(IS_JUDGE, isJudge);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,7 +49,6 @@ public class JudgeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         playedCards = (List<Card.PlayedCard>) getArguments().getSerializable(PLAYED_CARDS);
         blackCard = (Card) getArguments().getSerializable(BLACK_CARD);
-        isJudge = getArguments().getBoolean(IS_JUDGE);
     }
 
     @Override
@@ -90,7 +86,7 @@ public class JudgeFragment extends Fragment {
     protected void showCard(ViewGroup holder, Card.PlayedCard playedCard) {
         Button button = (Button)this.getActivity().getLayoutInflater().inflate(R.layout.white_card, holder, false);
         button.setText(playedCard.Card.getText());
-        if (isJudge) {
+        if (listener.isJudge()) {
             button.setOnClickListener(new OnJudgeClick(playedCard));
         } else {
             button.setBackgroundDrawable(getResources().getDrawable(R.drawable.game_wcard_unpressable));
@@ -115,5 +111,6 @@ public class JudgeFragment extends Fragment {
 
     public interface JudgeListener {
         public void pickCard(Card.PlayedCard pickedCard);
+        public boolean isJudge();
     }
 }

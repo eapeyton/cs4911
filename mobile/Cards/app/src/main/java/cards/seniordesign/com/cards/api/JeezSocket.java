@@ -17,6 +17,8 @@ import cards.seniordesign.com.cards.models.Card;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
 import cards.seniordesign.com.cards.models.response.JudgeWaitingResponse;
+import cards.seniordesign.com.cards.models.response.NewRoundResponse;
+import cards.seniordesign.com.cards.models.response.RoundReviewResponse;
 import cards.seniordesign.com.cards.models.response.StartGameResponse;
 
 /**
@@ -62,8 +64,8 @@ public class JeezSocket {
         webSocket.on(USER_NOT_HOST, new NotifyListener("The user is not the host."));
         webSocket.on(GAME_BEING_PLAYED, new NotifyListener("The game is already being played."));
         webSocket.on(USER_HAS_PLAYED, new NotifyListener("User played card"));
-        webSocket.on(ROUND_REVIEW, new NotifyListener("Round review."));
-        webSocket.on(NEW_ROUND, new NotifyListener(NEW_ROUND));
+        webSocket.on(ROUND_REVIEW, onRoundReview);
+        webSocket.on(NEW_ROUND, onNewRound);
         webSocket.on(GAME_REVIEW, new NotifyListener(GAME_REVIEW));
         webSocket.on(PRE_GAME, new NotifyListener(PRE_GAME));
         webSocket.on(WAITING_FOR_JUDGE, onWaitingForJudge);
@@ -84,7 +86,7 @@ public class JeezSocket {
         public void callOnUi(StartGameResponse response) {
             Log.i(getClass().getName(), "Object:" + JeezConverter.toJson(response).toString());
             Dialog.showNotification(game, "Game has started.");
-            game.goToGameplay(response);
+            game.goToGameplay(response.judge, response.blackCard);
         }
     };
 
@@ -93,6 +95,22 @@ public class JeezSocket {
         public void callOnUi(JudgeWaitingResponse response) {
             game.showPlayedCards(response.playedCards);
             Log.i(getClass().getName(), "Object: " + JeezConverter.toJson(response).toString());
+        }
+    };
+
+    private ResponseListener<RoundReviewResponse> onRoundReview = new ResponseListener<RoundReviewResponse>(RoundReviewResponse.class) {
+        @Override
+        public void callOnUi(RoundReviewResponse response) {
+            Dialog.showNotification(game, response.winner.getName() + " is the winner!");
+            Log.i(getClass().getName(), "Round Review:" + JeezConverter.toJson(response).toString());
+        }
+    };
+
+    private ResponseListener<NewRoundResponse> onNewRound = new ResponseListener<NewRoundResponse>(NewRoundResponse.class) {
+        @Override
+        public void callOnUi(NewRoundResponse response) {
+            Dialog.showNotification(game, "New round!");
+            game.goToGameplay(response.judge, response.blackCard);
         }
     };
 

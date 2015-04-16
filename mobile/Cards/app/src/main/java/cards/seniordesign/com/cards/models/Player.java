@@ -12,6 +12,7 @@ public class Player implements Serializable {
     private UUID userId;
     private UUID roomId;
     private int place;
+    private int points;
     private Date updatedAt;
     private Date createdAt;
 

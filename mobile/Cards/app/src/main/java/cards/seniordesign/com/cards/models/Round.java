@@ -12,6 +12,8 @@ public class Round implements Serializable {
     private UUID gameId;
     private UUID judge;
     private UUID blackCard;
+    private UUID winner;
+    private UUID winningCard;
     private GameState state;
     private Date updatedAt;
     private Date createdAt;
