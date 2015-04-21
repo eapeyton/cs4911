@@ -1,6 +1,7 @@
 package cards.seniordesign.com.cards.lobby;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -120,7 +121,9 @@ public class AddRoomFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_room, container, false);
+        View view =  inflater.inflate(R.layout.fragment_add_room, container, false);
+        view.setBackgroundColor(Color.parseColor("#F0F0F0"));
+        return view;
     }
 
     @Override
