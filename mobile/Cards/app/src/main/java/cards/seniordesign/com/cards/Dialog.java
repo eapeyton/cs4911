@@ -66,13 +66,17 @@ public class Dialog {
         textView.startAnimation(fadeInOut);
     }
 
-    public static void showDelayedGameNotification(final Activity activity, final String notification) {
+    public static void showDelayedGameNotification(final Activity activity, final String notification, final int delay) {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 showGameNotification(activity, notification);
             }
-        }, 500);
+        }, delay);
+    }
+
+    public static void showDelayedGameNotification(final Activity activity, final String notification) {
+        showDelayedGameNotification(activity, notification, 500);
     }
 }
