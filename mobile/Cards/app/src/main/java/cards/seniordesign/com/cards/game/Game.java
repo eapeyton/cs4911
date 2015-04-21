@@ -65,7 +65,10 @@ public class Game extends Activity implements GameplayFragment.GameplayListener,
             isJudge = false;
         }
         GameplayFragment gameplayFragment = GameplayFragment.newInstance(blackCard);
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, gameplayFragment).addToBackStack(null).commit();
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_frame, gameplayFragment)
+                .commit();
     }
 
     @Override
@@ -82,7 +85,11 @@ public class Game extends Activity implements GameplayFragment.GameplayListener,
 
     public void showPlayedCards(List<Card.PlayedCard> playedCards) {
         JudgeFragment judgeFragment = JudgeFragment.newInstance(playedCards, blackCard);
-        getFragmentManager().beginTransaction().replace(R.id.content_frame, judgeFragment).addToBackStack(null).commit();
+        getFragmentManager().beginTransaction()
+                .setCustomAnimations(R.animator.fade_in_long, android.R.animator.fade_out)
+                .replace(R.id.content_frame, judgeFragment)
+                .commit();
+        //judgeFragment.fadeIn();
     }
 
     @Override
