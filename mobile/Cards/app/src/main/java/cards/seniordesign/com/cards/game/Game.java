@@ -84,11 +84,24 @@ public class Game extends Activity implements GameplayFragment.GameplayListener,
     }
 
     public void showPlayedCards(List<Card.PlayedCard> playedCards) {
-        JudgeFragment judgeFragment = JudgeFragment.newInstance(playedCards, blackCard);
         getFragmentManager().beginTransaction()
                 .setCustomAnimations(R.animator.fade_in_long, R.animator.fade_out_long)
-                .replace(R.id.content_frame, judgeFragment)
+                .replace(R.id.content_frame, new TransitionFragment())
                 .commit();
+
+        final JudgeFragment judgeFragment = JudgeFragment.newInstance(playedCards, blackCard);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.animator.fade_in_long, R.animator.fade_out_long)
+                        .replace(R.id.content_frame, judgeFragment)
+                        .commit();
+            }
+        }, 2000);
+
+
     }
 
     @Override
