@@ -14,8 +14,8 @@ public class ServiceGenerator {
     public static JeezAPIInterface createService(final String token) {
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setEndpoint(BASE_URL)
-                .setConverter(new JeezConverter());
-                //.setLogLevel(RestAdapter.LogLevel.FULL);
+                .setConverter(new JeezConverter())
+                .setLogLevel(RestAdapter.LogLevel.FULL);
 
         if (token != null) {
             builder.setRequestInterceptor(new RequestInterceptor() {

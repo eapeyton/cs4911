@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import cards.seniordesign.com.cards.Dialog;
 import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Card;
@@ -74,6 +75,7 @@ public class GameplayFragment extends Fragment {
         JeezAPIClient.getAPI().getHand(new Callback<List<Card>>() {
             @Override
             public void success(List<Card> cards, Response response) {
+                holder.removeAllViews();
                 addCardButtons(holder, cards);
             }
 

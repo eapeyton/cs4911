@@ -1,5 +1,6 @@
 package cards.seniordesign.com.cards.api;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -63,11 +64,11 @@ public class JeezSocket {
         webSocket.on(HOST_STARTED_GAME, onGameStarted);
         webSocket.on(USER_NOT_HOST, new NotifyListener("The user is not the host."));
         webSocket.on(GAME_BEING_PLAYED, new NotifyListener("The game is already being played."));
-        webSocket.on(USER_HAS_PLAYED, new NotifyListener("User played card"));
+        webSocket.on(USER_HAS_PLAYED, new GameNotifyListener("User played card"));
         webSocket.on(ROUND_REVIEW, onRoundReview);
         webSocket.on(NEW_ROUND, onNewRound);
-        webSocket.on(GAME_REVIEW, new NotifyListener(GAME_REVIEW));
-        webSocket.on(PRE_GAME, new NotifyListener(PRE_GAME));
+        webSocket.on(GAME_REVIEW, new GameNotifyListener(GAME_REVIEW));
+        webSocket.on(PRE_GAME, new GameNotifyListener(PRE_GAME));
         webSocket.on(WAITING_FOR_JUDGE, onWaitingForJudge);
 
         webSocket.connect();
@@ -77,16 +78,15 @@ public class JeezSocket {
     private ResponseListener<User> onUserJoined = new ResponseListener<User>(User.class) {
         @Override
         public void callOnUi(User response) {
-            Dialog.showNotification(game, response.getName() + " has joined the room.");
+            game.showPlayerJoined(response);
         }
     };
 
     private ResponseListener<StartGameResponse> onGameStarted = new ResponseListener<StartGameResponse>(StartGameResponse.class) {
         @Override
         public void callOnUi(StartGameResponse response) {
-            Log.i(getClass().getName(), "Object:" + JeezConverter.toJson(response).toString());
-            Dialog.showNotification(game, "Game has started.");
             game.goToGameplay(response.judge, response.blackCard);
+            Dialog.showDelayedGameNotification(game, "The game has started");
         }
     };
 
@@ -94,23 +94,21 @@ public class JeezSocket {
         @Override
         public void callOnUi(JudgeWaitingResponse response) {
             game.showPlayedCards(response.playedCards);
-            Log.i(getClass().getName(), "Object: " + JeezConverter.toJson(response).toString());
         }
     };
 
     private ResponseListener<RoundReviewResponse> onRoundReview = new ResponseListener<RoundReviewResponse>(RoundReviewResponse.class) {
         @Override
         public void callOnUi(RoundReviewResponse response) {
-            Dialog.showNotification(game, response.winner.getName() + " is the winner!");
-            Log.i(getClass().getName(), "Round Review:" + JeezConverter.toJson(response).toString());
+            Dialog.showGameNotification(game, response.winner.getName() + " is the winner!");
         }
     };
 
     private ResponseListener<NewRoundResponse> onNewRound = new ResponseListener<NewRoundResponse>(NewRoundResponse.class) {
         @Override
         public void callOnUi(NewRoundResponse response) {
-            Dialog.showNotification(game, "New round!");
             game.goToGameplay(response.judge, response.blackCard);
+            Dialog.showDelayedGameNotification(game, "New round!");
         }
     };
 
@@ -178,16 +176,25 @@ public class JeezSocket {
     }
 
     private class NotifyListener extends UiListener {
-        private String message;
+        protected String message;
         public NotifyListener(String message) {
             this.message = message;
         }
 
         @Override
         public void callOnUi(Object... args) {
-            JSONObject recObj = (JSONObject) args[0];
-            Log.i(this.getClass().getName(), "Object received: " + recObj.toString());
             Dialog.showNotification(game, message);
+        }
+    }
+
+    private class GameNotifyListener extends NotifyListener {
+        public GameNotifyListener(String message) {
+            super(message);
+        }
+
+        @Override
+        public void callOnUi(Object... args) {
+            Dialog.showGameNotification(game, message);
         }
     }
 

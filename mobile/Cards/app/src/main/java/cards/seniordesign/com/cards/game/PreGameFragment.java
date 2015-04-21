@@ -52,10 +52,10 @@ public class PreGameFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_pre_game, container, false);
         if (isHost) {
             TextView waitingText = (TextView) view.findViewById(R.id.waiting_for_host);
-            waitingText.setVisibility(View.GONE);
+            waitingText.setVisibility(View.INVISIBLE);
         } else {
             Button startGame = (Button) view.findViewById(R.id.start_game);
-            startGame.setVisibility(View.GONE);
+            startGame.setVisibility(View.INVISIBLE);
         }
         return view;
     }
