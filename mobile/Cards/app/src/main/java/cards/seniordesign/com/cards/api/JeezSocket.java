@@ -108,7 +108,11 @@ public class JeezSocket {
         @Override
         public void callOnUi(NewRoundResponse response) {
             game.goToGameplay(response.judge, response.blackCard);
-            Dialog.showDelayedGameNotification(game, "New round!");
+            if (response.judge.getUserId().equals(currentUser.getId())) {
+                Dialog.showDelayedGameNotification(game, "New round! You are the new judge.");
+            } else {
+                Dialog.showDelayedGameNotification(game, "New round! A different player is the judge.");
+            }
         }
     };
 
