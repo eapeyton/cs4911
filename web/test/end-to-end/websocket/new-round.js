@@ -60,6 +60,8 @@ describe("Clients recieve 'new round'",function(){
 
         // check for judge
         lastResponse.should.have.property('round').with.property('judge');
+        lastResponse.judge.User.id.should.equal(clients[1].id);
+
 
         // check for black card
         lastResponse.should.have.property('blackCard');

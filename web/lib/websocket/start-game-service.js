@@ -75,7 +75,10 @@ StartGameService.prototype.startGame = function(){
     return new Promise(function(resolve, reject){
       models.Judge.findAll({
         where: {roomId: socket.roomId},
-        order: 'place ASC'
+        order: 'place ASC',
+        include:[{
+          model: models.User
+        }]
       })
       .then(function(judges){
         response.judge = judges[0];

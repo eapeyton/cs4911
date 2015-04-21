@@ -29,6 +29,7 @@ describe("'start game'",function(){
       lastResponse.should.have.property('blackCard').with.property('type', 'black');
       lastResponse.should.have.property('playerStates');
 
+      lastResponse.judge.User.id.should.equal(clients[0].id);
       // one of the players should be waiting, the others playing
       lastResponse.playerStates.should.containDeep([{state: 'waiting for players'},{state: 'playing'},{state: 'playing'}]);
       done();

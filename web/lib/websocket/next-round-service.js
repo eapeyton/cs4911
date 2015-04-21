@@ -31,7 +31,10 @@ NextRoundService.prototype.setupNextRound = function(){
     return new Promise(function(resolve, reject){
       models.Judge.findAll({
         where: {roomId: socket.roomId},
-        order: 'place ASC'
+        order: 'place ASC',
+        include:[{
+          model: models.User
+        }]
       })
       .then(function(judges){
         var lastJudgeIndex = -1;
