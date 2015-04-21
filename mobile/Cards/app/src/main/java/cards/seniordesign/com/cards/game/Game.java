@@ -86,10 +86,9 @@ public class Game extends Activity implements GameplayFragment.GameplayListener,
     public void showPlayedCards(List<Card.PlayedCard> playedCards) {
         JudgeFragment judgeFragment = JudgeFragment.newInstance(playedCards, blackCard);
         getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.animator.fade_in_long, android.R.animator.fade_out)
+                .setCustomAnimations(R.animator.fade_in_long, R.animator.fade_out_long)
                 .replace(R.id.content_frame, judgeFragment)
                 .commit();
-        //judgeFragment.fadeIn();
     }
 
     @Override

@@ -58,6 +58,7 @@ public class JudgeFragment extends Fragment {
         showBlackCard(view);
         ViewGroup holder = (ViewGroup) view.findViewById(R.id.card_hand);
         showPlayedCardsOn(holder);
+        showTitle(view);
         return view;
     }
 
@@ -96,6 +97,14 @@ public class JudgeFragment extends Fragment {
         holder.addView(button);
     }
 
+    private void showTitle(View view) {
+        TextView title = (TextView) view.findViewById(R.id.judge_title);
+        if (listener.isJudge()) {
+            title.setText("Pick a winner");
+        } else {
+            title.setText("Played Cards");
+        }
+    }
 
     private class OnJudgeClick implements View.OnClickListener {
         private Card.PlayedCard playedCard;
