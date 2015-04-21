@@ -2,14 +2,19 @@ package cards.seniordesign.com.cards.game;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.TextView;
 
 import java.util.List;
 
 import cards.seniordesign.com.cards.Args;
+import cards.seniordesign.com.cards.Dialog;
 import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezSocket;
 import cards.seniordesign.com.cards.models.Card;
@@ -91,5 +96,9 @@ public class Game extends Activity implements GameplayFragment.GameplayListener,
 
     public void setIsJudge(boolean isJudge) {
         this.isJudge = isJudge;
+    }
+
+    public void showPlayerJoined(User player) {
+        Dialog.showGameNotification(this, player.getName() + " has joined.");
     }
 }
