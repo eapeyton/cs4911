@@ -61,7 +61,6 @@ NextRoundService.prototype.setupNextRound = function(){
         limit: 1
       })
       .then(function(blackCard){
-        console.log("next blackCard", blackCard[0]);
         response.blackCard = blackCard[0];
         resolve(response);
       })

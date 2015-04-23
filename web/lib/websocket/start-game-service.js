@@ -95,7 +95,6 @@ StartGameService.prototype.startGame = function(){
         limit: 1
       })
       .then(function(blackCard){
-        console.log("start blackCard", blackCard[0]);
         response.blackCard = blackCard[0];
         resolve(response);
       })
