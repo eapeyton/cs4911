@@ -18,6 +18,7 @@ import cards.seniordesign.com.cards.Args;
 import cards.seniordesign.com.cards.Dialog;
 import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezAPIClient;
+import cards.seniordesign.com.cards.models.Player;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
 import cards.seniordesign.com.cards.models.response.AddRoomResponse;

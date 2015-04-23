@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -40,10 +41,9 @@ public class Dialog {
             throw new RuntimeException(activity + " does not include the notification layout.");
         }
 
+        textView.setGravity(Gravity.CENTER);
         textView.setText(notification);
         textView.setVisibility(View.VISIBLE);
-
-        Log.i(Dialog.class.getName(), "Showing:" + notification);
 
         AlphaAnimation fadeInOut = new AlphaAnimation(0.0f, 1.0f);
         fadeInOut.setDuration(1500);

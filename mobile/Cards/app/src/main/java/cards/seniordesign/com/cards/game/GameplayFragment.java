@@ -87,9 +87,7 @@ public class GameplayFragment extends Fragment {
     }
 
     protected void addCardButtons(ViewGroup holder, List<Card> cards) {
-        Log.i(getClass().getName(), "Adding new cards...");
         for (Card card: cards) {
-            Log.i(getClass().getName(), "Adding:" + card.getText());
             addCardButton(holder, card);
         }
     }

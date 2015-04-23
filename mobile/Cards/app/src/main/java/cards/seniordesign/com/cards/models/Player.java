@@ -15,6 +15,7 @@ public class Player implements Serializable {
     private int points;
     private Date updatedAt;
     private Date createdAt;
+    private User User;
 
     public UUID getId() {
         return id;
@@ -62,6 +63,10 @@ public class Player implements Serializable {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getName() {
+        return User.getName();
     }
 
     public static class PlayerState implements Serializable {
