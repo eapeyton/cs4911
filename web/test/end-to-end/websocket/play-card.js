@@ -39,10 +39,11 @@ describe("A single client sends 'play card'",function(){
       runPlayCardEvents(clients)
       .then(function(clients){
         var lastResponse = clients[0].lastResponse;
-
         lastResponse.should.have.property('key', 'user has played');
         lastResponse.should.have.property('round').with.property('state', 'waiting for players');
         lastResponse.should.have.property('playedCard');
+
+        lastResponse.User.fbToken.should.equal(clients[1].fbToken);
 
         websocketHelper.getClientsCards(2)
         .then(function(cards){

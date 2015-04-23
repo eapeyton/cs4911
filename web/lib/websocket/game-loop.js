@@ -72,6 +72,7 @@ GameLoop.prototype.handlePlay = function() {
   .then(updateHandToPlayed)
   .then(updatePlayerStateToWaiting)
   .then(updateGameState)
+  .then(addUserThatPlayed)
   .then(broadcastResponse)
   .catch(function(errors) {
     reject(errors)
@@ -177,7 +178,6 @@ GameLoop.prototype.handlePlay = function() {
             .then(resolve);
           } else {
             response.key = "user has played";
-            response.userId = userId;
             resolve();
           }
         });
@@ -246,6 +246,20 @@ GameLoop.prototype.handlePlay = function() {
           });
         });
       }
+    });
+  }
+
+  function addUserThatPlayed(response){
+    return new Promise(function(resolve, reject) {
+      console.log("\n\n\nuserId=", userId);
+      models.User.find({
+        where:{
+          id: userId
+        }
+      }).then(function(userId) {
+        response.User = userId;
+        resolve(response);
+      })
     });
   }
 
