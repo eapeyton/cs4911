@@ -14,9 +14,11 @@ import java.net.URISyntaxException;
 
 import cards.seniordesign.com.cards.Dialog;
 import cards.seniordesign.com.cards.game.Game;
+import cards.seniordesign.com.cards.game.TransitionFragment;
 import cards.seniordesign.com.cards.models.Card;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
+import cards.seniordesign.com.cards.models.response.GameReviewResponse;
 import cards.seniordesign.com.cards.models.response.JudgeWaitingResponse;
 import cards.seniordesign.com.cards.models.response.NewRoundResponse;
 import cards.seniordesign.com.cards.models.response.RoundReviewResponse;
@@ -46,6 +48,7 @@ public class JeezSocket {
     private User currentUser;
     private Room currentRoom;
     private Socket webSocket;
+    private RoundReviewResponse lastRoundReview;
 
     public JeezSocket(Game game, User currentUser, Room currentRoom) {
         this.game = game;
@@ -66,6 +69,7 @@ public class JeezSocket {
         webSocket.on(GAME_BEING_PLAYED, new NotifyListener("The game is already being played."));
         webSocket.on(USER_HAS_PLAYED, new GameNotifyListener("User played card"));
         webSocket.on(ROUND_REVIEW, onRoundReview);
+        webSocket.on(GAME_REVIEW, onGameReview);
         webSocket.on(NEW_ROUND, onNewRound);
         webSocket.on(GAME_REVIEW, new GameNotifyListener(GAME_REVIEW));
         webSocket.on(PRE_GAME, new GameNotifyListener(PRE_GAME));
@@ -85,8 +89,7 @@ public class JeezSocket {
     private ResponseListener<StartGameResponse> onGameStarted = new ResponseListener<StartGameResponse>(StartGameResponse.class) {
         @Override
         public void callOnUi(StartGameResponse response) {
-            game.goToGameplay(response.judge, response.blackCard);
-            Dialog.showDelayedGameNotification(game, "The game has started");
+            game.goToGameplay(response.blackCard, response.judge);
         }
     };
 
@@ -100,19 +103,27 @@ public class JeezSocket {
     private ResponseListener<RoundReviewResponse> onRoundReview = new ResponseListener<RoundReviewResponse>(RoundReviewResponse.class) {
         @Override
         public void callOnUi(RoundReviewResponse response) {
-            Dialog.showGameNotification(game, response.winner.getName() + " is the winner!");
+            game.announceWinner(response.winningCard, response.winner);
         }
     };
 
     private ResponseListener<NewRoundResponse> onNewRound = new ResponseListener<NewRoundResponse>(NewRoundResponse.class) {
         @Override
-        public void callOnUi(NewRoundResponse response) {
-            game.goToGameplay(response.judge, response.blackCard);
-            if (response.judge.getUserId().equals(currentUser.getId())) {
-                Dialog.showDelayedGameNotification(game, "New round! You are the new judge.");
-            } else {
-                Dialog.showDelayedGameNotification(game, "New round! A different player is the judge.");
-            }
+        public void callOnUi(final NewRoundResponse response) {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    game.goToGameplay(response.blackCard, response.judge);
+                }
+            }, 1500);
+        }
+    };
+
+    private ResponseListener<GameReviewResponse> onGameReview = new ResponseListener<GameReviewResponse>(GameReviewResponse.class) {
+        @Override
+        public void callOnUi(GameReviewResponse response) {
+            game.announceGameWinner(response.winningCard, response.winner);
         }
     };
 
@@ -199,6 +210,14 @@ public class JeezSocket {
         @Override
         public void callOnUi(Object... args) {
             Dialog.showGameNotification(game, message);
+        }
+    }
+
+    private class Debug implements Emitter.Listener {
+        @Override
+        public void call(Object... args) {
+            JSONObject obj = (JSONObject) args[0];
+            Log.i(getClass().getName(), obj.toString());
         }
     }
 

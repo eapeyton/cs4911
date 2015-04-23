@@ -8,7 +8,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Ben Schmaltz has joined the game"
-                android:textSize="10sp"
+                android:textSize="15sp"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/game_bcard_background"
                 android:textColor="@android:color/white"

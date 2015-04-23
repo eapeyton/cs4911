@@ -21,6 +21,8 @@ import cards.seniordesign.com.cards.models.Card;
 import cards.seniordesign.com.cards.models.Player;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
+import cards.seniordesign.com.cards.models.response.NewRoundResponse;
+import cards.seniordesign.com.cards.models.response.RoundReviewResponse;
 import cards.seniordesign.com.cards.models.response.StartGameResponse;
 
 
@@ -30,6 +32,7 @@ public class Game extends Activity implements GameplayFragment.GameplayListener,
     private User currentUser;
     private boolean isHost;
     private boolean isJudge = false;
+    private Card lastWinningCard;
 
     private Card blackCard;
 
@@ -40,15 +43,15 @@ public class Game extends Activity implements GameplayFragment.GameplayListener,
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_game);
-        currentRoom = getIntent().getExtras().getParcelable(Args.CURRENT_ROOM);
-        currentUser = getIntent().getExtras().getParcelable(Args.CURRENT_USER);
-        isHost = getIntent().getExtras().getBoolean(Args.IS_HOST);
-
-        socket = new JeezSocket(this, currentUser, currentRoom);
-
-        PreGameFragment pregame = PreGameFragment.newInstance(currentUser, currentRoom, isHost);
 
         if (savedInstanceState == null) {
+            currentRoom = getIntent().getExtras().getParcelable(Args.CURRENT_ROOM);
+            currentUser = getIntent().getExtras().getParcelable(Args.CURRENT_USER);
+            isHost = getIntent().getExtras().getBoolean(Args.IS_HOST);
+
+            socket = new JeezSocket(this, currentUser, currentRoom);
+
+            PreGameFragment pregame = PreGameFragment.newInstance(currentUser, currentRoom, isHost);
             getFragmentManager().beginTransaction().add(R.id.content_frame, pregame).commit();
         }
     }
@@ -57,18 +60,33 @@ public class Game extends Activity implements GameplayFragment.GameplayListener,
         socket.startGame();
     }
 
-    public void goToGameplay(Player judge, Card blackCard) {
+    public void announceWinner(Card winningCard, User winner) {
+        TransitionFragment.transitionToMessage(getFragmentManager(), winningCard.getText() + " is the winner!\n" +
+            winner.getName() + " earns one point.");
+    }
+
+    public void announceGameWinner(Card winningCard, User winner) {
+        TransitionFragment.transitionToMessage(getFragmentManager(), winningCard.getText() + " is the winner!\n" +
+            winner.getName() + " wins the game! ");
+    }
+
+    public void goToGameplay(Card blackCard, Player judge) {
         this.blackCard = blackCard;
-        if (judge.getUserId().equals(currentUser.getId())) {
-            isJudge = true;
-        } else {
-            isJudge = false;
-        }
+
         GameplayFragment gameplayFragment = GameplayFragment.newInstance(blackCard);
         getFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.animator.fade_in_long, R.animator.fade_out_long)
                 .replace(R.id.content_frame, gameplayFragment)
                 .commit();
+
+        if (judge.getUserId().equals(currentUser.getId())) {
+            isJudge = true;
+            Dialog.showDelayedGameNotification(this, "New round! You are the new judge.");
+        } else {
+            Dialog.showDelayedGameNotification(this, "New round! " + judge.getName() + " is the new judge.");
+            isJudge = false;
+        }
     }
 
     @Override
@@ -77,31 +95,14 @@ public class Game extends Activity implements GameplayFragment.GameplayListener,
         socket.close();
     }
 
-
     @Override
     public void playCard(Card card) {
         socket.playCard(card);
     }
 
     public void showPlayedCards(List<Card.PlayedCard> playedCards) {
-        getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.animator.fade_in_long, R.animator.fade_out_long)
-                .replace(R.id.content_frame, new TransitionFragment())
-                .commit();
-
-        final JudgeFragment judgeFragment = JudgeFragment.newInstance(playedCards, blackCard);
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.animator.fade_in_long, R.animator.fade_out_long)
-                        .replace(R.id.content_frame, judgeFragment)
-                        .commit();
-            }
-        }, 2000);
-
-
+        JudgeFragment judgeFragment = JudgeFragment.newInstance(playedCards, blackCard);
+        TransitionFragment.transitionToFragment(getFragmentManager(), judgeFragment, "Everyone has played a card.\nNow the judge will pick his favorite.");
     }
 
     @Override
@@ -119,5 +120,9 @@ public class Game extends Activity implements GameplayFragment.GameplayListener,
 
     public void showPlayerJoined(User player) {
         Dialog.showGameNotification(this, player.getName() + " has joined.");
+    }
+
+    public void setLastWinningCard(Card lastWinningCard) {
+        this.lastWinningCard = lastWinningCard;
     }
 }
