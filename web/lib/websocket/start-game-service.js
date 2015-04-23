@@ -91,10 +91,11 @@ StartGameService.prototype.startGame = function(){
     return new Promise(function(resolve, reject){
       models.Card.findAll({
         where: {type: 'black'},
-        limit: 1,
-        random: true
+        order: 'RANDOM()',
+        limit: 1
       })
       .then(function(blackCard){
+        console.log("start blackCard", blackCard[0]);
         response.blackCard = blackCard[0];
         resolve(response);
       })
