@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
@@ -21,7 +22,13 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
+import com.facebook.widget.UserSettingsFragment;
+
 import cards.seniordesign.com.cards.Args;
+import cards.seniordesign.com.cards.MainActivity;
 import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.game.Game;
 import cards.seniordesign.com.cards.models.Room;
@@ -29,7 +36,7 @@ import cards.seniordesign.com.cards.models.User;
 import cards.seniordesign.com.cards.Editor;
 
 
-public class Lobby extends Activity implements AddRoomFragment.AddRoomListener, ListRoomsFragment.ListRoomsListener {
+public class Lobby extends FragmentActivity implements AddRoomFragment.AddRoomListener, ListRoomsFragment.ListRoomsListener {
 
     private static final String TAG = "Lobby";
 
@@ -42,6 +49,16 @@ public class Lobby extends Activity implements AddRoomFragment.AddRoomListener, 
     private ActionBarDrawerToggle mDrawerToggle;
 
     private User currentUser;
+
+    private UiLifecycleHelper uiHelper;
+    private Session.StatusCallback callback =
+            new Session.StatusCallback() {
+                @Override
+                public void call(Session session,
+                                 SessionState state, Exception exception) {
+                    onSessionStateChange(session, state, exception);
+                }
+            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +76,7 @@ public class Lobby extends Activity implements AddRoomFragment.AddRoomListener, 
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, mDrawerNames));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setItemChecked(0, true);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
@@ -82,9 +100,15 @@ public class Lobby extends Activity implements AddRoomFragment.AddRoomListener, 
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        uiHelper = new UiLifecycleHelper(this, callback);
+        uiHelper.onCreate(savedInstanceState);
+
         if (savedInstanceState == null) {
             Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
-            getFragmentManager().beginTransaction().add(R.id.content_frame, ListRoomsFragment.newInstance(currentUser)).commit();
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.content_frame, ListRoomsFragment.newInstance(currentUser))
+                    .commit();
         }
 
 
@@ -131,14 +155,34 @@ public class Lobby extends Activity implements AddRoomFragment.AddRoomListener, 
     }
 
     private void selectItem(int position) {
-        Class <? extends Activity> activity = Drawers.values()[position].getActivityClass();
-
-
-        // do something later
-
+        selectItem(Drawers.values()[position]);
         mDrawerList.setItemChecked(position, true);
-        setTitle(mDrawerNames[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    private void selectItem(Drawers drawerItem) {
+        setTitle(drawerItem.drawerTitle);
+        switch (drawerItem) {
+            case Lobby:
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.content_frame, ListRoomsFragment.newInstance(currentUser))
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            case Editor:
+                break;
+            case Settings:
+                break;
+            case LogOut:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.content_frame, new UserSettingsFragment())
+                        .addToBackStack(null)
+                        .commit();
+
+                break;
+        }
     }
 
 
@@ -217,17 +261,15 @@ public class Lobby extends Activity implements AddRoomFragment.AddRoomListener, 
     }
 
     public enum Drawers {
-        Lobby ("Lobby", Lobby.class),
-        Editor ("Editor", Editor.class),
-        Settings ("Settings", null),
-        About ("About", null);
+        Lobby ("Lobby"),
+        Editor ("Editor"),
+        Settings ("Settings"),
+        LogOut ("Log Out");
 
         private String drawerTitle;
-        private Class<? extends Activity> activityClass;
 
-        private Drawers(String drawerTitle, Class<? extends Activity> activityClass) {
+        private Drawers(String drawerTitle) {
             this.drawerTitle = drawerTitle;
-            this.activityClass = activityClass;
         }
 
         public static String[] getDrawerTitles() {
@@ -238,10 +280,43 @@ public class Lobby extends Activity implements AddRoomFragment.AddRoomListener, 
             }
             return titles;
         }
+    }
 
-        public Class<? extends Activity> getActivityClass() {
-            return activityClass;
+    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        if (state.isClosed()) {
+            Intent intent = new Intent(this, MainActivity.class);
+            goToActivity(intent, currentUser);
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        uiHelper.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        uiHelper.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        uiHelper.onPause();
     }
 
 }
