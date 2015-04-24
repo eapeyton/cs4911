@@ -89,7 +89,8 @@ public class MainActivity extends FragmentActivity {
 
     public void loginAndGoToLobby() {
         loginProgress.show();
-        loginRandom();
+        //loginRandom();
+        loginWith(Session.getActiveSession());
     }
 
     public void goToActivity(Class<? extends Activity> activity) {
