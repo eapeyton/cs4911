@@ -9,31 +9,6 @@
     <string name="go_to_game">Game Screen Preview</string>
     <string name="go_to_lobby">Lobby Screen Preview</string>
     <string name="go_to_editor">Editor Screen Preview</string>
-    <string-array name="cards">
-        <item>Judge Judy.</item>
-        <item>Throwing a virgin into a volcano.</item>
-        <item>A good sniff.</item>
-        <item>Praying the gay away.</item>
-        <item>Horse meat.</item>
-        <item>A really cool hat.</item>
-        <item>Authentic Mexican cuisine.</item>
-        <item>The South.</item>
-        <item>An icepick lobotomy.</item>
-    </string-array>
-    <string-array name="drawers">
-        <item>Lobby</item>
-        <item>Editor</item>
-        <item>Settings</item>
-        <item>About</item>
-    </string-array>
-    <string-array name="lobby_samples">
-        <item>RANDOM PLAY 839\n8/10 players</item>
-        <item>RANDOM PLAY 932\n12/12 players</item>
-        <item>SENIOR DESIGN GROUP\n4/4 players</item>
-        <item>SCHMALTZ FAMILY\n6/8 players</item>
-        <item>RANDOM PLAY 1088\n2/3 players</item>
-        <item>WEIGHT WATCHERS BUDDIES\n8/8 players</item>
-    </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="title_activity_lobby">Lobby</string>

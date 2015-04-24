@@ -95,13 +95,13 @@ public class MainActivity extends FragmentActivity {
     public void goToActivity(Class<? extends Activity> activity) {
         Intent intent = new Intent(this, activity);
         if (currentUser == null) {
-            loginWith(Session.getActiveSession());
-            Dialog.showError(this, "Not logged in.");
-        } else {
-            Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
-            intent.putExtra(Args.CURRENT_USER, currentUser);
-            startActivity(intent);
+            loginRandom();
+            //loginWith(Session.getActiveSession());
         }
+        while (currentUser == null);
+        Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
+        intent.putExtra(Args.CURRENT_USER, currentUser);
+        startActivity(intent);
     }
 
     private void showFragment(int fragmentIndex, boolean addToBackStack) {
@@ -135,7 +135,6 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
-        Log.i(getClass().getName(), "Session state changed.");
         // Only make changes if the activity is visible
         if (isResumed) {
             FragmentManager manager = getSupportFragmentManager();
@@ -150,7 +149,8 @@ public class MainActivity extends FragmentActivity {
                 // Show the authenticated fragment
                 //loginWith(session);
                 loginRandom();
-                showFragment(SELECTION, false);
+                goToActivity(Lobby.class);
+                //showFragment(SELECTION, false);
             } else if (state.isClosed()) {
                 // If the session state is closed:
                 // Show the login fragment
@@ -210,7 +210,9 @@ public class MainActivity extends FragmentActivity {
         if (session != null && session.isOpened()) {
             // if the session is already open,
             // try to show the selection fragment
-            showFragment(SELECTION, false);
+            loginRandom();
+            goToActivity(Lobby.class);
+            //showFragment(SELECTION, false);
         } else {
             // otherwise present the splash screen
             // and ask the person to login.

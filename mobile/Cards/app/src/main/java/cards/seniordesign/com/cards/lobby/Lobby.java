@@ -26,6 +26,7 @@ import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.game.Game;
 import cards.seniordesign.com.cards.models.Room;
 import cards.seniordesign.com.cards.models.User;
+import cards.seniordesign.com.cards.Editor;
 
 
 public class Lobby extends Activity implements AddRoomFragment.AddRoomListener, ListRoomsFragment.ListRoomsListener {
@@ -50,7 +51,7 @@ public class Lobby extends Activity implements AddRoomFragment.AddRoomListener, 
         currentUser = getIntent().getExtras().getParcelable(Args.CURRENT_USER);
 
         mTitle = mDrawerTitle = getTitle();
-        mDrawerNames = getResources().getStringArray(R.array.drawers);
+        mDrawerNames = Drawers.getDrawerTitles();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.lobby_drawer);
         mDrawerList = (ListView) findViewById(R.id.nav_drawer);
 
@@ -130,12 +131,16 @@ public class Lobby extends Activity implements AddRoomFragment.AddRoomListener, 
     }
 
     private void selectItem(int position) {
+        Class <? extends Activity> activity = Drawers.values()[position].getActivityClass();
+
+
         // do something later
 
         mDrawerList.setItemChecked(position, true);
         setTitle(mDrawerNames[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
+
 
     @Override
     public void setTitle(CharSequence title) {
@@ -203,8 +208,40 @@ public class Lobby extends Activity implements AddRoomFragment.AddRoomListener, 
 
     private void goToGameRoom(Intent intent, Room room, User currentUser) {
         intent.putExtra(Args.CURRENT_ROOM, room);
+        goToActivity(intent, currentUser);
+    }
+
+    private void goToActivity(Intent intent, User currentUser) {
         intent.putExtra(Args.CURRENT_USER, currentUser);
         startActivity(intent);
-}
+    }
+
+    public enum Drawers {
+        Lobby ("Lobby", Lobby.class),
+        Editor ("Editor", Editor.class),
+        Settings ("Settings", null),
+        About ("About", null);
+
+        private String drawerTitle;
+        private Class<? extends Activity> activityClass;
+
+        private Drawers(String drawerTitle, Class<? extends Activity> activityClass) {
+            this.drawerTitle = drawerTitle;
+            this.activityClass = activityClass;
+        }
+
+        public static String[] getDrawerTitles() {
+            String[] titles = new String[Drawers.values().length];
+            Drawers[] drawers = Drawers.values();
+            for (int i=0; i < titles.length; i++) {
+                titles[i] = drawers[i].drawerTitle;
+            }
+            return titles;
+        }
+
+        public Class<? extends Activity> getActivityClass() {
+            return activityClass;
+        }
+    }
 
 }
