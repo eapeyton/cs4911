@@ -1,17 +1,12 @@
 package cards.seniordesign.com.cards;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +15,7 @@ import cards.seniordesign.com.cards.models.Card;
 import cards.seniordesign.com.cards.models.User;
 
 
-public class Editor extends Activity implements CreateCardFragment.OnFragmentInteractionListener, View.OnClickListener {
+public class Editor extends Activity implements CreateCardFragment.CreateCardListener, View.OnClickListener {
     private User currentUser;
 
     @Override
