@@ -2,6 +2,7 @@ package cards.seniordesign.com.cards.models.response;
 
 import cards.seniordesign.com.cards.game.Game;
 import cards.seniordesign.com.cards.models.Card;
+import cards.seniordesign.com.cards.models.GameModel;
 import cards.seniordesign.com.cards.models.Round;
 import cards.seniordesign.com.cards.models.User;
 
@@ -10,7 +11,7 @@ import cards.seniordesign.com.cards.models.User;
  */
 public class GameReviewResponse {
     public Round round;
-    public Game game;
+    public GameModel game;
     public Card winningCard;
     public User winner;
 }
