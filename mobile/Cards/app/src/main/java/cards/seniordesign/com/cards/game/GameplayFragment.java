@@ -55,6 +55,9 @@ public class GameplayFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_gameplay, container, false);
+        if (listener.isJudge()) {
+            view.setBackgroundDrawable(getResources().getDrawable(R.drawable.game_border));
+        }
         addCardButtons((ViewGroup)view.findViewById(R.id.card_hand));
         showBlackCard(view, blackCard);
         return view;
@@ -120,6 +123,7 @@ public class GameplayFragment extends Fragment {
         @Override
         public void onClick(View v) {
             listener.playCard(card);
+            v.animate().translationY(-200);
         }
     }
 

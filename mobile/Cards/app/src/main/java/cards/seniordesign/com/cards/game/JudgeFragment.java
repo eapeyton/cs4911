@@ -55,6 +55,9 @@ public class JudgeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_judge, container, false);
+        if (listener.isJudge()) {
+            view.setBackgroundDrawable(getResources().getDrawable(R.drawable.game_border));
+        }
         showBlackCard(view);
         ViewGroup holder = (ViewGroup) view.findViewById(R.id.card_hand);
         showPlayedCardsOn(holder);

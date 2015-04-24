@@ -21,6 +21,7 @@ import cards.seniordesign.com.cards.models.User;
 import cards.seniordesign.com.cards.models.response.GameReviewResponse;
 import cards.seniordesign.com.cards.models.response.JudgeWaitingResponse;
 import cards.seniordesign.com.cards.models.response.NewRoundResponse;
+import cards.seniordesign.com.cards.models.response.PlayCardResponse;
 import cards.seniordesign.com.cards.models.response.RoundReviewResponse;
 import cards.seniordesign.com.cards.models.response.StartGameResponse;
 
@@ -67,7 +68,7 @@ public class JeezSocket {
         webSocket.on(HOST_STARTED_GAME, onGameStarted);
         webSocket.on(USER_NOT_HOST, new NotifyListener("The user is not the host."));
         webSocket.on(GAME_BEING_PLAYED, new NotifyListener("The game is already being played."));
-        webSocket.on(USER_HAS_PLAYED, new GameNotifyListener("User played card"));
+        webSocket.on(USER_HAS_PLAYED, onUserPlayed);
         webSocket.on(ROUND_REVIEW, onRoundReview);
         webSocket.on(GAME_REVIEW, onGameReview);
         webSocket.on(NEW_ROUND, onNewRound);
@@ -124,6 +125,13 @@ public class JeezSocket {
         @Override
         public void callOnUi(GameReviewResponse response) {
             game.announceGameWinner(response.winningCard, response.winner);
+        }
+    };
+
+    private ResponseListener<PlayCardResponse> onUserPlayed = new ResponseListener<PlayCardResponse>(PlayCardResponse.class) {
+        @Override
+        public void callOnUi(PlayCardResponse response) {
+            Dialog.showGameNotification(game, response.User.getName() + " has played a card.");
         }
     };
 
