@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -16,9 +17,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 
@@ -28,7 +31,9 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.UserSettingsFragment;
 
 import cards.seniordesign.com.cards.Args;
+import cards.seniordesign.com.cards.CreateCardFragment;
 import cards.seniordesign.com.cards.MainActivity;
+import cards.seniordesign.com.cards.PreCreateCardFragment;
 import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.game.Game;
 import cards.seniordesign.com.cards.models.Room;
@@ -36,7 +41,7 @@ import cards.seniordesign.com.cards.models.User;
 import cards.seniordesign.com.cards.Editor;
 
 
-public class Lobby extends FragmentActivity implements AddRoomFragment.AddRoomListener, ListRoomsFragment.ListRoomsListener {
+public class Lobby extends FragmentActivity implements AddRoomFragment.AddRoomListener, ListRoomsFragment.ListRoomsListener, CreateCardFragment.CreateCardListener {
 
     private static final String TAG = "Lobby";
 
@@ -116,7 +121,9 @@ public class Lobby extends FragmentActivity implements AddRoomFragment.AddRoomLi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_lobby, menu);
+        if (mDrawerList.getCheckedItemPosition() == 0) {
+            getMenuInflater().inflate(R.menu.menu_lobby, menu);
+        }
         return true;
     }
 
@@ -171,10 +178,18 @@ public class Lobby extends FragmentActivity implements AddRoomFragment.AddRoomLi
                         .commit();
                 break;
             case Editor:
+                //invalidateOptionsMenu();
+                setTitle("Which color?");
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.content_frame, PreCreateCardFragment.newInstance(currentUser))
+                        .addToBackStack(null)
+                        .commit();
                 break;
             case Settings:
                 break;
             case LogOut:
+                //invalidateOptionsMenu();
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.content_frame, new UserSettingsFragment())
@@ -317,6 +332,17 @@ public class Lobby extends FragmentActivity implements AddRoomFragment.AddRoomLi
     protected void onPause() {
         super.onPause();
         uiHelper.onPause();
+    }
+
+    public void exitCreateCard(EditText editor) {
+        getFragmentManager().popBackStackImmediate();
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editor.getWindowToken(), 0);
+        getActionBar().setTitle("Which Color?");
+    }
+
+    public void closeCreateCard() {
+        getActionBar().setTitle(getTitle());
     }
 
 }
