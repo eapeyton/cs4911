@@ -1,9 +1,11 @@
 package cards.seniordesign.com.cards;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -50,6 +52,7 @@ public class MainActivity extends FragmentActivity {
                 }
             };
     private MenuItem settings;
+    private ProgressDialog loginProgress;
 
     private User currentUser;
 
@@ -78,30 +81,22 @@ public class MainActivity extends FragmentActivity {
         TextView selectionSplashText = (TextView) findViewById(R.id.selection_splash_title);
         splashText.setTypeface(blendaFont);
         selectionSplashText.setTypeface(blendaFont);
+
+        loginProgress = new ProgressDialog(this);
+        loginProgress.setIndeterminate(true);
+        loginProgress.setMessage("Logging in...");
     }
 
-    public void goToGame(View view) {
-        goToActivity(Game.class);
-    }
-
-    public void goToLobby(View view) {
-        goToActivity(Lobby.class);
-    }
-
-    public void goToEditor(View view) {
-        goToActivity(Editor.class);
+    public void loginAndGoToLobby() {
+        loginProgress.show();
+        loginRandom();
     }
 
     public void goToActivity(Class<? extends Activity> activity) {
-        Intent intent = new Intent(this, activity);
-        if (currentUser == null) {
-            loginWith(Session.getActiveSession());
-            Dialog.showError(this, "Not logged in.");
-        } else {
-            Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
-            intent.putExtra(Args.CURRENT_USER, currentUser);
-            startActivity(intent);
-        }
+        final Intent intent = new Intent(this, activity);
+        Log.i(this.getClass().getName(), "Current User Set:" + currentUser.getId());
+        intent.putExtra(Args.CURRENT_USER, currentUser);
+        startActivity(intent);
     }
 
     private void showFragment(int fragmentIndex, boolean addToBackStack) {
@@ -135,7 +130,6 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
-        Log.i(getClass().getName(), "Session state changed.");
         // Only make changes if the activity is visible
         if (isResumed) {
             FragmentManager manager = getSupportFragmentManager();
@@ -149,8 +143,8 @@ public class MainActivity extends FragmentActivity {
                 // If the session state is open:
                 // Show the authenticated fragment
                 //loginWith(session);
-                loginRandom();
-                showFragment(SELECTION, false);
+                loginAndGoToLobby();
+                //showFragment(SELECTION, false);
             } else if (state.isClosed()) {
                 // If the session state is closed:
                 // Show the login fragment
@@ -192,6 +186,10 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void success(User responseUser, retrofit.client.Response response) {
                 currentUser = responseUser;
+                if (loginProgress.isShowing()) {
+                    loginProgress.dismiss();
+                }
+                goToActivity(Lobby.class);
             }
 
             @Override
@@ -210,7 +208,8 @@ public class MainActivity extends FragmentActivity {
         if (session != null && session.isOpened()) {
             // if the session is already open,
             // try to show the selection fragment
-            showFragment(SELECTION, false);
+            loginAndGoToLobby();
+            //showFragment(SELECTION, false);
         } else {
             // otherwise present the splash screen
             // and ask the person to login.

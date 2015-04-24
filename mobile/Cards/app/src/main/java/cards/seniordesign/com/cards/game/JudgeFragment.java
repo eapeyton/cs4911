@@ -55,9 +55,13 @@ public class JudgeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_judge, container, false);
+        if (listener.isJudge()) {
+            view.setBackgroundDrawable(getResources().getDrawable(R.drawable.game_border));
+        }
         showBlackCard(view);
         ViewGroup holder = (ViewGroup) view.findViewById(R.id.card_hand);
         showPlayedCardsOn(holder);
+        showTitle(view);
         return view;
     }
 
@@ -89,11 +93,21 @@ public class JudgeFragment extends Fragment {
         if (listener.isJudge()) {
             button.setOnClickListener(new OnJudgeClick(playedCard));
         } else {
+            int padding = button.getPaddingTop();
             button.setBackgroundDrawable(getResources().getDrawable(R.drawable.game_wcard_unpressable));
+            button.setPadding(padding, padding, padding, padding);
         }
         holder.addView(button);
     }
 
+    private void showTitle(View view) {
+        TextView title = (TextView) view.findViewById(R.id.judge_title);
+        if (listener.isJudge()) {
+            title.setText("Pick a winner");
+        } else {
+            title.setText("Played Cards");
+        }
+    }
 
     private class OnJudgeClick implements View.OnClickListener {
         private Card.PlayedCard playedCard;

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import cards.seniordesign.com.cards.Dialog;
 import cards.seniordesign.com.cards.R;
 import cards.seniordesign.com.cards.api.JeezAPIClient;
 import cards.seniordesign.com.cards.models.Card;
@@ -54,6 +55,9 @@ public class GameplayFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_gameplay, container, false);
+        if (listener.isJudge()) {
+            view.setBackgroundDrawable(getResources().getDrawable(R.drawable.game_border));
+        }
         addCardButtons((ViewGroup)view.findViewById(R.id.card_hand));
         showBlackCard(view, blackCard);
         return view;
@@ -74,6 +78,7 @@ public class GameplayFragment extends Fragment {
         JeezAPIClient.getAPI().getHand(new Callback<List<Card>>() {
             @Override
             public void success(List<Card> cards, Response response) {
+                holder.removeAllViews();
                 addCardButtons(holder, cards);
             }
 
@@ -85,9 +90,7 @@ public class GameplayFragment extends Fragment {
     }
 
     protected void addCardButtons(ViewGroup holder, List<Card> cards) {
-        Log.i(getClass().getName(), "Adding new cards...");
         for (Card card: cards) {
-            Log.i(getClass().getName(), "Adding:" + card.getText());
             addCardButton(holder, card);
         }
     }
@@ -98,7 +101,9 @@ public class GameplayFragment extends Fragment {
         if (!listener.isJudge()) {
             button.setOnClickListener(new OnCardClick(whiteCard));
         } else {
+            int padding = button.getPaddingTop();
             button.setBackgroundDrawable(getResources().getDrawable(R.drawable.game_wcard_unpressable));
+            button.setPadding(padding, padding, padding, padding);
         }
         holder.addView(button);
     }
@@ -118,6 +123,7 @@ public class GameplayFragment extends Fragment {
         @Override
         public void onClick(View v) {
             listener.playCard(card);
+            v.animate().translationY(-200);
         }
     }
 

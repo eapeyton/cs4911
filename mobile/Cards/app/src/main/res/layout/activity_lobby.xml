@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="cards.seniordesign.com.cards.lobby.Lobby"
     style="@style/ActivityBase"
-    android:id="@+id/lobby_drawer">
+    android:id="@+id/lobby_drawer"
+    android:background="@drawable/bg_repeating">
 
     <FrameLayout
         android:id="@+id/content_frame"

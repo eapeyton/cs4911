@@ -31,7 +31,7 @@ import retrofit.client.Response;
  * create an instance of this fragment.
  */
 public class CreateCardFragment extends Fragment {
-    private OnFragmentInteractionListener mListener;
+    private CreateCardListener mListener;
     private EditText editor;
 
     /**
@@ -101,7 +101,7 @@ public class CreateCardFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (CreateCardListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -154,7 +154,7 @@ public class CreateCardFragment extends Fragment {
         dialog.show();
     }
 
-    public interface OnFragmentInteractionListener {
+    public interface CreateCardListener {
         // TODO: Update argument type and name
         public void exitCreateCard(EditText editor);
         public void closeCreateCard();
