@@ -1,4 +1,4 @@
-# cs4911 - Ah-Jeez - Team 8 senior design project for Spring 2015.
+# cs4911 - Team 8 Ah-Jeez
 
 See '/mobile' folder for front end source code
 
@@ -6,7 +6,7 @@ See '/web' folder for back end source code
 
 Documentation
 -------------
-Note, after clicking google drive link, click the 'Open in Drive' button in upper right corner.
+Note, after clicking google drive link, click the 'Open in Drive' button in the upper right corner.
 
 Developer Documentation - https://drive.google.com/folderview?id=0BwJrbdYDeYwHflVFMlJWYzRXRXU4RkxvUzlieGhvX25UOVNZZ3lkVDlsM0M4NVdBUE5uRTg&usp=sharing
 
