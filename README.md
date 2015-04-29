@@ -1,7 +1,4 @@
-# cs4911
-Team 8 senior design project for Spring 2015.
-
-Ah-Jeez - Cards Against Humanity
+# cs4911 - Ah-Jeez - Team 8 senior design project for Spring 2015.
 
 See '/mobile' folder for front end source code
 
